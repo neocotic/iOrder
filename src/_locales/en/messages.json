@@ -1,8 +1,159 @@
 {
+    "actions_header": {
+        "message": "Actions"
+    },
+    "clear_text": {
+        "message": "Clear"
+    },
+    "clear_title": {
+        "message": "Resets the badge"
+    },
+    "confirm_delete": {
+        "message": "$O_PARA$This action is $O_BOLD$permanent$C_BOLD$ and cannot be reversed.$C_PARA$$O_PARA$Do you want to continue anyway?$C_PARA$$BUTTONS$",
+        "placeholders": {
+            "buttons": {
+                "content": "<div style=\"text-align: right\"><button class=\"delete_yes_btn\">Yes</button><button class=\"delete_no_btn\">No</button></div>"
+            },
+            "c_bold": {
+                "content": "</strong>"
+            },
+            "c_para": {
+                "content": "</p>"
+            },
+            "o_bold": {
+                "content": "<strong>"
+            },
+            "o_para": {
+                "content": "<p>"
+            }
+        }
+    },
     "description": {
-        "message": "Keeps you updated with your iDevice order progress"
+        "message": "Keep updated with the progress of your iDevice order"
+    },
+    "freq_disabled": {
+        "message": "Disabled"
+    },
+    "freq_hour": {
+        "message": "1 hour"
+    },
+    "freq_hours": {
+        "message": "$1 hours"
+    },
+    "freq_minute": {
+        "message": "1 minute"
+    },
+    "freq_minutes": {
+        "message": "$1 minutes"
+    },
+    "freq_second": {
+        "message": "1 second"
+    },
+    "freq_seconds": {
+        "message": "$1 seconds"
+    },
+    "loading": {
+        "message": "Loading..."
     },
     "name": {
         "message": "iOrder"
+    },
+    "opt_add_button": {
+        "message": "Add"
+    },
+    "opt_add_new_button": {
+        "message": "Add New"
+    },
+    "opt_delete_button": {
+        "message": "Delete"
+    },
+    "opt_errors_header": {
+        "message": "The following problem(s) need to be corrected;"
+    },
+    "opt_footer": {
+        "message": "&copy;$1 $AUTHOR_LINK$",
+        "placeholders": {
+            "author_link": {
+                "content": "<a href=\"http://forchoon.com\" target=\"_blank\" title=\"Visit land of the forchoon cookies\">Alasdair Mercer</a>"
+            }
+        }
+    },
+    "opt_frequency_text": {
+        "message": "Automatically update every"
+    },
+    "opt_general_header": {
+        "message": "General"
+    },
+    "opt_help_text": {
+        "message": "Read help documentation"
+    },
+    "opt_order_code_invalid": {
+        "message": "Zip/Post Code is missing"
+    },
+    "opt_order_code_text": {
+        "message": "Zip/Post Code"
+    },
+    "opt_order_header": {
+        "message": "Orders"
+    },
+    "opt_order_label_invalid": {
+        "message": "Label is missing"
+    },
+    "opt_order_label_text": {
+        "message": "Label"
+    },
+    "opt_order_number_invalid": {
+        "message": "Number is missing"
+    },
+    "opt_order_number_text": {
+        "message": "Number"
+    },
+    "opt_order_updates_text": {
+        "message": "Updates"
+    },
+    "opt_save_button": {
+        "message": "Save &amp; Close"
+    },
+    "options_text": {
+        "message": "Options"
+    },
+    "options_title": {
+        "message": "Configure iOrder"
+    },
+    "order_header": {
+        "message": "Order"
+    },
+    "order_title": {
+        "message": "View this order"
+    },
+    "orders_text": {
+        "message": "Orders"
+    },
+    "orders_title": {
+        "message": "View all your orders"
+    },
+    "popup_footer_text": {
+        "message": "Updated: $1 - Frequency: $2"
+    },
+    "refresh_text": {
+        "message": "Refresh"
+    },
+    "refresh_title": {
+        "message": "Updates the progress of all orders"
+    },
+    "refreshing_text": {
+        "message": "Refreshing..."
+    },
+    "refreshing_title": {
+        "message": "Currently updating progress of all orders. Please wait..."
+    },
+    "status_header": {
+        "message": "Status"
+    },
+    "track_text": {
+        "message": "Track"
+    },
+    "track_title": {
+        "message": "Track this order"
     }
 }
