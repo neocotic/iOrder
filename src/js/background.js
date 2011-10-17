@@ -21,25 +21,25 @@ var ext = {
     badgeCount: 0,
 
     frequencies: [{
-        text: 'Disabled', // TODO: i18n
+        text: chrome.i18n.getMessage('freq_disabled'),
         value: -1
     }, {
-        text: '5 minutes', // TODO: i18n
+        text: chrome.i18n.getMessage('freq_minutes', '5'),
         value: 5 * 60 * 1000
     }, {
-        text: '10 minutes', // TODO: i18n
+        text: chrome.i18n.getMessage('freq_minutes', '10'),
         value: 10 * 60 * 1000
     }, {
-        text: '15 minutes', // TODO: i18n
+        text: chrome.i18n.getMessage('freq_minutes', '15'),
         value: 15 * 60 * 1000
     }, {
-        text: '30 minutes', // TODO: i18n
+        text: chrome.i18n.getMessage('freq_minutes', '30'),
         value: 30 * 60 * 1000
     }, {
-        text: '1 hour', // TODO: i18n
+        text: chrome.i18n.getMessage('freq_hour'),
         value: 60 * 60 * 1000
     }, {
-        text: '2 hours', // TODO: i18n
+        text: chrome.i18n.getMessage('freq_hours', '2'),
         value: 2 * 60 * 60 * 1000
     }],
 
@@ -61,82 +61,178 @@ var ext = {
 
     trackerUrl: 'https://applestore.bridge-point.com/',
 
-    updateManager: undefined,
+    updateManager: {
+        id: undefined,
+        messages: [],
+        restart: function () {
+            var frequency = utils.get('frequency');
+            if (this.updating) {
+                this.messages.push('restart');
+                return;
+            }
+            if (this.id) {
+                clearInterval(this.id);
+                if (frequency === -1) {
+                    this.id = undefined;
+                }
+            }
+            if (frequency !== -1) {
+                this.id = setInterval(this.run, frequency);
+            }
+            this.run();
+        },
+        run: function () {
+            var popup = $(ext.popupHtml),
+                progress = 0;
+            this.updating = true;
+            popup.find('footer div:first-child button:first-child').attr({
+                disabled: 'disabled',
+                title: chrome.i18n.getMessage('refreshing_title')
+            }).html(chrome.i18n.getMessage('refreshing_text'));
+            ext.popupHtml = $('<div/>').append(popup).html();
+            function updated(order) {
+                progress++;
+                if (progress === ext.orders.length) {
+                    this.updating = false;
+                    utils.set('orders', ext.orders);
+                    utils.set('lastUpdated', $.now());
+                    ext.showBadge();
+                    ext.buildPopup();
+                    // Handles message stack
+                    for (var i = 0; i < this.messages.length; i++) {
+                        this[this.messages[i]]();
+                    }
+                    this.messages = [];
+                }
+            }
+            for (var i = 0; i < ext.orders.length; i++) {
+                ext.update(ext.orders[i], updated);
+            }
+        },
+        start: function () {
+            var frequency = utils.get('frequency');
+            if (frequency === -1) {
+                if (this.id) {
+                    clearInterval(this.id);
+                    this.id = undefined;
+                }
+            } else {
+                if (this.id) {
+                    return;
+                }
+                this.id = setInterval(this.run, frequency);
+            }
+            this.run();
+        },
+        stop: function () {
+            if (this.updating) {
+                this.messages.push('stop');
+                return;
+            }
+            if (this.id) {
+                clearInterval(this.id);
+                this.id = undefined;
+            }
+        },
+        updating: false
+    },
 
     version: '',
 
     buildPopup: function () {
         var footer = $('<footer/>').append($('<div/>'), $('<div/>')),
-            header = $('<header/>').append($('<div/>')),
-            table = $('<table id="orders"/>');
-        header.find('div').append($('<a/>', {
+            header = $('<header/>').append($('<div/>'), $('<div/>')),
+            table = $('<table id="orders"/>'),
+            tbody = $('<tbody/>');
+        header.find('div:last-child').append($('<a/>', {
             href: '#',
             id: 'optionsLink',
             onclick: 'popup.options()',
-            text: 'Options' // TODO: i18n
+            text: chrome.i18n.getMessage('options_text'),
+            title: chrome.i18n.getMessage('options_title')
         }), $('<a/>', {
             href: '#',
             id: 'ordersLink',
             onclick: 'popup.viewAll()',
-            text: 'Orders' // TODO: i18n
+            text: chrome.i18n.getMessage('orders_text'),
+            title: chrome.i18n.getMessage('orders_title')
         }));
-        footer.find('div:first-child').append($('<a/>', {
-            href: '#',
+        footer.find('div:first-child').append($('<button/>', {
             id: 'refreshLink',
             onclick: 'popup.refresh()',
-            text: 'Refresh' // TODO: i18n
+            text: chrome.i18n.getMessage('refresh_text'),
+            title: chrome.i18n.getMessage('refresh_title')
         }));
+        if (ext.updateManager.updating) {
+            footer.find('div:first-child button:first-child').attr({
+                disabled: 'disabled',
+                title: chrome.i18n.getMessage('refreshing_title')
+            }).html(chrome.i18n.getMessage('refreshing_text'));
+        }
         if (ext.badgeCount) {
-            footer.find('div:first-child').append($('<a/>', {
-                href: '#',
-                id: 'flushLink',
-                onclick: 'popup.flush()',
-                text: 'Flush' // TODO: i18n
+            footer.find('div:first-child').append($('<button/>', {
+                id: 'clearLink',
+                onclick: 'popup.clear()',
+                text: chrome.i18n.getMessage('clear_text'),
+                title: chrome.i18n.getMessage('clear_title')
             }));
         }
         footer.find('div:last-child').append($('<span/>', {
-            text: function () {
-                var str = 'Updated: '; // TODO: i18n
-                str += new Date(utils.get('lastUpdated')).toLocaleTimeString();
-                str += ' - Frequency: ' + ext.getFrequency().text; // TODO: i18n
-                return str;
-            }
-        })); // TODO: Actual code
-        table.append($('<tr/>').append($('<th/>', {
-            text: 'Order' // TODO: i18n
+            text: chrome.i18n.getMessage('popup_footer_text', [
+                ext.formatTimeStamp(utils.get('lastUpdated')),
+                ext.getFrequency().text
+            ])
+        }));
+        table.append($('<thead/>').append($('<tr/>').append($('<th/>', {
+            text: chrome.i18n.getMessage('order_header')
         }), $('<th/>', {
-            text: 'Status' // TODO: i18n
+            text: chrome.i18n.getMessage('status_header')
         }), $('<th/>', {
-            text: 'Actions' // TODO: i18n
-        })));
+            text: chrome.i18n.getMessage('actions_header')
+        }))));
+        table.append(tbody);
         for (var i = 0; i < ext.orders.length; i++) {
             $('<tr/>').append(
-                $('<td/>').append($('<a/>', {
+                $('<td/>').append($('<strong/>', {
+                    text: ext.orders[i].label
+                }), '<br />', $('<a/>', {
                     'data-order': ext.orders[i].number,
                     href: '#',
                     onclick: 'popup.view(this)',
-                    text: ext.orders[i].number
+                    text: ext.orders[i].number,
+                    title: chrome.i18n.getMessage('order_title')
                 })),
                 $('<td/>').append($('<span/>', {
                     text: function () {
                         var length = ext.orders[i].updates.length;
                         if (length === 0) {
-                            return 'N/A'; // TODO: i18n?
+                            return chrome.i18n.getMessage('loading');
                         }
                         return ext.orders[i].updates[length - 1].status;
                     }
                 }))
-            ).appendTo(table);
+            ).appendTo(tbody);
             if (ext.orders[i].trackingUrl) {
-                table.find('tr:last-child').append($('<td/>').append($('<a/>', {
+                tbody.find('tr:last-child').append($('<td/>').append($('<a/>', {
                     'data-order': ext.orders[i].number,
                     href: '#',
                     onclick: 'popup.track(this)',
-                    text: 'Track' // TODO: i18n
+                    text: chrome.i18n.getMessage('track_text'),
+                    title: chrome.i18n.getMessage('track_title')
                 })));
+            } else {
+                tbody.find('tr:last-child').append($('<td/>').append(chrome.i18n.getMessage('loading')));
             }
         }
         ext.popupHtml = $('<div/>').append(header, table, footer).html();
+    },
+
+    formatTimeStamp: function (timeStamp) {
+        var date = new Date(timeStamp),
+            str = '';
+        str += ext.leftPad(date.getHours(), 2, 0) + ':';
+        str += ext.leftPad(date.getMinutes(), 2, 0);
+        return str;
     },
 
     getFrequency: function () {
@@ -191,19 +287,12 @@ var ext = {
         });
         ext.showBadge();
         ext.buildPopup();
-        ext.startUpdateManager();
+        ext.updateManager.start();
     },
 
     initOrders: function () {
-        // TODO: ext.orders = utils.get('orders');
-        ext.orders = [{
-            code: 'KY12 7TR',
-            errors: false,
-            number: 'W246106987',
-            trackingUrl: '',
-            updates: []
-        }]; // TODO: Remove
-        console.log('fetched orders'); // TODO: Remove
+        utils.init('orders', []);
+        ext.orders = utils.get('orders');
     },
 
     isOrderNumberNew: function (number) {
@@ -233,27 +322,46 @@ var ext = {
         return false;
     },
 
+    leftPad: function (str, size, padStr) {
+        if (typeof padStr === 'undefined') {
+            padStr = ' ';
+        } else {
+            padStr = String(padStr);
+        }
+        if (str === null) {
+            return str;
+        }
+        str = String(str);
+        var pads = size - str.length;
+        if (pads <= 0) {
+            return str;
+        }
+        for (var i = 0; i < pads; i++) {
+            str = padStr + str;
+        }
+        return str;
+    },
+
     markRead: function () {
         ext.badgeCount = 0;
         utils.set('lastRead', $.now());
         chrome.browserAction.setBadgeText({text: ''});
-        ext.popupHtml = $('<div/>').append($(ext.popupHtml).remove(
-                '#flushLink')).html();
+        var popup = $(ext.popupHtml);
+        popup.find('#clearLink').remove();
+        ext.popupHtml = $('<div/>').append(popup).html();
     },
 
     onRequest: function (request, sender, sendResponse) {
         var order = {};
         switch (request.type) {
-        case 'flush':
+        case 'clear':
             ext.markRead();
             break;
         case 'options':
-            chrome.tabs.create({
-                url: chrome.extension.getURL('pages/options.html')
-            });
+            ext.selectOrCreateTab(chrome.extension.getURL('pages/options.html'));
             break;
         case 'refresh':
-            ext.refresh();
+            ext.updateManager.restart();
             break;
         case 'track':
             order = ext.getOrder(request.data.order);
@@ -279,8 +387,25 @@ var ext = {
         }
     },
 
-    refresh: function () {
-        ext.updateManager.restart();
+    selectOrCreateTab: function (url) {
+        chrome.tabs.getAllInWindow(null, function (tabs) {
+            var tab;
+            for (var i = 0; i < tabs.length; i++) {
+                if (tabs[i].url.indexOf(url) === 0) {
+                    tab = tabs[i];
+                    break;
+                }
+            }
+            if (tab) {
+                chrome.tabs.update(tab.id, {
+                    selected: true
+                });
+            } else {
+                chrome.tabs.create({
+                    url: url
+                });
+            }
+        });
     },
 
     showBadge: function () {
@@ -291,74 +416,10 @@ var ext = {
         });
     },
 
-    startUpdateManager: function () {
-        // TODO: Fix it! It keeps updating too quickly! Why?!?!?!?
-        if (!ext.updateManager) {
-            ext.updateManager = {
-                id: undefined,
-                messages: [],
-                restart: function () {
-                    var frequency = utils.get('frequency');
-                    if (this.updating) {
-                        this.messages.push('restart');
-                        return;
-                    }
-                    if (this.id) {
-                        clearInterval(this.id);
-                        if (frequency === -1) {
-                            this.id = undefined;
-                        }
-                    }
-                    if (frequency !== -1) {
-                        this.id = setInterval(this.run, frequency);
-                    }
-                    this.run();
-                },
-                run: function () {
-                    this.updating = true;
-                    ext.updateAll(function () {
-                        this.updating = false;
-                        for (var i = 0; i < this.messages.length; i++) {
-                            this[this.messages[i]]();
-                        }
-                        this.messages = [];
-                    });
-                },
-                start: function () {
-                    var frequency = utils.get('frequency');
-                    if (frequency === -1) {
-                        if (this.id) {
-                            clearInterval(this.id);
-                            this.id = undefined;
-                        }
-                    } else {
-                        if (this.id) {
-                            return;
-                        }
-                        this.id = setInterval(this.run, frequency);
-                    }
-                    this.run();
-                },
-                stop: function () {
-                    if (this.updating) {
-                        this.messages.push('stop');
-                        return;
-                    }
-                    if (this.id) {
-                        clearInterval(this.id);
-                        this.id = undefined;
-                    }
-                },
-                updating: false
-            }
-        }
-        ext.updateManager.start();
-    },
-
     update: function (order, callback) {
         $.get(ext.getOrderUrl(order), function (data) {
             if (!data) {
-                callback(order);
+                callback.apply(ext.updateManager, [order]);
                 return;
             }
             var heading = $(data).find('.order .delivery-group .sb-heading'),
@@ -374,26 +435,8 @@ var ext = {
             }
             order.trackingUrl = trackingUrl;
         }).complete(function () {
-            callback(order);
+            callback.apply(ext.updateManager, [order]);
         });
-    },
-
-    updateAll: function (callback) {
-        var updateCount = 0;
-        function updated(order) {
-            updateCount++;
-            if (updateCount === ext.orders.length) {
-                // TODO: utils.set('orders', ext.orders);
-                console.log('stored orders'); // TODO: Remove
-                utils.set('lastUpdated', $.now());
-                ext.showBadge();
-                ext.buildPopup();
-                callback.apply(ext.updateManager);
-            }
-        }
-        for (var i = 0; i < ext.orders.length; i++) {
-            ext.update(ext.orders[i], updated);
-        }
     }
 
 };
