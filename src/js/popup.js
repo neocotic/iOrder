@@ -16,15 +16,15 @@
  * along with iOrder. If not, see http://www.gnu.org/licenses/.
  */
 
-var popup = {
+var ext = chrome.extension.getBackgroundPage().ext,
+    popup = {
 
-    flush: function () {
-        popup.sendRequest('flush');
+    clear: function () {
+        popup.sendRequest('clear');
     },
 
     init: function () {
-        var bg = chrome.extension.getBackgroundPage();
-        document.body.innerHTML = bg.ext.popupHtml;
+        document.body.innerHTML = ext.popupHtml;
     },
 
     options: function () {
