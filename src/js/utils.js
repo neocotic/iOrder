@@ -19,7 +19,7 @@
 /**
  * <p>Provides utility functions used throughout the extension.</p>
  * @author <a href="http://github.com/neocotic">Alasdair Mercer</a>
- * @since 0.0.0.1
+ * @since 1.0.0
  * @namespace
  */
 var utils = {

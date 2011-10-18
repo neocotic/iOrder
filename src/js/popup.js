@@ -19,6 +19,8 @@
 var ext = chrome.extension.getBackgroundPage().ext,
     popup = {
 
+    optionsTabSuffix: '_nav',
+
     clear: function () {
         popup.sendRequest('clear');
     },
@@ -27,36 +29,46 @@ var ext = chrome.extension.getBackgroundPage().ext,
         document.body.innerHTML = ext.popupHtml;
     },
 
-    options: function () {
-        popup.sendRequest('options');
+    options: function (tab) {
+        var suffix = popup.optionsTabSuffix;
+        if (tab) {
+            if (tab.indexOf(suffix) !== tab.length - suffix.length) {
+                tab += suffix;
+            }
+            utils.set('options_active_tab', tab);
+        }
+        popup.sendRequest('options', true);
     },
 
     refresh: function () {
         popup.sendRequest('refresh');
     },
 
-    sendRequest: function (type, data, element) {
+    sendRequest: function (type, closeAfter, data, element) {
         data = data || {};
         if (element) {
-            data.order = element.getAttribute('data-order');
+            data.code = element.getAttribute('data-order-code');
+            data.number = element.getAttribute('data-order-number');
         }
         chrome.extension.sendRequest({
             data: data,
             type: type
         });
-        window.close();
+        if (closeAfter) {
+            window.close();
+        }
     },
 
     track: function (element) {
-        popup.sendRequest('track', {}, element);
+        popup.sendRequest('track', true, {}, element);
     },
 
     view: function (element) {
-        popup.sendRequest('view', {}, element);
+        popup.sendRequest('view', true, {}, element);
     },
 
     viewAll: function () {
-        popup.sendRequest('viewAll');
-    },
+        popup.sendRequest('viewAll', true);
+    }
 
 };

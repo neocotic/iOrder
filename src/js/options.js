@@ -19,6 +19,8 @@
 var ext = chrome.extension.getBackgroundPage().ext,
     options = {
 
+    orderNumbers: [],
+
     deriveOrder: function (optGrp) {
         var opt = optGrp.find('option'),
             existingOrder,
@@ -26,13 +28,15 @@ var ext = chrome.extension.getBackgroundPage().ext,
         if (optGrp.length && opt.length) {
             order = {
                 code: opt.data('code'),
+                error: '',
                 label: opt.text(),
                 number: optGrp.attr('label'),
                 trackingUrl: '',
                 updates: []
             };
-            existingOrder = ext.getOrder(order.number);
+            existingOrder = ext.getOrder(order.number, order.code);
             if (existingOrder) {
+                order.error = existingOrder.error;
                 order.trackingUrl = existingOrder.trackingUrl;
                 order.updates = existingOrder.updates;
             }
@@ -85,8 +89,12 @@ var ext = chrome.extension.getBackgroundPage().ext,
         options.i18nReplace('#footer', 'opt_footer',
                 String(new Date().getFullYear()));
         // Inserts localized help/confirmation sections
-        // TODO: Help sections
+        options.i18nReplace('#frequency_help', 'help_frequency');
         options.i18nReplace('#delete_con', 'confirm_delete');
+        options.i18nReplace('#order_label_help', 'help_order_label');
+        options.i18nReplace('#order_number_help', 'help_order_number');
+        options.i18nReplace('#order_code_help', 'help_order_code');
+        options.i18nReplace('#updates_help', 'help_updates');
         // Binds tab selection event to tabs
         $('#navigation li').click(function (event) {
             var $this = $(this);
@@ -106,6 +114,18 @@ var ext = chrome.extension.getBackgroundPage().ext,
         options.load();
         // Initialize facebox
         $('a[rel*=facebox]').facebox();
+    },
+
+    isOrderNumberAvailable: function (number) {
+        var available = true;
+        $('#orders optgroup').each(function () {
+            if ($(this).attr('label') === number) {
+                available = false;
+                // Breaks out of $.each
+                return false;
+            }
+        });
+        return available;
     },
 
     load: function () {
@@ -170,6 +190,7 @@ var ext = chrome.extension.getBackgroundPage().ext,
                 $('#order_code').val(opt.data('code'));
                 $('#order_label').val(opt.text());
                 $('#order_number').val(optGrp.attr('label'));
+                updates.find('optgroup').remove();
                 var orderUpdates = JSON.parse(opt.data('updates'));
                 for (var i = 0; i < orderUpdates.length; i++) {
                     updates.append($('<optgroup/>', {
@@ -193,12 +214,14 @@ var ext = chrome.extension.getBackgroundPage().ext,
                 $('#errors').find('li').remove();
                 optGrp = options.loadOrder({
                     code: $('#order_code').val().trim().toUpperCase(),
+                    error: '',
                     label: $('#order_label').val().trim(),
                     number: $('#order_number').val().trim().toUpperCase(),
                     trackingUrl: '',
                     updates: []
                 });
-                if (options.validateOrder(optGrp)) {
+                opt = optGrp.find('option');
+                if (options.validateOrder(optGrp, true)) {
                     orders.append(optGrp);
                     opt.attr('selected', 'selected');
                     orders.change().focus();
@@ -231,15 +254,25 @@ var ext = chrome.extension.getBackgroundPage().ext,
         // Creates and inserts options representing orders
         for (var i = 0; i < ext.orders.length; i++) {
             orders.append(options.loadOrder(ext.orders[i]));
+            // Ensures order number is initially stored
+            options.orderNumbers.push(ext.orders[i].number);
         }
         // Loads all event handlers required for managing orders
         options.loadOrderControlEvents();
     },
 
+    refreshTabSelection: function () {
+        $('#' + utils.get('options_active_tab')).click();
+    },
+
     save: function () {
-        // TODO: Ensure update manager is called when frequency is changed OR orders are modified
-        options.saveOrders();
-        options.saveFrequencies();
+        var ordersChanged = options.saveOrders(),
+            updateAction = options.saveFrequencies();
+        if (ordersChanged) {
+            ext.updateManager.restart();
+        } else if (updateAction) {
+            ext.updateManager[updateAction]();
+        }
     },
 
     saveAndClose: function (event) {
@@ -265,29 +298,33 @@ var ext = chrome.extension.getBackgroundPage().ext,
         // Handles update manager status
         if (frequency === -1) {
             if (oldFrequency !== -1) {
-                ext.updateManager.stop();
+                return 'stop';
             }
         } else if (oldFrequency === -1) {
-            ext.updateManager.start();
-        } else {
-            ext.updateManager.restart();
+            return 'start';
         }
+        return 'restart';
     },
 
     saveOrders: function () {
-        var orders = [];
+        var order = {},
+            orders = [],
+            ordersChanged = false;
         /*
          * Updates each individual order settings based on their
          * corresponding options.
          */
         $('#orders optgroup').each(function () {
-            orders.push(options.deriveOrder($(this)));
+            order = options.deriveOrder($(this));
+            orders.push(order);
+            if (options.orderNumbers.indexOf(order.number) !== -1) {
+                ordersChanged = true;
+            }
         });
         // Ensures orders data reflects the updated settings
         utils.set('orders', orders);
         ext.orders = orders;
-        ext.showBadge();
-        ext.buildPopup();
+        return ordersChanged;
     },
 
     updateOrder: function (optGrp) {
@@ -300,7 +337,7 @@ var ext = chrome.extension.getBackgroundPage().ext,
         }
     },
 
-    validateOrder: function (optGrp) {
+    validateOrder: function (optGrp, isNew) {
         var opt = optGrp.find('option'),
             code = opt.data('code').trim().toUpperCase(),
             errors = $('#errors'),
@@ -314,8 +351,12 @@ var ext = chrome.extension.getBackgroundPage().ext,
         if (label.length === 0) {
             createError('opt_order_label_invalid');
         }
-        if (number.length === 0) {
-            createError('opt_order_number_invalid');
+        if (isNew) {
+            if (number.length === 0) {
+                createError('opt_order_number_invalid');
+            } else if (!options.isOrderNumberAvailable(number)) {
+                createError('opt_order_number_unavailable');
+            }
         }
         if (code.length === 0) {
             createError('opt_order_code_invalid');
@@ -329,7 +370,7 @@ var ext = chrome.extension.getBackgroundPage().ext,
         errors.find('li').remove();
         orders.each(function () {
             var $this = $(this);
-            if (!options.validateOrder($this)) {
+            if (!options.validateOrder($this, false)) {
                 $this.attr('selected', 'selected');
                 $('#orders').change().focus();
                 return false;

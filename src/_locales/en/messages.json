@@ -52,11 +52,179 @@
     "freq_seconds": {
         "message": "$1 seconds"
     },
+    "help_frequency": {
+        "message": "$O_PARA$How often $O_BOLD$iOrder$C_BOLD$ should check your $O_LINK_1$Apple$C_LINK$ orders for status updates.$C_PARA$$O_PARA$If $O_BOLD$Disabled$C_BOLD$ is selected you will need to manually press $O_EMPH$Refresh$C_EMPH$ to check for updates.$C_PARA$",
+        "placeholders": {
+            "c_bold": {
+                "content": "</strong>"
+            },
+            "c_emph": {
+                "content": "</em>"
+            },
+            "c_link": {
+                "content": "</a>"
+            },
+            "c_para": {
+                "content": "</p>"
+            },
+            "o_bold": {
+                "content": "<strong>"
+            },
+            "o_emph": {
+                "content": "<em>"
+            },
+            "o_link_1": {
+                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+            },
+            "o_para": {
+                "content": "<p>"
+            }
+        }
+    },
+    "help_order_code": {
+        "message": "$O_PARA$The Zip/Post code of the delivery address for your $O_LINK_1$Apple$C_LINK$ order.$C_PARA$$O_PARA$The following rules apply;$C_PARA$$O_LIST$$O_ITEM$Must only contain alphanumeric characters$C_ITEM$$O_ITEM$Must contain spaces if required (post codes $O_EMPH$only$C_EMPH$)$C_ITEM$$C_LIST$",
+        "placeholders": {
+            "c_emph": {
+                "content": "</em>"
+            },
+            "c_item": {
+                "content": "</li>"
+            },
+            "c_link": {
+                "content": "</a>"
+            },
+            "c_list": {
+                "content": "</ul>"
+            },
+            "c_para": {
+                "content": "</p>"
+            },
+            "o_emph": {
+                "content": "<em>"
+            },
+            "o_item": {
+                "content": "<li>"
+            },
+            "o_link_1": {
+                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+            },
+            "o_list": {
+                "content": "<ul>"
+            },
+            "o_para": {
+                "content": "<p>"
+            }
+        }
+    },
+    "help_order_label": {
+        "message": "$O_PARA$A short label to help you quickly identify your $O_LINK_1$Apple$C_LINK$ order.$C_PARA$$O_PARA$The following rules apply;$C_PARA$$O_LIST$$O_ITEM$Must only contain alphanumeric characters$C_ITEM$$C_LIST$",
+        "placeholders": {
+            "c_item": {
+                "content": "</li>"
+            },
+            "c_link": {
+                "content": "</a>"
+            },
+            "c_list": {
+                "content": "</ul>"
+            },
+            "c_para": {
+                "content": "</p>"
+            },
+            "o_item": {
+                "content": "<li>"
+            },
+            "o_link_1": {
+                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+            },
+            "o_list": {
+                "content": "<ul>"
+            },
+            "o_para": {
+                "content": "<p>"
+            }
+        }
+    },
+    "help_order_number": {
+        "message": "$O_PARA$The number of your $O_LINK_1$Apple$C_LINK$ order (e.g. W123456789).$C_PARA$$O_PARA$The following rules apply;$C_PARA$$O_LIST$$O_ITEM$Must be unique$C_ITEM$$O_ITEM$Must only contain alphanumeric characters$C_ITEM$$C_LIST$$O_PARA$This $O_EMPH$cannot$C_EMPH$ be changed once added.$C_PARA$",
+        "placeholders": {
+            "c_emph": {
+                "content": "</em>"
+            },
+            "c_item": {
+                "content": "</li>"
+            },
+            "c_link": {
+                "content": "</a>"
+            },
+            "c_list": {
+                "content": "</ul>"
+            },
+            "c_para": {
+                "content": "</p>"
+            },
+            "o_emph": {
+                "content": "<em>"
+            },
+            "o_item": {
+                "content": "<li>"
+            },
+            "o_link_1": {
+                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+            },
+            "o_list": {
+                "content": "<ul>"
+            },
+            "o_para": {
+                "content": "<p>"
+            }
+        }
+    },
+    "help_updates": {
+        "message": "$O_PARA$A list of status updates detected by $O_BOLD$iOrder$C_BOLD$ so far.$C_PARA$$O_PARA$The date/time associated with each update indicates when it was detected and $O_EMPH$may not$C_EMPH$ be exactly when your $O_LINK_1$Apple$C_LINK$ order was updated.$C_PARA$",
+        "placeholders": {
+            "c_bold": {
+                "content": "</strong>"
+            },
+            "c_emph": {
+                "content": "</em>"
+            },
+            "c_link": {
+                "content": "</a>"
+            },
+            "c_para": {
+                "content": "</p>"
+            },
+            "o_bold": {
+                "content": "<strong>"
+            },
+            "o_emph": {
+                "content": "<em>"
+            },
+            "o_link_1": {
+                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+            },
+            "o_para": {
+                "content": "<p>"
+            }
+        }
+    },
     "loading": {
-        "message": "Loading..."
+        "message": "..."
     },
     "name": {
         "message": "iOrder"
+    },
+    "no_orders_text": {
+        "message": "No orders found. $O_LINK_1$Add some$C_LINK$",
+        "placeholders": {
+            "c_link": {
+                "content": "</a>"
+            },
+            "o_link_1": {
+                "content": "<a href=\"#\" onclick=\"popup.options('orders')\">"
+            }
+        }
     },
     "opt_add_button": {
         "message": "Add"
@@ -111,6 +279,9 @@
     "opt_order_updates_text": {
         "message": "Updates"
     },
+    "opt_order_number_unavailable": {
+        "message": "Number already exists"
+    },
     "opt_save_button": {
         "message": "Save &amp; Close"
     },
@@ -155,5 +326,20 @@
     },
     "track_title": {
         "message": "Track this order"
+    },
+    "update_errors_text": {
+        "message": "Some orders could not be updated"
+    },
+    "update_invalid_page_error": {
+        "message": "Order page contained no data"
+    },
+    "update_invalid_status_error": {
+        "message": "Order status was not recognised"
+    },
+    "update_page_not_found_error": {
+        "message": "Order page could not be found"
+    },
+    "update_status_not_found_error": {
+        "message": "Order status could not be found"
     }
 }
