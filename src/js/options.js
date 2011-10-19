@@ -16,16 +16,43 @@
  * along with iOrder. If not, see http://www.gnu.org/licenses/.
  */
 
-var ext = chrome.extension.getBackgroundPage().ext,
-    options = {
+/**
+ * <p>Easily accessible reference to the extension controller.</p>
+ * @ignore
+ */
+var ext = chrome.extension.getBackgroundPage().ext;
 
+/**
+ * <p>Responsible for the options page.</p>
+ * @author <a href="http://github.com/neocotic">Alasdair Mercer</a>
+ * @since 1.0.0
+ * @requires jQuery
+ * @namespace
+ */
+var options = {
+
+    /**
+     * <p>The list of existing order numbers.</p>
+     * <p>This is used to determine whether or not an order number already
+     * exists.</p>
+     * @private
+     * @type String[]
+     */
     orderNumbers: [],
 
+    /**
+     * <p>Creates an order with the information derived from the specified
+     * <code>&lt;optgroup/&gt;</code> element.</p>
+     * @param {jQuery} optGrp The <code>&lt;optgroup/&gt;</code> element in a
+     * jQuery wrapper.
+     * @return {Object} The order created from the jQuery object.
+     * @private
+     */
     deriveOrder: function (optGrp) {
         var opt = optGrp.find('option'),
-            existingOrder,
             order;
         if (optGrp.length && opt.length) {
+            // Create order from derived data
             order = {
                 code: opt.data('code'),
                 error: '',
@@ -34,7 +61,8 @@ var ext = chrome.extension.getBackgroundPage().ext,
                 trackingUrl: '',
                 updates: []
             };
-            existingOrder = ext.getOrder(order.number, order.code);
+            // Try to get data from existing order
+            var existingOrder = ext.getOrder(order.number, order.code);
             if (existingOrder) {
                 order.error = existingOrder.error;
                 order.trackingUrl = existingOrder.trackingUrl;
@@ -44,34 +72,76 @@ var ext = chrome.extension.getBackgroundPage().ext,
         return order;
     },
 
+    /**
+     * <p>Formats the given time stamp for display in the updates list.</p>
+     * <p>The time stamp is formatted as
+     * <code>dd/MM/yyyy @ HH:mm:ss</code>.</p>
+     * @param {Integer} timeStamp The time stamp to be formatted.
+     * @returns {String} The formatted time stamp.
+     * @private
+     */
     formatTimeStamp: function (timeStamp) {
         var date = new Date(timeStamp),
             str = '';
-        str += ext.leftPad(date.getDate(), 2, 0) + '/';
-        str += ext.leftPad(date.getMonth() + 1, 2, 0) + '/';
+        str += utils.leftPad(date.getDate(), 2, 0) + '/';
+        str += utils.leftPad(date.getMonth() + 1, 2, 0) + '/';
         str += date.getFullYear() + ' @ ';
-        str += ext.leftPad(date.getHours(), 2, 0) + ':';
-        str += ext.leftPad(date.getMinutes(), 2, 0) + ':';
-        str += ext.leftPad(date.getSeconds(), 2, 0);
+        str += utils.leftPad(date.getHours(), 2, 0) + ':';
+        str += utils.leftPad(date.getMinutes(), 2, 0) + ':';
+        str += utils.leftPad(date.getSeconds(), 2, 0);
         return str;
     },
 
+    /**
+     * <p>Replaces the value of the specified attribute of the selected
+     * element(s) to the internationalized <code>String</code> looked up using
+     * Chrome.</p>
+     * @param {String} selector A <code>String</code> containing a jQuery
+     * selector expression to find the element(s) to be modified.
+     * @param {String} attribute The name of the attribute to be modified.
+     * @param {String} name The name of the internationalized message to be
+     * retrieved.
+     * @param {String|String[]} [sub] The <code>String</code>(s) to substituted
+     * in the returned message (where applicable).
+     * @returns {jQuery} The modified element(s) wrapped in jQuery.
+     * @private
+     */
     i18nAttribute: function (selector, attribute, name, sub) {
+        // Wrap it up
         if (typeof sub === 'string') {
             sub = [sub];
         }
         return $(selector).attr(attribute, chrome.i18n.getMessage(name, sub));
     },
 
+    /**
+     * <p>Replaces the inner HTML of the selected element(s) with the
+     * internationalized <code>String</code> looked up using Chrome.</p>
+     * @param {String} selector A <code>String</code> containing a jQuery
+     * selector expression to find the element(s) to be modified.
+     * @param {String} name The name of the internationalized message to be
+     * retrieved.
+     * @param {String|String[]} [sub] The <code>String</code>(s) to substituted
+     * in the returned message (where applicable).
+     * @returns {jQuery} The modified element(s) wrapped in jQuery.
+     * @private
+     */
     i18nReplace: function (selector, name, sub) {
+        // Wrap it up
         if (typeof sub === 'string') {
             sub = [sub];
         }
         return $(selector).html(chrome.i18n.getMessage(name, sub));
     },
 
+    /**
+     * <p>Initializes the options page.</p>
+     * <p>This involves inserting and configuring the UI elements as well as
+     * the insertion of internationalized <code>Strings</code> and, most
+     * importantly, loading the current settings.</p>
+     */
     init: function () {
-        // Inserts localized Strings
+        // Insert internationalized Strings
         options.i18nReplace('title', 'name');
         options.i18nReplace('#errors_hdr', 'opt_errors_header');
         options.i18nReplace('#add_btn', 'opt_add_button');
@@ -88,14 +158,14 @@ var ext = chrome.extension.getBackgroundPage().ext,
         options.i18nReplace('.save-btn', 'opt_save_button');
         options.i18nReplace('#footer', 'opt_footer',
                 String(new Date().getFullYear()));
-        // Inserts localized help/confirmation sections
+        // Insert internationalized help/confirmation sections
         options.i18nReplace('#frequency_help', 'help_frequency');
         options.i18nReplace('#delete_con', 'confirm_delete');
         options.i18nReplace('#order_label_help', 'help_order_label');
         options.i18nReplace('#order_number_help', 'help_order_number');
         options.i18nReplace('#order_code_help', 'help_order_code');
         options.i18nReplace('#updates_help', 'help_updates');
-        // Binds tab selection event to tabs
+        // Bind tab selection event to all tabs
         $('#navigation li').click(function (event) {
             var $this = $(this);
             if (!$this.hasClass('selected')) {
@@ -105,45 +175,82 @@ var ext = chrome.extension.getBackgroundPage().ext,
                 utils.set('options_active_tab', $this.attr('id'));
             }
         });
-        // Reflects persisted tab
+        // Reflect the persisted tab
         utils.init('options_active_tab', 'general_nav');
         $('#' + utils.get('options_active_tab')).click();
-        // Binds options:saveAndClose event to button
+        // Bind options:saveAndClose event to its button
         $('.save-btn').click(options.saveAndClose);
-        // Loads current option values
-        options.load();
+        // Load the current option values
+        options.load(true);
         // Initialize facebox
         $('a[rel*=facebox]').facebox();
     },
 
+    /**
+     * <p>Indicates whether or not an order already exists with the specified
+     * number.</p>
+     * @param {String} number The order number to be checked.
+     * @returns {Boolean} <code>true</code> if no order exists with the number
+     * provided; otherwise <code>false</code>.
+     * @private
+     */
     isOrderNumberAvailable: function (number) {
         var available = true;
         $('#orders optgroup').each(function () {
             if ($(this).attr('label') === number) {
                 available = false;
-                // Breaks out of $.each
                 return false;
             }
         });
         return available;
     },
 
-    load: function () {
+    /**
+     * <p>Updates the options page with the values of the current settings.</p>
+     * @param {Boolean} loadEvents <code>true</code> to bind events required
+     * for managing orders; otherwise <code>false</code>.
+     * @private
+     */
+    load: function (loadEvents) {
         options.loadFrequencies();
         options.loadOrders();
+        // Load all event handlers required for managing orders, if required
+        if (loadEvents) {
+            options.loadOrderControlEvents();
+        }
     },
 
+    /**
+     * <p>Updates the frequency section of the options page with the current
+     * settings.</p>
+     * @private
+     */
     loadFrequencies: function () {
         var frequency = $('#frequency');
+        // Start from clean slate
+        frequency.remove('option');
+        // Create and insert options representing each update frequency
         for (var i = 0; i < ext.frequencies.length; i++) {
             frequency.append($('<option/>', {
                 text: ext.frequencies[i].text,
                 value: ext.frequencies[i].value
             }));
         }
-        frequency.find('option[value="' + utils.get('frequency') + '"]').attr('selected', 'selected');
+        // Select the option for the current update frequency
+        frequency.find('option[value="' + utils.get('frequency') +
+                '"]').attr('selected', 'selected');
     },
 
+    /**
+     * <p>Creates a <code>&lt;optgroup/&gt;</code> element representing the
+     * specified order.</p>
+     * <p>The returned element should then be inserted in to the
+     * <code>&lt;select/&gt;</code> managing orders on the options page.</p>
+     * @param {Object} order The order to be used.
+     * @returns {jQuery} The <code>&lt;optgroup/&gt;</code> element in a jQuery
+     * wrapper.
+     * @private
+     */
     loadOrder: function (order) {
         var opt = $('<option/>', {
             text: order.label
@@ -155,6 +262,10 @@ var ext = chrome.extension.getBackgroundPage().ext,
         }).append(opt);
     },
 
+    /**
+     * <p>Binds the event handlers required for controlling the orders.</p>
+     * @private
+     */
     loadOrderControlEvents: function () {
         var lastSelectedOrder = {},
             orders = $('#orders'),
@@ -167,11 +278,12 @@ var ext = chrome.extension.getBackgroundPage().ext,
             var $this = $(this),
                 opt = $this.find('option:selected'),
                 optGrp = opt.parent('optgroup');
+            // Update the previously selected order
             if (lastSelectedOrder.length) {
                 options.updateOrder(lastSelectedOrder.parent('optgroup'));
             }
-            // Disables all the controls as no option is selected
             if (opt.length === 0) {
+                // Disable all the controls as no option is selected
                 lastSelectedOrder = {};
                 options.i18nReplace('#add_btn', 'opt_add_button');
                 $('.read-only, .read-only-always').removeAttr('disabled');
@@ -180,21 +292,26 @@ var ext = chrome.extension.getBackgroundPage().ext,
                 $('#order_code').val('');
                 $('#order_label').val('');
                 $('#order_number').val('');
+                // Wipes status updates
                 updates.find('optgroup').remove();
             } else {
+                // An order is selected; start cooking
                 lastSelectedOrder = opt;
                 options.i18nReplace('#add_btn', 'opt_add_new_button');
                 $('.read-only-always').attr('disabled', 'disabled');
                 $('.read-only-always').attr('readonly', 'readonly');
-                // Updates fields and controls to reflect selected order
+                // Update the fields and controls to reflect selected option
                 $('#order_code').val(opt.data('code'));
                 $('#order_label').val(opt.text());
                 $('#order_number').val(optGrp.attr('label'));
                 updates.find('optgroup').remove();
                 var orderUpdates = JSON.parse(opt.data('updates'));
+                // Populate status updates
                 for (var i = 0; i < orderUpdates.length; i++) {
                     updates.append($('<optgroup/>', {
-                        label: options.formatTimeStamp(orderUpdates[i].timeStamp)
+                        label: options.formatTimeStamp(
+                            orderUpdates[i].timeStamp
+                        )
                     }).append($('<option/>', {
                         text: orderUpdates[i].status
                     })));
@@ -203,15 +320,18 @@ var ext = chrome.extension.getBackgroundPage().ext,
                 $('.read-only').removeAttr('readonly');
             }
         }).change();
-        // Adds a new order to options based on the input values
+        // Add a new order to the select based on the input values
         $('#add_btn').click(function (event) {
             var opt = orders.find('option:selected'),
                 optGrp = opt.parent('optgroup');
             if (optGrp.length && opt.length) {
+                // Order was selected; clear that selection and allow creation
                 orders.val([]).change();
                 $('#order_label').focus();
             } else {
+                // Wipe any pre-existing error messages
                 $('#errors').find('li').remove();
+                // User submitted new order so check it out already
                 optGrp = options.loadOrder({
                     code: $('#order_code').val().trim().toUpperCase(),
                     error: '',
@@ -221,24 +341,26 @@ var ext = chrome.extension.getBackgroundPage().ext,
                     updates: []
                 });
                 opt = optGrp.find('option');
+                // Confirm the order meets the criteria
                 if (options.validateOrder(optGrp, true)) {
                     orders.append(optGrp);
                     opt.attr('selected', 'selected');
                     orders.change().focus();
                 } else {
+                    // Show the error messages to the user
                     $.facebox({div: '#message'});
                 }
             }
         });
-        // Prompts user to confirm removal of selected order
+        // Prompt the user to confirm removal of the selected order
         $('#delete_btn').click(function (event) {
             $.facebox({div: '#delete_con'});
         });
-        // Cancels order removal process
+        // Cancel the order removal process
         $('.delete_no_btn').live('click', function (event) {
             $(document).trigger('close.facebox');
         });
-        // Finalizes order removal
+        // Finalize the order removal
         $('.delete_yes_btn').live('click', function (event) {
             var optGrp = orders.find('option:selected').parent('optgroup');
             optGrp.remove();
@@ -247,34 +369,56 @@ var ext = chrome.extension.getBackgroundPage().ext,
         });
     },
 
+    /**
+     * <p>Updates the orders section of the options page with the current
+     * settings.</p>
+     * @private
+     */
     loadOrders: function () {
         var orders = $('#orders');
-        // Ensures clean slate
+        // Start from clean slate
         orders.remove('optgroup');
-        // Creates and inserts options representing orders
+        options.orderNumbers = [];
+        // Create and insert options representing each order
         for (var i = 0; i < ext.orders.length; i++) {
             orders.append(options.loadOrder(ext.orders[i]));
-            // Ensures order number is initially stored
+            // Store order number initially (to prevent duplicates)
             options.orderNumbers.push(ext.orders[i].number);
         }
-        // Loads all event handlers required for managing orders
-        options.loadOrderControlEvents();
     },
 
-    refreshTabSelection: function () {
+    /**
+     * <p>Ensures that the persisted tab is currently visible.</p>
+     * <p>This is called if the user clicks the Options link in the popup while
+     * and options page is already open.</p>
+     */
+    refresh: function () {
+        // Ensure the persisted tab is visible
         $('#' + utils.get('options_active_tab')).click();
     },
 
+    /**
+     * <p>Updates the settings with the values from the options page.</p>
+     * <p>The update manager will be restarted once all settings have been
+     * updated.</p>
+     * @private
+     */
     save: function () {
-        var ordersChanged = options.saveOrders(),
-            updateAction = options.saveFrequencies();
-        if (ordersChanged) {
-            ext.updateManager.restart();
-        } else if (updateAction) {
-            ext.updateManager[updateAction]();
-        }
+        options.saveOrders();
+        options.saveFrequencies();
+        // Reboot the boss so it knows of any changes
+        ext.updateManager.restart();
     },
 
+    /**
+     * <p>Updates the settings with the values from the options page and closes
+     * the current tab.</p>
+     * <p>None of this will happen if the invalid orders are found; in which
+     * case the user is notified of these errors.</p>
+     * @param {Event} [event] The event triggered.
+     * @private
+     * @event
+     */
     saveAndClose: function (event) {
         options.updateOrder($('#orders option:selected').parent('optgroup'));
         if (options.validateOrders()) {
@@ -287,91 +431,128 @@ var ext = chrome.extension.getBackgroundPage().ext,
         }
     },
 
+    /**
+     * <p>Updates the settings with the values from the frequency section of
+     * the options page.</p>
+     * @private
+     */
     saveFrequencies: function () {
-        var frequency = $('#frequency option:selected').val(),
-            oldFrequency = utils.get('frequency');
+        var frequency = $('#frequency option:selected').val();
         utils.set('frequency', parseInt(frequency, 10));
-        // Update manager doesn't need updated as frequency hasn't changed
-        if (frequency === oldFrequency) {
-            return;
-        }
-        // Handles update manager status
-        if (frequency === -1) {
-            if (oldFrequency !== -1) {
-                return 'stop';
-            }
-        } else if (oldFrequency === -1) {
-            return 'start';
-        }
-        return 'restart';
     },
 
+    /**
+     * <p>Updates the settings with the values from the orders section of
+     * the options page.</p>
+     * @private
+     */
     saveOrders: function () {
-        var order = {},
-            orders = [],
-            ordersChanged = false;
+        var order = {}, orders = [];
         /*
-         * Updates each individual order settings based on their
-         * corresponding options.
+         * Update each individual order settings based on their corresponding
+         * options.
          */
         $('#orders optgroup').each(function () {
             order = options.deriveOrder($(this));
             orders.push(order);
-            if (options.orderNumbers.indexOf(order.number) !== -1) {
-                ordersChanged = true;
-            }
         });
-        // Ensures orders data reflects the updated settings
+        // Persist the updated orders
         utils.set('orders', orders);
         ext.orders = orders;
-        return ordersChanged;
     },
 
+    /**
+     * <p>Updates the specified &lt;optgroup&gt; element that represents an
+     * order with values taken from the available fields.</p>
+     * @param {jQuery} optGrp The jQuery wrapped &lt;optgroup&gt; to be
+     * updated.
+     * @private
+     */
     updateOrder: function (optGrp) {
         var opt = optGrp.find('option');
         if (optGrp.length && opt.length) {
             opt.data('code', $('#order_code').val().trim().toUpperCase());
             opt.text($('#order_label').val().trim());
-            optGrp.attr('number', $('#order_number').val().trim().toUpperCase());
+            optGrp.attr('number',
+                    $('#order_number').val().trim().toUpperCase());
             return opt;
         }
     },
 
+    /**
+     * <p>Validates that the specified &lt;optgroup&gt; element that should
+     * represents an order does just that.</p>
+     * <p>This function adds any validation errors it encounters to an
+     * unordered list which should be displayed to the user at some point if
+     * <code>true</code> is returned.</p>
+     * @param {jQuery} optGrp The jQuery wrapped &lt;optgroup&gt; to be
+     * validated.
+     * @param {Boolean} [isNew=false] <code>true</code> if the order has yet to
+     * be added; otherwise <code>false</code>.
+     * @returns {Boolean} <code>true</code> if validation errors were
+     * encountered; otherwise <code>false</code>.
+     * @private
+     */
     validateOrder: function (optGrp, isNew) {
         var opt = optGrp.find('option'),
             code = opt.data('code').trim().toUpperCase(),
             errors = $('#errors'),
             label = opt.text().trim(),
             number = optGrp.attr('label').trim().toUpperCase();
+        /**
+         * <p>Appends a new &lt;li&gt; element containing an internationalized
+         * error <code>String</code> looked up using Chrome to the unordered
+         * list of errors.</p>
+         * @param {String} name The name of the internationalized error message
+         * to be retrieved.
+         * @returns {jQuery} The new &lt;li&gt; element wrapped in jQuery.
+         * @ignore
+         */
         function createError(name) {
             return $('<li/>', {
                 html: chrome.i18n.getMessage(name)
             }).appendTo(errors);
         }
+        // Label is required
         if (label.length === 0) {
             createError('opt_order_label_invalid');
         }
+        // Only validate new order numbers
         if (isNew) {
+            // Number is required and must be available
             if (number.length === 0) {
                 createError('opt_order_number_invalid');
             } else if (!options.isOrderNumberAvailable(number)) {
                 createError('opt_order_number_unavailable');
             }
         }
+        // Zip/post code is required
         if (code.length === 0) {
             createError('opt_order_code_invalid');
         }
         return errors.find('li').length === 0;
     },
 
+    /**
+     * <p>Validates all &lt;optgroup&gt; elements that represent orders that
+     * are to be persisted in <code>localStorage</code>.</p>
+     * <p>This function adds any validation errors it encounters to a unordered
+     * list which should be displayed to the user at some point if
+     * <code>true</code> is returned.</p>
+     * @returns {Boolean} <code>true</code> if validation errors were
+     * encountered; otherwise <code>false</code>.
+     * @private
+     */
     validateOrders: function () {
         var errors = $('#errors'),
             orders = $('#orders optgroup');
-        errors.find('li').remove();
+        // Wipe all pre-existing errors
+        errors.remove('li');
         orders.each(function () {
             var $this = $(this);
-            if (!options.validateOrder($this, false)) {
-                $this.attr('selected', 'selected');
+            if (!options.validateOrder($this)) {
+                // Show user which validation failed validation
+                $this.find('option').attr('selected', 'selected');
                 $('#orders').change().focus();
                 return false;
             }

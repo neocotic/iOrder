@@ -25,10 +25,11 @@
 var utils = {
 
     /**
-     * <p>Returns whether or not the specified key exists in localStorage.</p>
+     * <p>Returns whether or not the specified key exists in
+     * <code>localStorage</code>.</p>
      * @param {String} key The key whose existence is to be checked.
-     * @returns {Boolean} <code>true</code> if the key exists in localStorage;
-     * otherwise <code>false</code>.
+     * @returns {Boolean} <code>true</code> if the key exists in
+     * <code>localStorage</code>; otherwise <code>false</code>.
      */
     exists: function (key) {
         return localStorage.hasOwnProperty(key);
@@ -36,7 +37,7 @@ var utils = {
 
     /**
      * <p>Retrieves the value associated with the specified key from
-     * localStorage.</p>
+     * <code>localStorage</code>.</p>
      * <p>If the value is found it is parsed as JSON before being returned;
      * otherwise undefined is returned.</p>
      * @param {String} key The key of the value to be returned.
@@ -53,7 +54,8 @@ var utils = {
     },
 
     /**
-     * <p>Initializes the value of the specified key in localStorage.</p>
+     * <p>Initializes the value of the specified key in
+     * <code>localStorage</code>.</p>
      * <p>If the value is currently undefined the specified default value will
      * be assigned to it; otherwise it is reassigned to itself.</p>
      * @param {String} key The key whose value is to be initialized.
@@ -72,10 +74,40 @@ var utils = {
     },
 
     /**
-     * <p>Removes the specified key from localStorage.</p>
+     * <p>Left pads a <code>String</code> with a specified
+     * <code>String</code>.</p>
+     * @param {String} str The <code>String</code> to pad out.
+     * @param {Integer} size The size to pad to.
+     * @param {String} [padStr=" "] The <code>String</code> to pad with.
+     * @returns {String} Left padded <code>String</code> or original
+     * <code>String</code> if no padding is necessary or <code>null</code> if
+     * <code>str</code> was <code>null</code>.
+     */
+    leftPad: function (str, size, padStr) {
+        if (typeof padStr === 'undefined') {
+            padStr = ' ';
+        } else {
+            padStr = String(padStr);
+        }
+        if (str === null) {
+            return str;
+        }
+        str = String(str);
+        var pads = size - str.length;
+        if (pads <= 0) {
+            return str;
+        }
+        for (var i = 0; i < pads; i++) {
+            str = padStr + str;
+        }
+        return str;
+    },
+
+    /**
+     * <p>Removes the specified key from <code>localStorage</code>.</p>
      * @param {String} key The key to be removed.
      * @returns {Boolean} <code>true</code> if a key was removed from
-     * localStorage; otherwise <code>false</code>.
+     * <code>localStorage</code>; otherwise <code>false</code>.
      */
     remove: function (key) {
         var exists = utils.exists(key);
@@ -85,9 +117,9 @@ var utils = {
 
     /**
      * <p>Copies the value of the existing key to that of the new key then
-     * removes the old key from localStorage.</p>
-     * <p>If the old key doesn't exist in localStorage the specified default
-     * value will be assigned to it instead.</p>
+     * removes the old key from <code>localStorage</code>.</p>
+     * <p>If the old key doesn't exist in <code>localStorage</code> the
+     * specified default value will be assigned to it instead.</p>
      * @param {String} oldKey The key whose value is to be copied and then
      * removed.
      * @param {String} newKey The key whose value is to be set.
@@ -104,7 +136,8 @@ var utils = {
     },
 
     /**
-     * <p>Sets the value of the specified key in localStorage.</p>
+     * <p>Sets the value of the specified key in
+     * <code>localStorage</code>.</p>
      * <p>If the specified value is undefined it is assigned directly to the
      * key; otherwise it is transformed to a JSON String.</p>
      * @param {String} key The key whose value is to be set.
