@@ -578,7 +578,7 @@ var ext = {
         utils.init('lastRead', $.now());
         utils.init('lastUpdated', $.now());
         utils.init('notifications', true);
-        utils.init('notificationDuration', 3000);
+        utils.init('notificationDuration', 6 * 1000);
         ext.initOrders();
         chrome.extension.onRequest.addListener(ext.onRequest);
         // It's nice knowing what version is running
