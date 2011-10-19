@@ -27,13 +27,6 @@
 var ext = {
 
     /**
-     * <p>The list of copy request features supported by the extension.</p>
-     * @private
-     * @type Integer
-     */
-    badgeCount: 0,
-
-    /**
      * <p>The details of the update frequencies supported.</p>
      * @type Object[]
      */
@@ -184,7 +177,7 @@ var ext = {
                 progress = 0;
             this.updating = true;
             // Update the UI to show I'm busy
-            ext.showBadge();
+            ext.notify();
             ext.updatePopup();
             /**
              * <p>Called when the AJAX request has been parsed and read for
@@ -203,7 +196,7 @@ var ext = {
                     utils.set('orders', ext.orders);
                     utils.set('lastUpdated', $.now());
                     // Update the UI again to reflect the changes
-                    ext.showBadge();
+                    ext.notify();
                     ext.updatePopup();
                     // Now read the message stack
                     for (var i = 0; i < this.messages.length; i++) {
@@ -274,6 +267,12 @@ var ext = {
     },
 
     /**
+     * <p>The number of status updates since the user last cleared it.</p>
+     * @type Integer
+     */
+    updates: 0,
+
+    /**
      * <p>The current version of this extension.</p>
      * @private
      * @type String
@@ -325,7 +324,7 @@ var ext = {
             }).html(chrome.i18n.getMessage('refreshing_text'));
         }
         // Add the clear button if badges are visibile; they can be distracting
-        if (ext.badgeCount) {
+        if (ext.updates) {
             footer.find('div:first-child').append(
                 $('<button/>', {
                     id: 'clearLink',
@@ -553,14 +552,33 @@ var ext = {
     },
 
     /**
+     * <p>Indicates whether or not any orders contain errors.</p>
+     * @returns {Boolean} <code>true</code> if one or more orders have an
+     * error; otherwise <code>false</code>.
+     */
+    hasErrors: function () {
+        var errors = false;
+        for (var i = 0; i < ext.orders.length; i++) {
+            if (ext.orders[i].error) {
+                errors = true;
+                break;
+            }
+        }
+        return errors;
+    },
+
+    /**
      * <p>Initializes the background page.</p>
      * <p>This involves initializing the settings, adding the request
      * listeners and starting the update manager.</p>
      */
     init: function () {
+        utils.init('badges', true);
         utils.init('frequency', ext.frequencies[1].value);
         utils.init('lastRead', $.now());
         utils.init('lastUpdated', $.now());
+        utils.init('notifications', true);
+        utils.init('notificationDuration', 3000);
         ext.initOrders();
         chrome.extension.onRequest.addListener(ext.onRequest);
         // It's nice knowing what version is running
@@ -617,14 +635,42 @@ var ext = {
     },
 
     /**
-     * <p>Clears any badge currently being displayed.</p>
+     * <p>Ensures any badge notification is cleared.</p>
+     * @param {Boolean} [retainTimeStamp=false] <code>true</code> to avoid
+     * updating the persisted <code>lastRead</code> time stamp; otherwise
+     * <code>false</code>.
+     * @private
      */
-    markRead: function () {
-        ext.badgeCount = 0;
-        utils.set('lastRead', $.now());
-        chrome.browserAction.setBadgeText({text: ''});
+    markRead: function (retainTimeStamp) {
+        ext.updates = 0;
+        if (!retainTimeStamp) {
+            utils.set('lastRead', $.now());
+        }
+        ext.setBadge();
         // Update the UI so the clear button vanishes
         ext.updatePopup();
+    },
+
+    /**
+     * <p>Attempts to notify the user of any unread status updates.</p>
+     * <p>If there are no status updates any visible badge will be removed.</p>
+     * @private
+     */
+    notify: function () {
+        var oldUpdates = ext.updates;
+        ext.updates = ext.getStatusUpdates();
+        // Update/clear badge depending on setting and updates available
+        if (utils.get('badges')) {
+            ext.setBadge(ext.updates || '');
+        } else {
+            ext.setBadge();
+        }
+        // Show the notification if setting enabled and has new updates
+        if (utils.get('notifications') && ext.updates > oldUpdates) {
+            webkitNotifications.createHTMLNotification(
+                chrome.extension.getURL('pages/notification.html')
+            ).show();
+        }
     },
 
     /**
@@ -728,16 +774,16 @@ var ext = {
     },
 
     /**
-     * <p>Displays a badge indicating all unread status updates.</p>
-     * <p>If there are no status updates the badge is removed.</p>
+     * <p>Sets the badge text to the specified <code>String</code>.</p>
+     * <p>If no <code>String</code> is specified the badge is cleared.</p>
+     * @param {String} [str=""] The <code>String</code> to be displayed.
      * @private
      */
-    showBadge: function () {
-        var str = '';
-        ext.badgeCount = ext.getStatusUpdates();
-        chrome.browserAction.setBadgeText({
-            text: str + (ext.badgeCount || '')
-        });
+    setBadge: function (str) {
+        if (typeof str === 'undefined') {
+            str = '';
+        }
+        chrome.browserAction.setBadgeText({text: String(str)});
     },
 
     /**

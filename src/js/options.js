@@ -155,11 +155,22 @@ var options = {
         options.i18nReplace('#general_hdr, #general_nav',
                 'opt_general_header');
         options.i18nReplace('#frequency_txt', 'opt_frequency_text');
+        options.i18nReplace('#notifications_hdr', 'opt_notification_header');
+        options.i18nReplace('#badges_txt', 'opt_badge_text');
+        options.i18nReplace('#notifications_txt', 'opt_notification_text');
+        options.i18nReplace('#notificationDuration_txt1',
+                'opt_notification_timer_text1');
+        options.i18nReplace('#notificationDuration_txt2',
+                'opt_notification_timer_text2');
         options.i18nReplace('.save-btn', 'opt_save_button');
         options.i18nReplace('#footer', 'opt_footer',
                 String(new Date().getFullYear()));
         // Insert internationalized help/confirmation sections
         options.i18nReplace('#frequency_help', 'help_frequency');
+        options.i18nReplace('#badges_help', 'help_badges');
+        options.i18nReplace('#notifications_help', 'help_notifications');
+        options.i18nReplace('#notificationDuration_help',
+                'help_notificationDuration');
         options.i18nReplace('#delete_con', 'confirm_delete');
         options.i18nReplace('#order_label_help', 'help_order_label');
         options.i18nReplace('#order_number_help', 'help_order_number');
@@ -213,6 +224,7 @@ var options = {
      */
     load: function (loadEvents) {
         options.loadFrequencies();
+        options.loadNotifications();
         options.loadOrders();
         // Load all event handlers required for managing orders, if required
         if (loadEvents) {
@@ -239,6 +251,29 @@ var options = {
         // Select the option for the current update frequency
         frequency.find('option[value="' + utils.get('frequency') +
                 '"]').attr('selected', 'selected');
+    },
+
+    /**
+     * <p>Updates the notification section of the options page with the current
+     * settings.</p>
+     * @private
+     */
+    loadNotifications: function () {
+        if (utils.get('badges')) {
+            $('#badges').attr('checked', 'checked');
+        } else {
+            $('#badges').removeAttr('checked');
+        }
+        if (utils.get('notifications')) {
+            $('#notifications').attr('checked', 'checked');
+        } else {
+            $('#notifications').removeAttr('checked');
+        }
+        var timeInSecs = 0;
+        if (utils.get('notificationDuration') > timeInSecs) {
+            timeInSecs = utils.get('notificationDuration') / 1000;
+        }
+        $('#notificationDuration').val(timeInSecs);
     },
 
     /**
@@ -405,6 +440,7 @@ var options = {
      */
     save: function () {
         options.saveOrders();
+        options.saveNotifications();
         options.saveFrequencies();
         // Reboot the boss so it knows of any changes
         ext.updateManager.restart();
@@ -439,6 +475,19 @@ var options = {
     saveFrequencies: function () {
         var frequency = $('#frequency option:selected').val();
         utils.set('frequency', parseInt(frequency, 10));
+    },
+
+    /**
+     * <p>Updates the settings with the values from the notification section of
+     * the options page.</p>
+     * @private
+     */
+    saveNotifications: function () {
+        utils.set('badges', $('#badges').is(':checked'));
+        utils.set('notifications', $('#notifications').is(':checked'));
+        var timeInSecs = $('#notificationDuration').val();
+        timeInSecs = (timeInSecs) ? parseInt(timeInSecs, 10) * 1000 : 0;
+        utils.set('notificationDuration', timeInSecs);
     },
 
     /**

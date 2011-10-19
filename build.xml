@@ -7,7 +7,7 @@
     <property name="jsdoc.toolkit.classpath" value="build/lib/jsdoc-toolkit-ant-task-1.1.2.jar;${jsdoc.toolkit}java/classes/js.jar" />
     <property name="jslint.classpath" value="build/lib/jslint4java-2.0.0.jar" />
     <property name="jsmin.classpath" value="build/lib/jsmin.0.2.4.jar" />
-    <property name="base.files" value="js/background.js,js/options.js,js/popup.js,js/utils.js" />
+    <property name="base.files" value="js/background.js,js/notification.js,js/options.js,js/popup.js,js/utils.js" />
     <property name="base.dirs" value="bin,bin/_locales,bin/images,bin/js,bin/pages" />
     <property name="base.locale.dirs" value="bin/_locales/en" />
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
