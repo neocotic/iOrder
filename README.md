@@ -1,4 +1,4 @@
-# [iOrder](#) - Google Chrome Extension
+# [iOrder](https://chrome.google.com/webstore/detail/kflemogpkbophbipihnbcmlplbihbdhb) - Google Chrome Extension
 
 ## Build Requirements
 In order to build iOrder, you need to have the following:
