@@ -35,7 +35,7 @@ var ext = {
 
     /**
      * <p>The details of the update frequencies supported.</p>
-     * @type Object
+     * @type Object[]
      */
     frequencies: [{
         text: chrome.i18n.getMessage('freq_disabled'),
