@@ -808,7 +808,7 @@ var ext = {
             var heading = $(data).find('.order .delivery-group .sb-heading'),
                 status = heading.find('h4 span:first-child'),
                 trackingUrl = heading.find('.group-actions tr:first-child ' +
-                    'td:first-child a[href^="' + ext.trackerUrl + '"]');
+                    'td a[href^="' + ext.trackerUrl + '"]');
             // Dig deeper and try and get the actual values
             status = (status.length) ? status.text() : '';
             trackingUrl = (trackingUrl.length) ? trackingUrl.attr('href') : '';
