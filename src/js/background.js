@@ -833,7 +833,10 @@ var ext = {
                 order.error = 'update_status_not_found_error';
                 return;
             }
-            order.trackingUrl = trackingUrl;
+            // Only update the Track link if it was found
+            if (trackingUrl) {
+                order.trackingUrl = trackingUrl;
+            }
             // Clear any pre-existing errors
             order.error = '';
         }).error(function () {
