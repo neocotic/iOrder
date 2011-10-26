@@ -369,6 +369,23 @@ var ext = {
             ).appendTo(tbody);
             footer.find('#refreshLink').remove();
         }
+        /**
+         * <p>Helper function that attempts to derive the status text to be
+         * displayed for the indexed order.</p>
+         * <p>The status text will either be that of the latest update or a
+         * single whitespace character if no status updates have been detected
+         * yet for that order.</p>
+         * @param {Integer} index The index of the stored order.
+         * @returns {String} The derived status text or a single space.
+         * @ignore
+         */
+        function getStatusText(index) {
+            var length = ext.orders[index].updates.length;
+            if (length === 0) {
+                return ' ';
+            }
+            return ext.orders[index].updates[length - 1].status;
+        }
         // Otherwise; let's create a row for each order
         for (var i = 0; i < ext.orders.length; i++) {
             $('<tr/>').append(
@@ -388,13 +405,7 @@ var ext = {
                 ),
                 $('<td/>').append(
                     $('<span/>', {
-                        text: function () {
-                            var length = ext.orders[i].updates.length;
-                            if (length === 0) {
-                                return ' ';
-                            }
-                            return ext.orders[i].updates[length - 1].status;
-                        }
+                        text: getStatusText(i)
                     })
                 )
             ).appendTo(tbody);
