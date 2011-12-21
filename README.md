@@ -28,4 +28,5 @@ please visit the project's homepage;
 
 http://neocotic.com/iOrder
 
+[@neocotic]: https://twitter.com/#!/neocotic
 [iOrder]: https://chrome.google.com/webstore/detail/kflemogpkbophbipihnbcmlplbihbdhb
