@@ -5,6 +5,17 @@
         "default_popup": "pages/popup.html",
         "default_title": "__MSG_name__"
     },
+    "content_scripts": [
+        {
+            "js": [
+                "js/install.js"
+            ],
+            "matches": [
+                "http://*.neocotic.com/*"
+            ],
+            "run_at": "document_end"
+        }
+    ],
     "default_locale": "en",
     "description": "__MSG_description__",
     "icons": {
@@ -25,5 +36,5 @@
         "tabs",
         "https://store.apple.com/"
     ],
-    "version": "1.0.2"
+    "version": "1.0.3"
 }

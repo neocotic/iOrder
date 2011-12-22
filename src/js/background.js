@@ -57,6 +57,14 @@ var ext = {
     }],
 
     /**
+     * <p>The domain of this extension's homepage.</p>
+     * @since 1.0.3
+     * @private
+     * @type String
+     */
+    homepage: 'neocotic.com',
+
+    /**
      * <p>The base URL (incl. domain and path) of order pages on the Apple US
      * store.</p>
      * <p>The remaining path segments include the number and delivery zip/post
@@ -456,6 +464,36 @@ var ext = {
     },
 
     /**
+     * <p>Injects and executes the <code>install.js</code> script within each of
+     * the tabs provided (where valid).</p>
+     * @param {Object[]} tabs The tabs to execute the script in.
+     * @since 1.0.3
+     * @private
+     */
+    executeScriptsInExistingTabs: function (tabs) {
+        for (var i = 0; i < tabs.length; i++) {
+            if (tabs[i].url.indexOf(ext.homepage) !== -1) {
+                chrome.tabs.executeScript(tabs[i].id, {file: 'js/install.js'});
+            }
+        }
+    },
+
+    /**
+     * <p>Injects and executes the <code>install.js</code> script within all the
+     * tabs (where valid) of each Chrome window.</p>
+     * @since 1.0.3
+     * @private
+     */
+    executeScriptsInExistingWindows: function () {
+        chrome.windows.getAll(null, function (windows) {
+            for (var i = 0; i < windows.length; i++) {
+                chrome.tabs.query({windowId: windows[i].id},
+                        ext.executeScriptsInExistingTabs);
+            }
+        });
+    },
+
+    /**
      * <p>Formats the given time stamp for display in the popup.</p>
      * <p>The time stamp is formatted as <code>HH:mm</code>.</p>
      * @param {Integer} timeStamp The time stamp to be formatted.
@@ -598,6 +636,8 @@ var ext = {
         // It's nice knowing what version is running
         $.getJSON(chrome.extension.getURL('manifest.json'), function (data) {
             ext.version = data.version;
+            // Execute content scripts now that we know the version
+            ext.executeScriptsInExistingWindows();
         });
         // It's alive!
         ext.updateManager.start();
@@ -758,32 +798,37 @@ var ext = {
      * @private
      */
     selectOrCreateTab: function (url, callback) {
-        chrome.tabs.getAllInWindow(null, function (tabs) {
-            var tab;
-            // Try to find an existing tab
-            for (var i = 0; i < tabs.length; i++) {
-                if (tabs[i].url.indexOf(url) === 0) {
-                    tab = tabs[i];
-                    break;
+        chrome.windows.getCurrent(function (win) {
+            chrome.tabs.query({
+                active: true,
+                windowId: win.id
+            }, function (tabs) {
+                var tab;
+                // Try to find an existing tab
+                for (var i = 0; i < tabs.length; i++) {
+                    if (tabs[i].url.indexOf(url) === 0) {
+                        tab = tabs[i];
+                        break;
+                    }
                 }
-            }
-            if (tab) {
-                // Found one! Now to select it
-                chrome.tabs.update(tab.id, {
-                    selected: true
-                });
-                if (callback) {
-                    callback(false);
+                if (tab) {
+                    // Found one! Now to select it
+                    chrome.tabs.update(tab.id, {
+                        selected: true
+                    });
+                    if (callback) {
+                        callback(false);
+                    }
+                } else {
+                    // Ach well, let's just create a new one
+                    chrome.tabs.create({
+                        url: url
+                    });
+                    if (callback) {
+                        callback(true);
+                    }
                 }
-            } else {
-                // Ach well, let's just create a new one
-                chrome.tabs.create({
-                    url: url
-                });
-                if (callback) {
-                    callback(true);
-                }
-            }
+            });
         });
     },
 
