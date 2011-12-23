@@ -4,6 +4,7 @@
 * [#9](https://github.com/neocotic/iOrder/issues/9): Replace API calls deprecated by [Chrome 16](http://code.google.com/chrome/extensions/whats_new.html#16)
 * Change to [MIT license](http://www.opensource.org/licenses/mit-license.php)
 * Update homepage links
+* Minor bug fixes
 
 2011.10.26, Version 1.0.2
 
