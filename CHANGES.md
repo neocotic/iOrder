@@ -1,4 +1,4 @@
-2011.12.22, Version 1.0.3
+2011.12.23, Version 1.0.3
 
 * [#8](https://github.com/neocotic/iOrder/issues/8): Add support for [inline installation](http://code.google.com/chrome/webstore/docs/inline_installation.html)
 * [#9](https://github.com/neocotic/iOrder/issues/9): Replace API calls deprecated by [Chrome 16](http://code.google.com/chrome/extensions/whats_new.html#16)
