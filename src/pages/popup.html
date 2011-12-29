@@ -1,35 +1,35 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-    <head>
-        <style type="text/css">
-            a {color: #12C; text-decoration: none;}
-            a:hover {text-decoration: underline;}
-            body {font-family: Arial, Verdana; font-size: 12px; overflow: visible; width: 400px;}
-            button {background-image: -webkit-gradient(linear, left top, left bottom, from(whiteSmoke), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, whiteSmoke, #F1F1F1); -webkit-border-radius: 2px; -webkit-user-select: none; background-color: whiteSmoke; background-image: linear-gradient(top, whiteSmoke, #F1F1F1); background-image: -o-linear-gradient(top, whiteSmoke, #F1F1F1); border: 1px solid gainsboro; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 2px; color: #666; cursor: pointer; font-size: 11px; font-weight: bold; height: 22px; line-height: 1em; margin: auto 6px auto auto; padding: 0 8px; text-align: center;}
-            button:disabled {background-image: -webkit-gradient(linear,left top,left bottom, from(#EBEBE4), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, #EBEBE4, #F1F1F1); background-color: #EBEBE4; background-image: linear-gradient(top, #EBEBE4, #F1F1F1); background-image: -o-linear-gradient(top, #EBEBE4, #F1F1F1); border: 1px solid #C6C6C6; color: #AAA; cursor: default;}
-            button:hover:not(:disabled) {background-image: -webkit-gradient(linear,left top,left bottom, from(#F8F8F8), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, #F8F8F8, #F1F1F1); -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1); background-color: #F8F8F8; background-image: linear-gradient(top, #F8F8F8, #F1F1F1); background-image: -o-linear-gradient(top, #F8F8F8, #F1F1F1); border: 1px solid #C6C6C6; box-shadow: 0 1px 1px rgba(0,0,0,0.1); color: #333;}
-            footer, header {width: 100%;}
-            footer div, header div {display: inline-block;}
-            footer div:first-child, header div:first-child {text-align: left;}
-            footer div:first-child {width: 40%;}
-            footer div:last-child, header div:last-child {text-align: right;}
-            footer div:last-child {color: grey; width: 60%;}
-            header a {padding-left: 4px;}
-            header div:first-child {width: 33%;}
-            header div:last-child {width: 66%;}
-            #errorIcon {cursor: help; padding-right: 4px;}
-            #orders {border-top: 1px solid #B5C7DE; border-collapse: collapse; margin: 10px 0; width: 100%;}
-            #orders tbody tr {border-bottom: 1px solid #CDCDCD;}
-            #orders tbody tr td {vertical-align: top;}
-            #orders td, #orders th {padding: 3px 4px 2px;}
-            #orders th {text-align: left;}
-            #orders th:first-child, #orders th:last-child {width: 25%;}
-            #orders thead {background: #EBEFF9; border-bottom: 1px solid #EDEFF5;}
-            #orders tbody tr td[colspan="3"] {font-style: italic;}
-            .error {color: #DD4B39; cursor: help;}
-        </style>
-        <script type="application/javascript" src="../js/utils.js"></script>
-        <script type="application/javascript" src="../js/popup.js"></script>
-    </head>
-    <body onload="popup.init();"></body>
+  <head>
+    <style type="text/css">
+      a {color: #12C; text-decoration: none;}
+      a:hover {text-decoration: underline;}
+      body {font-family: Arial, Verdana; font-size: 12px; overflow: visible; width: 400px;}
+      button {background-image: -webkit-gradient(linear, left top, left bottom, from(whiteSmoke), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, whiteSmoke, #F1F1F1); -webkit-border-radius: 2px; -webkit-user-select: none; background-color: whiteSmoke; background-image: linear-gradient(top, whiteSmoke, #F1F1F1); background-image: -o-linear-gradient(top, whiteSmoke, #F1F1F1); border: 1px solid gainsboro; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 2px; color: #666; cursor: pointer; font-size: 11px; font-weight: bold; height: 22px; line-height: 1em; margin: auto 6px auto auto; padding: 0 8px; text-align: center;}
+      button:disabled {background-image: -webkit-gradient(linear,left top,left bottom, from(#EBEBE4), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, #EBEBE4, #F1F1F1); background-color: #EBEBE4; background-image: linear-gradient(top, #EBEBE4, #F1F1F1); background-image: -o-linear-gradient(top, #EBEBE4, #F1F1F1); border: 1px solid #C6C6C6; color: #AAA; cursor: default;}
+      button:hover:not(:disabled) {background-image: -webkit-gradient(linear,left top,left bottom, from(#F8F8F8), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, #F8F8F8, #F1F1F1); -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1); background-color: #F8F8F8; background-image: linear-gradient(top, #F8F8F8, #F1F1F1); background-image: -o-linear-gradient(top, #F8F8F8, #F1F1F1); border: 1px solid #C6C6C6; box-shadow: 0 1px 1px rgba(0,0,0,0.1); color: #333;}
+      footer, header {width: 100%;}
+      footer div, header div {display: inline-block;}
+      footer div:first-child, header div:first-child {text-align: left;}
+      footer div:first-child {width: 40%;}
+      footer div:last-child, header div:last-child {text-align: right;}
+      footer div:last-child {color: grey; width: 60%;}
+      header a {padding-left: 4px;}
+      header div:first-child {width: 33%;}
+      header div:last-child {width: 66%;}
+      #errorIcon {cursor: help; padding-right: 4px;}
+      #orders {border-top: 1px solid #B5C7DE; border-collapse: collapse; margin: 10px 0; width: 100%;}
+      #orders tbody tr {border-bottom: 1px solid #CDCDCD;}
+      #orders tbody tr td {vertical-align: top;}
+      #orders td, #orders th {padding: 3px 4px 2px;}
+      #orders th {text-align: left;}
+      #orders th:first-child, #orders th:last-child {width: 25%;}
+      #orders thead {background: #EBEFF9; border-bottom: 1px solid #EDEFF5;}
+      #orders tbody tr td[colspan="3"] {font-style: italic;}
+      .error {color: #DD4B39; cursor: help;}
+    </style>
+    <script src="../js/utils.js"></script>
+    <script src="../js/popup.js"></script>
+  </head>
+  <body onload="popup.init()"></body>
 </html>

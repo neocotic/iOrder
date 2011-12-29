@@ -1,402 +1,402 @@
 {
-    "actions_header": {
-        "message": "Actions"
-    },
-    "clear_text": {
-        "message": "Clear"
-    },
-    "clear_title": {
-        "message": "Resets the badge"
-    },
-    "confirm_delete": {
-        "message": "$O_PARA$This action is $O_BOLD$permanent$C_BOLD$ and cannot be reversed.$C_PARA$$O_PARA$Do you want to continue anyway?$C_PARA$$BUTTONS$",
-        "placeholders": {
-            "buttons": {
-                "content": "<div style=\"text-align: right\"><button class=\"delete_yes_btn\">Yes</button><button class=\"delete_no_btn\">No</button></div>"
-            },
-            "c_bold": {
-                "content": "</strong>"
-            },
-            "c_para": {
-                "content": "</p>"
-            },
-            "o_bold": {
-                "content": "<strong>"
-            },
-            "o_para": {
-                "content": "<p>"
-            }
-        }
-    },
-    "description": {
-        "message": "Keep updated with the progress of your iDevice order"
-    },
-    "freq_disabled": {
-        "message": "Disabled"
-    },
-    "freq_hour": {
-        "message": "1 hour"
-    },
-    "freq_hours": {
-        "message": "$1 hours"
-    },
-    "freq_minute": {
-        "message": "1 minute"
-    },
-    "freq_minutes": {
-        "message": "$1 minutes"
-    },
-    "freq_second": {
-        "message": "1 second"
-    },
-    "freq_seconds": {
-        "message": "$1 seconds"
-    },
-    "help_badges": {
-        "message": "$O_PARA$This indicates whether or not a badge will display the number of status updates detected.$C_PARA$",
-        "placeholders": {
-            "c_para": {
-                "content": "</p>"
-            },
-            "o_para": {
-                "content": "<p>"
-            }
-        }
-    },
-    "help_frequency": {
-        "message": "$O_PARA$How often $O_BOLD$iOrder$C_BOLD$ should check your $O_LINK_1$Apple$C_LINK$ orders for status updates.$C_PARA$$O_PARA$If $O_BOLD$Disabled$C_BOLD$ is selected you will need to manually press $O_EMPH$Refresh$C_EMPH$ to check for updates.$C_PARA$",
-        "placeholders": {
-            "c_bold": {
-                "content": "</strong>"
-            },
-            "c_emph": {
-                "content": "</em>"
-            },
-            "c_link": {
-                "content": "</a>"
-            },
-            "c_para": {
-                "content": "</p>"
-            },
-            "o_bold": {
-                "content": "<strong>"
-            },
-            "o_emph": {
-                "content": "<em>"
-            },
-            "o_link_1": {
-                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
-            },
-            "o_para": {
-                "content": "<p>"
-            }
-        }
-    },
-    "help_notificationDuration": {
-        "message": "$O_PARA$The time (in seconds) to display the desktop notification before automatically hiding it again.$C_PARA$$O_PARA$Enter $O_BOLD$0$C_BOLD$ to disable auto-hide functionality.$C_PARA$",
-        "placeholders": {
-            "c_bold": {
-                "content": "</strong>"
-            },
-            "c_para": {
-                "content": "</p>"
-            },
-            "o_bold": {
-                "content": "<strong>"
-            },
-            "o_para": {
-                "content": "<p>"
-            }
-        }
-    },
-    "help_notifications": {
-        "message": "$O_PARA$This indicates whether or not desktop notifications will appear whenever a new status update is detected.$C_PARA$",
-        "placeholders": {
-            "c_para": {
-                "content": "</p>"
-            },
-            "o_para": {
-                "content": "<p>"
-            }
-        }
-    },
-    "help_order_code": {
-        "message": "$O_PARA$The Zip/Post code of the delivery address for your $O_LINK_1$Apple$C_LINK$ order.$C_PARA$$O_PARA$The following rules apply;$C_PARA$$O_LIST$$O_ITEM$Must only contain alphanumeric characters$C_ITEM$$O_ITEM$Must contain spaces if required (post codes $O_EMPH$only$C_EMPH$)$C_ITEM$$C_LIST$",
-        "placeholders": {
-            "c_emph": {
-                "content": "</em>"
-            },
-            "c_item": {
-                "content": "</li>"
-            },
-            "c_link": {
-                "content": "</a>"
-            },
-            "c_list": {
-                "content": "</ul>"
-            },
-            "c_para": {
-                "content": "</p>"
-            },
-            "o_emph": {
-                "content": "<em>"
-            },
-            "o_item": {
-                "content": "<li>"
-            },
-            "o_link_1": {
-                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
-            },
-            "o_list": {
-                "content": "<ul>"
-            },
-            "o_para": {
-                "content": "<p>"
-            }
-        }
-    },
-    "help_order_label": {
-        "message": "$O_PARA$A short label to help you quickly identify your $O_LINK_1$Apple$C_LINK$ order.$C_PARA$$O_PARA$The following rules apply;$C_PARA$$O_LIST$$O_ITEM$Must only contain alphanumeric characters$C_ITEM$$C_LIST$",
-        "placeholders": {
-            "c_item": {
-                "content": "</li>"
-            },
-            "c_link": {
-                "content": "</a>"
-            },
-            "c_list": {
-                "content": "</ul>"
-            },
-            "c_para": {
-                "content": "</p>"
-            },
-            "o_item": {
-                "content": "<li>"
-            },
-            "o_link_1": {
-                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
-            },
-            "o_list": {
-                "content": "<ul>"
-            },
-            "o_para": {
-                "content": "<p>"
-            }
-        }
-    },
-    "help_order_number": {
-        "message": "$O_PARA$The number of your $O_LINK_1$Apple$C_LINK$ order (e.g. W123456789).$C_PARA$$O_PARA$The following rules apply;$C_PARA$$O_LIST$$O_ITEM$Must be unique$C_ITEM$$O_ITEM$Must only contain alphanumeric characters$C_ITEM$$C_LIST$$O_PARA$This $O_EMPH$cannot$C_EMPH$ be changed once added.$C_PARA$",
-        "placeholders": {
-            "c_emph": {
-                "content": "</em>"
-            },
-            "c_item": {
-                "content": "</li>"
-            },
-            "c_link": {
-                "content": "</a>"
-            },
-            "c_list": {
-                "content": "</ul>"
-            },
-            "c_para": {
-                "content": "</p>"
-            },
-            "o_emph": {
-                "content": "<em>"
-            },
-            "o_item": {
-                "content": "<li>"
-            },
-            "o_link_1": {
-                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
-            },
-            "o_list": {
-                "content": "<ul>"
-            },
-            "o_para": {
-                "content": "<p>"
-            }
-        }
-    },
-    "help_updates": {
-        "message": "$O_PARA$A list of status updates detected by $O_BOLD$iOrder$C_BOLD$ so far.$C_PARA$$O_PARA$The date/time associated with each update indicates when it was detected and $O_EMPH$may not$C_EMPH$ be exactly when your $O_LINK_1$Apple$C_LINK$ order was updated.$C_PARA$",
-        "placeholders": {
-            "c_bold": {
-                "content": "</strong>"
-            },
-            "c_emph": {
-                "content": "</em>"
-            },
-            "c_link": {
-                "content": "</a>"
-            },
-            "c_para": {
-                "content": "</p>"
-            },
-            "o_bold": {
-                "content": "<strong>"
-            },
-            "o_emph": {
-                "content": "<em>"
-            },
-            "o_link_1": {
-                "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
-            },
-            "o_para": {
-                "content": "<p>"
-            }
-        }
-    },
-    "loading": {
-        "message": "..."
-    },
-    "name": {
-        "message": "iOrder"
-    },
-    "no_orders_text": {
-        "message": "No orders found. $O_LINK_1$Add some$C_LINK$",
-        "placeholders": {
-            "c_link": {
-                "content": "</a>"
-            },
-            "o_link_1": {
-                "content": "<a href=\"#\" onclick=\"popup.options('orders')\">"
-            }
-        }
-    },
-    "notification": {
-        "message": "One or more orders have been updated!"
-    },
-    "opt_add_button": {
-        "message": "Add"
-    },
-    "opt_add_new_button": {
-        "message": "Add New"
-    },
-    "opt_badge_text": {
-        "message": "Enable badge"
-    },
-    "opt_delete_button": {
-        "message": "Delete"
-    },
-    "opt_errors_header": {
-        "message": "The following problem(s) need to be corrected;"
-    },
-    "opt_footer": {
-        "message": "&copy;$1 $AUTHOR_LINK$",
-        "placeholders": {
-            "author_link": {
-                "content": "<a href=\"http://neocotic.com\" target=\"_blank\">Alasdair Mercer</a>"
-            }
-        }
-    },
-    "opt_frequency_text": {
-        "message": "Automatically update every"
-    },
-    "opt_general_header": {
-        "message": "General"
-    },
-    "opt_help_text": {
-        "message": "Read help documentation"
-    },
-    "opt_notification_header": {
-        "message": "Notifications"
-    },
-    "opt_notification_text": {
-        "message": "Enable notifications"
-    },
-    "opt_notification_timer_text1": {
-        "message": "Auto-hide notifications after"
-    },
-    "opt_notification_timer_text2": {
-        "message": "seconds"
-    },
-    "opt_order_code_invalid": {
-        "message": "Zip/Post Code is missing"
-    },
-    "opt_order_code_text": {
-        "message": "Zip/Post Code"
-    },
-    "opt_order_header": {
-        "message": "Orders"
-    },
-    "opt_order_label_invalid": {
-        "message": "Label is missing"
-    },
-    "opt_order_label_text": {
-        "message": "Label"
-    },
-    "opt_order_number_invalid": {
-        "message": "Number is missing"
-    },
-    "opt_order_number_text": {
-        "message": "Number"
-    },
-    "opt_order_updates_text": {
-        "message": "Updates"
-    },
-    "opt_order_number_unavailable": {
-        "message": "Number already exists"
-    },
-    "opt_save_button": {
-        "message": "Save &amp; Close"
-    },
-    "options_text": {
-        "message": "Options"
-    },
-    "options_title": {
-        "message": "Configure iOrder"
-    },
-    "order_header": {
-        "message": "Order"
-    },
-    "order_title": {
-        "message": "View this order"
-    },
-    "orders_text": {
-        "message": "Orders"
-    },
-    "orders_title": {
-        "message": "View all your orders"
-    },
-    "popup_footer_text": {
-        "message": "Updated: $1 - Frequency: $2"
-    },
-    "refresh_text": {
-        "message": "Refresh"
-    },
-    "refresh_title": {
-        "message": "Updates the progress of all orders"
-    },
-    "refreshing_text": {
-        "message": "Refreshing..."
-    },
-    "refreshing_title": {
-        "message": "Currently updating progress of all orders. Please wait..."
-    },
-    "status_header": {
-        "message": "Status"
-    },
-    "track_text": {
-        "message": "Track"
-    },
-    "track_title": {
-        "message": "Track this order"
-    },
-    "update_errors_text": {
-        "message": "Some orders could not be updated"
-    },
-    "update_invalid_page_error": {
-        "message": "Order page contained no data"
-    },
-    "update_invalid_status_error": {
-        "message": "Order status was not recognised"
-    },
-    "update_page_not_found_error": {
-        "message": "Order page could not be found"
-    },
-    "update_status_not_found_error": {
-        "message": "Order status could not be found"
+  "actions_header": {
+    "message": "Actions"
+  },
+  "clear_text": {
+    "message": "Clear"
+  },
+  "clear_title": {
+    "message": "Resets the badge"
+  },
+  "confirm_delete": {
+    "message": "$O_PARA$This action is $O_BOLD$permanent$C_BOLD$ and cannot be reversed.$C_PARA$$O_PARA$Do you want to continue anyway?$C_PARA$$BUTTONS$",
+    "placeholders": {
+      "buttons": {
+        "content": "<div style=\"text-align: right\"><button class=\"delete_yes_btn\">Yes</button><button class=\"delete_no_btn\">No</button></div>"
+      },
+      "c_bold": {
+        "content": "</strong>"
+      },
+      "c_para": {
+        "content": "</p>"
+      },
+      "o_bold": {
+        "content": "<strong>"
+      },
+      "o_para": {
+        "content": "<p>"
+      }
     }
+  },
+  "description": {
+    "message": "Keep updated with the progress of your iDevice order"
+  },
+  "freq_disabled": {
+    "message": "Disabled"
+  },
+  "freq_hour": {
+    "message": "1 hour"
+  },
+  "freq_hours": {
+    "message": "$1 hours"
+  },
+  "freq_minute": {
+    "message": "1 minute"
+  },
+  "freq_minutes": {
+    "message": "$1 minutes"
+  },
+  "freq_second": {
+    "message": "1 second"
+  },
+  "freq_seconds": {
+    "message": "$1 seconds"
+  },
+  "help_badges": {
+    "message": "$O_PARA$This indicates whether or not a badge will display the number of status updates detected.$C_PARA$",
+    "placeholders": {
+      "c_para": {
+        "content": "</p>"
+      },
+      "o_para": {
+        "content": "<p>"
+      }
+    }
+  },
+  "help_frequency": {
+    "message": "$O_PARA$How often $O_BOLD$iOrder$C_BOLD$ should check your $O_LINK_1$Apple$C_LINK$ orders for status updates.$C_PARA$$O_PARA$If $O_BOLD$Disabled$C_BOLD$ is selected you will need to manually press $O_EMPH$Refresh$C_EMPH$ to check for updates.$C_PARA$",
+    "placeholders": {
+      "c_bold": {
+        "content": "</strong>"
+      },
+      "c_emph": {
+        "content": "</em>"
+      },
+      "c_link": {
+        "content": "</a>"
+      },
+      "c_para": {
+        "content": "</p>"
+      },
+      "o_bold": {
+        "content": "<strong>"
+      },
+      "o_emph": {
+        "content": "<em>"
+      },
+      "o_link_1": {
+        "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+      },
+      "o_para": {
+        "content": "<p>"
+      }
+    }
+  },
+  "help_notificationDuration": {
+    "message": "$O_PARA$The time (in seconds) to display the desktop notification before automatically hiding it again.$C_PARA$$O_PARA$Enter $O_BOLD$0$C_BOLD$ to disable auto-hide functionality.$C_PARA$",
+    "placeholders": {
+      "c_bold": {
+        "content": "</strong>"
+      },
+      "c_para": {
+        "content": "</p>"
+      },
+      "o_bold": {
+        "content": "<strong>"
+      },
+      "o_para": {
+        "content": "<p>"
+      }
+    }
+  },
+  "help_notifications": {
+    "message": "$O_PARA$This indicates whether or not desktop notifications will appear whenever a new status update is detected.$C_PARA$",
+    "placeholders": {
+      "c_para": {
+        "content": "</p>"
+      },
+      "o_para": {
+        "content": "<p>"
+      }
+    }
+  },
+  "help_order_code": {
+    "message": "$O_PARA$The Zip/Post code of the delivery address for your $O_LINK_1$Apple$C_LINK$ order.$C_PARA$$O_PARA$The following rules apply;$C_PARA$$O_LIST$$O_ITEM$Must only contain alphanumeric characters$C_ITEM$$O_ITEM$Must contain spaces if required (post codes $O_EMPH$only$C_EMPH$)$C_ITEM$$C_LIST$",
+    "placeholders": {
+      "c_emph": {
+        "content": "</em>"
+      },
+      "c_item": {
+        "content": "</li>"
+      },
+      "c_link": {
+        "content": "</a>"
+      },
+      "c_list": {
+        "content": "</ul>"
+      },
+      "c_para": {
+        "content": "</p>"
+      },
+      "o_emph": {
+        "content": "<em>"
+      },
+      "o_item": {
+        "content": "<li>"
+      },
+      "o_link_1": {
+        "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+      },
+      "o_list": {
+        "content": "<ul>"
+      },
+      "o_para": {
+        "content": "<p>"
+      }
+    }
+  },
+  "help_order_label": {
+    "message": "$O_PARA$A short label to help you quickly identify your $O_LINK_1$Apple$C_LINK$ order.$C_PARA$$O_PARA$The following rules apply;$C_PARA$$O_LIST$$O_ITEM$Must only contain alphanumeric characters$C_ITEM$$C_LIST$",
+    "placeholders": {
+      "c_item": {
+        "content": "</li>"
+      },
+      "c_link": {
+        "content": "</a>"
+      },
+      "c_list": {
+        "content": "</ul>"
+      },
+      "c_para": {
+        "content": "</p>"
+      },
+      "o_item": {
+        "content": "<li>"
+      },
+      "o_link_1": {
+        "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+      },
+      "o_list": {
+        "content": "<ul>"
+      },
+      "o_para": {
+        "content": "<p>"
+      }
+    }
+  },
+  "help_order_number": {
+    "message": "$O_PARA$The number of your $O_LINK_1$Apple$C_LINK$ order (e.g. W123456789).$C_PARA$$O_PARA$The following rules apply;$C_PARA$$O_LIST$$O_ITEM$Must be unique$C_ITEM$$O_ITEM$Must only contain alphanumeric characters$C_ITEM$$C_LIST$$O_PARA$This $O_EMPH$cannot$C_EMPH$ be changed once added.$C_PARA$",
+    "placeholders": {
+      "c_emph": {
+        "content": "</em>"
+      },
+      "c_item": {
+        "content": "</li>"
+      },
+      "c_link": {
+        "content": "</a>"
+      },
+      "c_list": {
+        "content": "</ul>"
+      },
+      "c_para": {
+        "content": "</p>"
+      },
+      "o_emph": {
+        "content": "<em>"
+      },
+      "o_item": {
+        "content": "<li>"
+      },
+      "o_link_1": {
+        "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+      },
+      "o_list": {
+        "content": "<ul>"
+      },
+      "o_para": {
+        "content": "<p>"
+      }
+    }
+  },
+  "help_updates": {
+    "message": "$O_PARA$A list of status updates detected by $O_BOLD$iOrder$C_BOLD$ so far.$C_PARA$$O_PARA$The date/time associated with each update indicates when it was detected and $O_EMPH$may not$C_EMPH$ be exactly when your $O_LINK_1$Apple$C_LINK$ order was updated.$C_PARA$",
+    "placeholders": {
+      "c_bold": {
+        "content": "</strong>"
+      },
+      "c_emph": {
+        "content": "</em>"
+      },
+      "c_link": {
+        "content": "</a>"
+      },
+      "c_para": {
+        "content": "</p>"
+      },
+      "o_bold": {
+        "content": "<strong>"
+      },
+      "o_emph": {
+        "content": "<em>"
+      },
+      "o_link_1": {
+        "content": "<a href=\"http://store.apple.com/us\" target=\"_blank\">"
+      },
+      "o_para": {
+        "content": "<p>"
+      }
+    }
+  },
+  "loading": {
+    "message": "..."
+  },
+  "name": {
+    "message": "iOrder"
+  },
+  "no_orders_text": {
+    "message": "No orders found. $O_LINK_1$Add some$C_LINK$",
+    "placeholders": {
+      "c_link": {
+        "content": "</a>"
+      },
+      "o_link_1": {
+        "content": "<a href=\"#\" onclick=\"popup.options('orders')\">"
+      }
+    }
+  },
+  "notification": {
+    "message": "One or more orders have been updated!"
+  },
+  "opt_add_button": {
+    "message": "Add"
+  },
+  "opt_add_new_button": {
+    "message": "Add New"
+  },
+  "opt_badge_text": {
+    "message": "Enable badge"
+  },
+  "opt_delete_button": {
+    "message": "Delete"
+  },
+  "opt_errors_header": {
+    "message": "The following problem(s) need to be corrected;"
+  },
+  "opt_footer": {
+    "message": "&copy;$1 $AUTHOR_LINK$",
+    "placeholders": {
+      "author_link": {
+        "content": "<a href=\"http://neocotic.com\" target=\"_blank\">Alasdair Mercer</a>"
+      }
+    }
+  },
+  "opt_frequency_text": {
+    "message": "Automatically update every"
+  },
+  "opt_general_header": {
+    "message": "General"
+  },
+  "opt_help_text": {
+    "message": "Read help documentation"
+  },
+  "opt_notification_header": {
+    "message": "Notifications"
+  },
+  "opt_notification_text": {
+    "message": "Enable notifications"
+  },
+  "opt_notification_timer_text1": {
+    "message": "Auto-hide notifications after"
+  },
+  "opt_notification_timer_text2": {
+    "message": "seconds"
+  },
+  "opt_order_code_invalid": {
+    "message": "Zip/Post Code is missing"
+  },
+  "opt_order_code_text": {
+    "message": "Zip/Post Code"
+  },
+  "opt_order_header": {
+    "message": "Orders"
+  },
+  "opt_order_label_invalid": {
+    "message": "Label is missing"
+  },
+  "opt_order_label_text": {
+    "message": "Label"
+  },
+  "opt_order_number_invalid": {
+    "message": "Number is missing"
+  },
+  "opt_order_number_text": {
+    "message": "Number"
+  },
+  "opt_order_updates_text": {
+    "message": "Updates"
+  },
+  "opt_order_number_unavailable": {
+    "message": "Number already exists"
+  },
+  "opt_save_button": {
+    "message": "Save &amp; Close"
+  },
+  "options_text": {
+    "message": "Options"
+  },
+  "options_title": {
+    "message": "Configure iOrder"
+  },
+  "order_header": {
+    "message": "Order"
+  },
+  "order_title": {
+    "message": "View this order"
+  },
+  "orders_text": {
+    "message": "Orders"
+  },
+  "orders_title": {
+    "message": "View all your orders"
+  },
+  "popup_footer_text": {
+    "message": "Updated: $1 - Frequency: $2"
+  },
+  "refresh_text": {
+    "message": "Refresh"
+  },
+  "refresh_title": {
+    "message": "Updates the progress of all orders"
+  },
+  "refreshing_text": {
+    "message": "Refreshing..."
+  },
+  "refreshing_title": {
+    "message": "Currently updating progress of all orders. Please wait..."
+  },
+  "status_header": {
+    "message": "Status"
+  },
+  "track_text": {
+    "message": "Track"
+  },
+  "track_title": {
+    "message": "Track this order"
+  },
+  "update_errors_text": {
+    "message": "Some orders could not be updated"
+  },
+  "update_invalid_page_error": {
+    "message": "Order page contained no data"
+  },
+  "update_invalid_status_error": {
+    "message": "Order status was not recognised"
+  },
+  "update_page_not_found_error": {
+    "message": "Order page could not be found"
+  },
+  "update_status_not_found_error": {
+    "message": "Order status could not be found"
+  }
 }

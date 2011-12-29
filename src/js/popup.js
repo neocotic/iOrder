@@ -1,144 +1,85 @@
-/* Copyright (C) 2011 Alasdair Mercer, http://neocotic.com/
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy  
- * of this software and associated documentation files (the "Software"), to deal  
- * in the Software without restriction, including without limitation the rights  
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  
- * copies of the Software, and to permit persons to whom the Software is  
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all  
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
- * SOFTWARE.
- */
+// [iOrder](http://neocotic.com/iOrder)  
+// (c) 2011 Alasdair Mercer  
+// Freely distributable under the MIT license.  
+// For all details and documentation:  
+// <http://neocotic.com/iOrder>
 
-/**
- * <p>Easily accessible reference to the extension controller.</p>
- * @ignore
- */
-var ext = chrome.extension.getBackgroundPage().ext;
+(function (window, undefined) {
 
-/**
- * <p>Responsible for the popup page.</p>
- * @author <a href="http://neocotic.com">Alasdair Mercer</a>
- * @since 1.0.0
- * @namespace
- */
-var popup = {
+  // Private variables
+  // -----------------
 
-    /**
-     * <p>The suffix of tab declarations used on the options page.</p>
-     * @private
-     * @type String
-     */
-    optionsTabSuffix: '_nav',
+  // Easily accessible reference to the extension controller.
+  var ext = chrome.extension.getBackgroundPage().ext;
 
-    /**
-     * <p>Sends a request to clear any displayed badge.</p>
-     * @event
-     */
+  // Private functions
+  // -----------------
+
+  // Send a request to the background page using the information provided.
+  function sendRequest(type, closeAfter, data, element) {
+    data = data || {};
+    // Extract the related order data from the element, where possible.
+    if (element) {
+      data.code = element.getAttribute('data-order-code');
+      data.number = element.getAttribute('data-order-number');
+    }
+    // Send the request to the background page.
+    chrome.extension.sendRequest({data: data, type: type});
+    // Close this pesky popup.
+    if (closeAfter) window.close();
+  }
+
+  // Popup page setup
+  // ----------------
+
+  var popup = window.popup = {
+
+    // Public functions
+    // ----------------
+
+    // Send a request to clear any badge being displayed.
     clear: function () {
-        popup.sendRequest('clear');
+      sendRequest('clear');
     },
 
-    /**
-     * <p>Initializes the popup page.</p>
-     * <p>This involves inserting the HTML prepared by the background
-     * page.</p>
-     * @event
-     */
+    // Initialize the popup page.
     init: function () {
-        // Insert the prepared HTML in to the popup's body
-        document.body.innerHTML = ext.popupHtml;
+      // Insert the prepared HTML in to the popup's body.
+      document.body.innerHTML = ext.popupHtml;
     },
 
-    /**
-     * <p>Sends a request to open the orders tab on the options page.</p>
-     * @param {String} tab
-     * @event
-     */
+    // Send a request to open the Orders tab on the options page.
     options: function (tab) {
-        var suffix = popup.optionsTabSuffix;
-        if (tab) {
-            if (tab.indexOf(suffix) !== tab.length - suffix.length) {
-                tab += suffix;
-            }
-            utils.set('options_active_tab', tab);
-        }
-        popup.sendRequest('options', true);
+      var suffix = '_nav';
+      if (tab) {
+        if (tab.indexOf(suffix) !== tab.length - suffix.length) tab += suffix;
+        utils.set('options_active_tab', tab);
+      }
+      sendRequest('options', true);
     },
 
-    /**
-     * <p>Sends a request to update the orders immediately.</p>
-     * @event
-     */
+    // Send a request to update the orders immediately.
     refresh: function () {
-        popup.sendRequest('refresh');
+      sendRequest('refresh');
     },
 
-    /**
-     * <p>Sends a request to the background page for using the information
-     * provided.</p>
-     * @param {String} type The type of request to be sent.
-     * @param {Boolean} [closeAfter=false] <code>true</code> to close the popup
-     * after the request has been sent; otherwise <code>false</code>.
-     * @param {Object} [data] The request data to be sent.
-     * @param {Element} [element] The element from which to extract related
-     * order information and append to the request data.
-     * @private
-     */
-    sendRequest: function (type, closeAfter, data, element) {
-        data = data || {};
-        // Extract the related order data from the element, where possible
-        if (element) {
-            data.code = element.getAttribute('data-order-code');
-            data.number = element.getAttribute('data-order-number');
-        }
-        // Send the request to the background page
-        chrome.extension.sendRequest({
-            data: data,
-            type: type
-        });
-        // Close this pesky popup
-        if (closeAfter) {
-            window.close();
-        }
-    },
-
-    /**
-     * <p>Sends a request to open the tracking page for the order relating to
-     * the clicked link.</p>
-     * @param {Element} element The element clicked.
-     * @event
-     */
+    // Send a request to open the tracking page for the order relating to the
+    // clicked link.
     track: function (element) {
-        popup.sendRequest('track', true, {}, element);
+      sendRequest('track', true, {}, element);
     },
 
-    /**
-     * <p>Sends a request to open the page on the Apple US store for the order
-     * relating to the clicked link.</p>
-     * @param {Element} element The element clicked.
-     * @event
-     */
+    // Send a request to open the page on the Apple US store for the order
+    // relating to the clicked link.
     view: function (element) {
-        popup.sendRequest('view', true, {}, element);
+      sendRequest('view', true, {}, element);
     },
 
-    /**
-     * <p>Sends a request to open the order listing page on the Apple US
-     * store.</p>
-     * @event
-     */
+    // Send a request to open the order listing page on the Apple US store.
     viewAll: function () {
-        popup.sendRequest('viewAll', true);
+      sendRequest('viewAll', true);
     }
 
-};
+  };
+
+}(this));

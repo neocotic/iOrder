@@ -1,162 +1,172 @@
-/* Copyright (C) 2011 Alasdair Mercer, http://neocotic.com/
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy  
- * of this software and associated documentation files (the "Software"), to deal  
- * in the Software without restriction, including without limitation the rights  
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell  
- * copies of the Software, and to permit persons to whom the Software is  
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all  
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  
- * SOFTWARE.
- */
+// [iOrder](http://neocotic.com/iOrder)  
+// (c) 2011 Alasdair Mercer  
+// Freely distributable under the MIT license.  
+// For all details and documentation:  
+// <http://neocotic.com/iOrder>
 
-/**
- * <p>Provides utility functions used throughout the extension.</p>
- * @author <a href="http://neocotic.com">Alasdair Mercer</a>
- * @since 1.0.0
- * @namespace
- */
-var utils = {
+(function (window, undefined) {
 
-    /**
-     * <p>Returns whether or not the specified key exists in
-     * <code>localStorage</code>.</p>
-     * @param {String} key The key whose existence is to be checked.
-     * @returns {Boolean} <code>true</code> if the key exists in
-     * <code>localStorage</code>; otherwise <code>false</code>.
-     */
+  // Private functions
+  // -----------------
+
+  // Internationalize the value of the specified element's property.
+  function i18nConvert(element, property, value, subMap) {
+    var
+      prop,
+      props = property.split('.'),
+      subProp,
+      subs;
+    // Find an array of substitution strings using the element's ID and the
+    // message key as the mapping.
+    if (subMap) {
+      for (prop in subMap) {
+        if (subMap.hasOwnProperty(prop)) {
+          if (prop === element.id) {
+            for (subProp in subMap[prop]) {
+              if (subMap[prop].hasOwnProperty(subProp)) {
+                if (subProp === value) {
+                  subs = subMap[prop][subProp];
+                  break;
+                }
+              }
+            }
+            break;
+          }
+        }
+      }
+    }
+    // Walk the element's properties to find the desired property.
+    prop = element;
+    for (var i = 0; i < props.length; i++) {
+      if (prop) prop = prop[props[i]] || {};
+    }
+    // Lookup and replace actual property's value.
+    if (prop) prop = utils.i18n(value, subs);
+  }
+
+  // Utilities setup
+  // ---------------
+
+  var utils = window.utils = {
+
+    // Data functions
+    // --------------
+
+    // Determine whether or not the specified key exists in `localStorage`.
     exists: function (key) {
-        return localStorage.hasOwnProperty(key);
+      return localStorage.hasOwnProperty(key);
     },
 
-    /**
-     * <p>Retrieves the value associated with the specified key from
-     * <code>localStorage</code>.</p>
-     * <p>If the value is found it is parsed as JSON before being returned;
-     * otherwise undefined is returned.</p>
-     * @param {String} key The key of the value to be returned.
-     * @returns The parsed value associated with the specified key or undefined
-     * if none exists.
-     * @see JSON.parse
-     */
+    // Retrieve the value associated with the specified key from
+    // `localStorage`.  
+    // If the value is found, parse it as JSON before being returning it;
+    // otherwise return `undefined`.
     get: function (key) {
-        var value = localStorage[key];
-        if (typeof value !== 'undefined') {
-            return JSON.parse(value);
-        }
-        return value;
+      var value = localStorage[key];
+      if (value !== undefined) return JSON.parse(value);
+      return value;
     },
 
-    /**
-     * <p>Initializes the value of the specified key in
-     * <code>localStorage</code>.</p>
-     * <p>If the value is currently undefined the specified default value will
-     * be assigned to it; otherwise it is reassigned to itself.</p>
-     * @param {String} key The key whose value is to be initialized.
-     * @param defaultValue The value to be assigned to the specified key if it
-     * is currently undefined.
-     * @returns The previous value associated with the specified key. This will
-     * be undefined if not previously initialized.
-     * @see utils.set
-     */
+    // Initialize the value of the specified key in `localStorage`.  
+    // If the value is currently `undefined`, assign the specified default
+    // value; otherwise reassign itself.
     init: function (key, defaultValue) {
-        var value = utils.get(key);
-        if (typeof value === 'undefined') {
-            value = defaultValue;
-        }
-        return utils.set(key, value);
+      var value = utils.get(key);
+      if (value === undefined) value = defaultValue;
+      return utils.set(key, value);
     },
 
-    /**
-     * <p>Left pads a <code>String</code> with a specified
-     * <code>String</code>.</p>
-     * @param {String} str The <code>String</code> to pad out.
-     * @param {Integer} size The size to pad to.
-     * @param {String} [padStr=" "] The <code>String</code> to pad with.
-     * @returns {String} Left padded <code>String</code> or original
-     * <code>String</code> if no padding is necessary or <code>null</code> if
-     * <code>str</code> was <code>null</code>.
-     */
-    leftPad: function (str, size, padStr) {
-        if (typeof padStr === 'undefined') {
-            padStr = ' ';
-        } else {
-            padStr = String(padStr);
-        }
-        if (str === null) {
-            return str;
-        }
-        str = String(str);
-        var pads = size - str.length;
-        if (pads <= 0) {
-            return str;
-        }
-        for (var i = 0; i < pads; i++) {
-            str = padStr + str;
-        }
-        return str;
-    },
-
-    /**
-     * <p>Removes the specified key from <code>localStorage</code>.</p>
-     * @param {String} key The key to be removed.
-     * @returns {Boolean} <code>true</code> if a key was removed from
-     * <code>localStorage</code>; otherwise <code>false</code>.
-     */
+    // Remove the specified key from `localStorage`.
     remove: function (key) {
-        var exists = utils.exists(key);
-        delete localStorage[key];
-        return exists;
+      var exists = utils.exists(key);
+      delete localStorage[key];
+      return exists;
     },
 
-    /**
-     * <p>Copies the value of the existing key to that of the new key then
-     * removes the old key from <code>localStorage</code>.</p>
-     * <p>If the old key doesn't exist in <code>localStorage</code> the
-     * specified default value will be assigned to it instead.</p>
-     * @param {String} oldKey The key whose value is to be copied and then
-     * removed.
-     * @param {String} newKey The key whose value is to be set.
-     * @param defaultValue The value to be assigned to the new key if the old
-     * key didn't exist.
-     */
+    // Copy the value of the existing key to that of the new key then remove
+    // the old key from `localStorage`.  
+    // If the old key doesn't exist in `localStorage`, assign the specified
+    // default value to it instead.
     rename: function (oldKey, newKey, defaultValue) {
-        if (utils.exists(oldKey)) {
-            utils.init(newKey, utils.get(oldKey));
-            utils.remove(oldKey);
-        } else {
-            utils.init(newKey, defaultValue);
-        }
+      if (utils.exists(oldKey)) {
+        utils.init(newKey, utils.get(oldKey));
+        utils.remove(oldKey);
+      } else {
+        utils.init(newKey, defaultValue);
+      }
     },
 
-    /**
-     * <p>Sets the value of the specified key in
-     * <code>localStorage</code>.</p>
-     * <p>If the specified value is undefined it is assigned directly to the
-     * key; otherwise it is transformed to a JSON String.</p>
-     * @param {String} key The key whose value is to be set.
-     * @param value The value to be assigned to the specified key.
-     * @returns The previous value associated with the specified key or
-     * undefined if there was none.
-     * @see JSON.stringify
-     */
+    // Set the value of the specified key in `localStorage`.  
+    // If the specified value is `undefined`, assign that value directly to the
+    // key; otherwise transform it to a JSON string beforehand.
     set: function (key, value) {
-        var oldValue = utils.get(key);
-        if (typeof value !== 'undefined') {
-            localStorage[key] = JSON.stringify(value);
-        } else {
-            localStorage[key] = value;
+      var oldValue = utils.get(key);
+      if (value !== undefined) {
+        localStorage[key] = JSON.stringify(value);
+      } else {
+        localStorage[key] = value;
+      }
+      return oldValue;
+    },
+
+    // Internationalization functions
+    // ------------------------------
+
+    // Convenient shorthand for `chrome.i18n.getMessage`.
+    i18n: function () {
+      chrome.i18n.getMessage.apply(chrome.i18n, arguments);
+    },
+
+    // Internationalize the specified attribute of all the selected elements.
+    i18nAttribute: function (selector, attribute, value, subs) {
+      var elements = document.querySelectorAll(selector);
+      // Ensure the substitution string(s) are in an array.
+      if (typeof subs === 'string') subs = [subs];
+      for (var i = 0; i < elements.length; i++) {
+        elements[i][attribute] = utils.i18n(value, subs);
+      }
+    },
+
+    // Internationalize the contents of all the selected elements.
+    i18nContent: function (selector, value, subs) {
+      var elements = document.querySelectorAll(selector);
+      // Ensure the substitution string(s) are in an array.
+      if (typeof subs === 'string') subs = [subs];
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].innerHTML = utils.i18n(value, subs);
+      }
+    },
+
+    // Perform all internationalization setup required for the current page.
+    i18nSetup: function (subMap) {
+      var
+        elements = document.querySelectorAll('[i18n-content]'),
+        i;
+      // Internationalize the contents of all `[i18n-content]` elements.
+      for (i = 0; i < elements.length; i++) {
+        i18nConvert(elements[i], 'innerHTML', elements[i]['i18n-content'],
+            subMap);
+        elements[i].removeAttribute('i18n-content');
+      }
+      elements = document.querySelectorAll('[i18n-values]');
+      var j, mapping, values;
+      // Internationalize the specified properties of all `[i18n.values]`
+      // elements.
+      for (i = 0; i < elements.length; i++) {
+        values = elements[i]['i18n-values'].split(';');
+        for (j = 0; j < values.length; j++) {
+          mapping = values[j].split(':');
+          if (mapping.length === 2) {
+            if (mapping[0].indexOf('.') === 0) {
+              mapping[0] = mapping[0].substr(1);
+            }
+            i18nConvert(elements[i], mapping[0], mapping[1], subMap);
+          }
         }
-        return oldValue;
+        elements[i].removeAttribute('i18n-values');
+      }
     }
 
-};
+  };
+
+}(this));
