@@ -55,6 +55,7 @@ task 'clean', 'cleans directories', ->
   ].join '&&', (error) ->
     throw error if error
   )
+  console.log 'Cleaned!'
 
 task 'dist', 'creates distributable file', ->
   console.log 'Generating distributable....'
@@ -64,8 +65,10 @@ task 'dist', 'creates distributable file', ->
   ].join '&&', (error) ->
     throw error if error
   )
+  console.log 'Distributable created!'
 
 task 'docs', 'creates documentation', ->
   console.log 'Generating documentation...'
-  exec "`which docco` #{baseFiles}", (error) ->
+  exec "`which docco` #{baseFiles.join ' '}", (error) ->
     throw error if error
+  console.log 'Documentation created!'
