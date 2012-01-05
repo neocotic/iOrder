@@ -260,6 +260,26 @@
     });
   }
 
+  // Handle the conversion/removal of older version of settings that may have
+  // been stored previously by `ext.init`.
+  function init_update() {
+    var update = utils.get('update_progress');
+    update.settings = update.settings || {};
+    // Check if the settings need updated for 1.1.0.
+    if (update.settings.indexOf('1.1.0') === -1) {
+      // Update the settings for 1.1.0.
+      var
+        defaultFrequency = ext.FREQUENCIES[1].value,
+        frequency        = utils.get('frequency');
+      if (frequency > -1 && frequency < defaultFrequency) {
+        utils.set('frequency', defaultFrequency);
+      }
+      // Ensure that settings are not updated for 1.1.0 again.
+      update.settings.push('1.1.0');
+      utils.set('update_progress', update);
+    }
+  }
+
   // Initialize the persisted managed orders.
   function initOrders() {
     utils.init('orders', []);
@@ -579,17 +599,14 @@
       text  : utils.i18n('freq_disabled'),
       value : -1
     }, {
-      text  : utils.i18n('freq_minutes', '5'),
-      value : 5 * 60 * 1000
-    }, {
-      text  : utils.i18n('freq_minutes', '10'),
-      value : 10 * 60 * 1000
-    }, {
       text  : utils.i18n('freq_minutes', '15'),
       value : 15 * 60 * 1000
     }, {
       text  : utils.i18n('freq_minutes', '30'),
       value : 30 * 60 * 1000
+    }, {
+      text  : utils.i18n('freq_minutes', '45'),
+      value : 45 * 60 * 1000
     }, {
       text  : utils.i18n('freq_hour'),
       value : 60 * 60 * 1000
@@ -628,6 +645,8 @@
     // This will involve initializing the settings, adding the request
     // listeners and starting the update manager.
     init: function () {
+      utils.init('update_progress', {settings: []});
+      init_update();
       utils.init('badges', true);
       utils.init('frequency', ext.FREQUENCIES[1].value);
       utils.init('lastRead', $.now());
