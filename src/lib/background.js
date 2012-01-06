@@ -657,7 +657,7 @@
       chrome.extension.onRequest.addListener(onRequest);
       // It's nice knowing what version is running.
       $.getJSON(chrome.extension.getURL('manifest.json'), function (data) {
-        ext.version = data.version;
+        version = data.version;
         // Execute content scripts now that we know the version.
         executeScriptsInExistingWindows();
       });
