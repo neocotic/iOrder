@@ -3,7 +3,7 @@ YYYY.MM.DD, Version 1.1.0
 * [#7](https://github.com/neocotic/iOrder/issues/7): Simplify internationalization code
 * [#10](https://github.com/neocotic/iOrder/issues/10): Reduce update frequency
 * [#11](https://github.com/neocotic/iOrder/issues/11): Update build process
-* Completely rewrite code
+* Completely rewrite code in [CoffeeScript](http://coffeescript.org)
 
 2011.12.23, Version 1.0.3
 
