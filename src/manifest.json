@@ -8,7 +8,7 @@
   "content_scripts" : [
     {
       "js"      : [
-        "js/install.js"
+        "lib/install.js"
       ],
       "matches" : [
         "http://*.neocotic.com/*"

@@ -189,7 +189,7 @@
   function executeScriptsInExistingTabs(tabs) {
     for (var i = 0; i < tabs.length; i++) {
       if (tabs[i].url.indexOf(HOMEPAGE_DOMAIN) !== -1) {
-        chrome.tabs.executeScript(tabs[i].id, {file: 'js/install.js'});
+        chrome.tabs.executeScript(tabs[i].id, {file: 'lib/install.js'});
       }
     }
   }
@@ -645,7 +645,7 @@
     // This will involve initializing the settings, adding the request
     // listeners and starting the update manager.
     init: function () {
-      utils.init('update_progress', {settings: []});
+      utils.init('update_progress', {});
       init_update();
       utils.init('badges', true);
       utils.init('frequency', ext.FREQUENCIES[1].value);
@@ -657,7 +657,7 @@
       chrome.extension.onRequest.addListener(onRequest);
       // It's nice knowing what version is running.
       $.getJSON(chrome.extension.getURL('manifest.json'), function (data) {
-        version = data.version;
+        ext.version = data.version;
         // Execute content scripts now that we know the version.
         executeScriptsInExistingWindows();
       });

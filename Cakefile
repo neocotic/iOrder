@@ -11,16 +11,17 @@ baseDirs     = [
   "#{binDir}/_locales"
   "#{binDir}/_locales/en"
   "#{binDir}/images"
-  "#{binDir}/js"
+  "#{binDir}/lib"
   "#{binDir}/pages"
+  "#{binDir}/vendor"
 ]
 baseFiles    = [
-  "#{srcDir}/js/background.js"
-  "#{srcDir}/js/install.js"
-  "#{srcDir}/js/notification.js"
-  "#{srcDir}/js/options.js"
-  "#{srcDir}/js/popup.js"
-  "#{srcDir}/js/utils.js"
+  "#{srcDir}/lib/background.js"
+  "#{srcDir}/lib/install.js"
+  "#{srcDir}/lib/notification.js"
+  "#{srcDir}/lib/options.js"
+  "#{srcDir}/lib/popup.js"
+  "#{srcDir}/lib/utils.js"
 ]
 baseBinFiles = (path.replace "#{srcDir}/", "#{binDir}/" for path in baseFiles)
 
