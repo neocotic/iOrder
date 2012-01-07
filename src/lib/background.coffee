@@ -223,7 +223,7 @@ getWindows = (url) ->
 # been stored previously by `ext.init`.
 init_update = ->
   update_progress = utils.get 'update_progress'
-  update_progress.settings ?= {}
+  update_progress.settings ?= []
   # Check if the settings need updated for 1.1.0.
   if update_progress.settings.indexOf('1.1.0') is -1
     # Update the settings for 1.1.0.

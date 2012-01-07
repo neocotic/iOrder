@@ -264,7 +264,7 @@
   // been stored previously by `ext.init`.
   function init_update() {
     var update = utils.get('update_progress');
-    update.settings = update.settings || {};
+    update.settings = update.settings || [];
     // Check if the settings need updated for 1.1.0.
     if (update.settings.indexOf('1.1.0') === -1) {
       // Update the settings for 1.1.0.
