@@ -4,12 +4,52 @@
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
 
+#### Private variables
+
+# TODO: Comment
+i18nHandlers   =
+
+  # TODO: Comment
+  'i18n-content': (element, value, subMap) ->
+    subs = i18nSubs element, value, subMap
+    element.innerHTML = utils.i18n value, subs
+
+  # TODO: Comment
+  'i18n-values':  (element, value, subMap) ->
+    subs  = i18nSubs element, value, subMap
+    parts = value.replace(/\s/g, '').split ';'
+    for part in parts
+      prop = part.match /^([^:]+):(.+)$/
+      if prop
+        propName = prop[1]
+        propExpr = prop[2]
+        if propName.indexOf('.') is 0
+          path = propName.slice(1).split '.'
+          obj = element
+          obj = obj[path.shift()] while obj and path.length > 1
+          if obj
+            obj[path] = utils.i18n value, subs
+            i18nProcess element, subMap if path is 'innerHTML'
+        else
+          element.setAttribute propName, utils.i18n propExpr, subs
+# TODO: Comment
+i18nAttributes = []
+i18nAttributes.push key for key of i18nHandlers
+# TODO: Comment
+i18nSelector   = "[#{i18nAttributes.join '],['}]"
+
 #### Private functions
 
-# Internationalize the value of the specified element's property.
-i18nConvert = (element, property, value, subMap) ->
-  # Find an array of substitution strings using the element's ID and the
-  # message key as the mapping.
+# TODO: Comment
+i18nProcess = (node, subMap) ->
+  for element in node.querySelectorAll i18nSelector
+    for name in i18nAttributes
+      attribute = element.getAttribute name
+      i18nHandlers[name] element, attribute, subMap if attribute?
+
+# Find an array of substitution strings using the element's ID and the message
+# key as the mapping.
+i18nSubs = (element, value, subMap) ->
   if subMap
     for prop of subMap when subMap.hasOwnProperty(prop) and prop is element.id
       for subProp of subMap[prop] when subMap[prop].hasOwnProperty subProp
@@ -17,11 +57,7 @@ i18nConvert = (element, property, value, subMap) ->
           subs = subMap[prop][subProp]
           break
       break
-  # Walk the element's properties to find the desired property.
-  prop = element
-  prop = prop[property] ? {} for property in property.split '.' when prop
-  # Lookup and replace actual property's value.
-  prop = utils.i18n value, subs if prop
+  return subs
 
 #### Utilities setup
 
@@ -83,7 +119,8 @@ utils = window.utils =
     elements = document.querySelectorAll selector
     # Ensure the substitution string(s) are in an array.
     subs = [subs] if typeof subs is 'string'
-    element[attribute] = utils.i18n value, subs for element in elements
+    for element in elements
+      element.setAttribute attribute, utils.i18n value, subs
 
   # Internationalize the contents of all the selected elements.
   i18nContent: (selector, value, subs) ->
@@ -94,18 +131,4 @@ utils = window.utils =
 
   # Perform all internationalization setup required for the current page.
   i18nSetup: (subMap) ->
-    elements = document.querySelectorAll('[i18n-content]')
-    # Internationalize the contents of all `[i18n-content]` elements.
-    for element in elements
-      i18nConvert element, 'innerHTML', element['i18n-content'], subMap
-      element.removeAttribute 'i18n-content'
-    elements = document.querySelectorAll '[i18n-values]'
-    # Internationalize the specified properties of all `[i18n.values]` elements.
-    for element in elements
-      values = element['i18n-values'].split ';'
-      for value in values
-        mapping = value.split ':'
-        if mapping.length is 2
-          mapping[0] = mapping[0].substr 1 if mapping[0].indexOf('.') is 0
-        i18nConvert element, mapping[0], mapping[1], subMap
-      element.removeAttribute 'i18n-values'
+    i18nProcess document, subMap
