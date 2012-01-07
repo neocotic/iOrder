@@ -16,18 +16,13 @@ In order to build [iOrder][], you need to have the following:
 Follow these steps to build [iOrder][];
 
 1. Clone a copy of the main [iOrder git repository](https://github.com/neocotic/iOrder) by running `git clone git://github.com/neocotic/iOrder.git`
-2. For the minified version `cd` to the repository directory and enter `cake build`
-   * If you don't have any of the build dependencies installed and/or want the basic, uncompressed, version of [iOrder][], simply run the extension off of the `src` directory
-   * Outputs to `bin` directory
-3. For the distribution enter `cake dist`
-   * Outputs to `dist` directory
+2. For the compiled and minified version `cd` to the repository directory and enter `cake build`
+   * Outputs to the `bin` directory
+3. For the distributable file enter `cake dist`
+   * Outputs to the `dist` directory
+4. To update the documentation enter `cake docs`
 
-If you want to generate documentation as well you can do the following after step 1 of the above;
-
-1. `cd` to the repository directory and enter `cake docs`
-   * Outputs to `docs` directory
-
-To remove all built files, run `cake clean`.
+To remove all built files and/or directories, run `cake clean`.
 
 # Debugging
 To run the locally built extension in [Google Chrome][] you can follow these steps;
