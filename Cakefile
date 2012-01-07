@@ -1,11 +1,11 @@
 {exec} = require 'child_process'
 
 copyright = """
-            # [iOrder](http://neocotic.com/iOrder)
-            # (c) #{new Date().getFullYear()} Alasdair Mercer
-            # Freely distributable under the MIT license.
-            # For all details and documentation:
-            # http://neocotic.com/iOrder
+            // [iOrder](http://neocotic.com/iOrder)
+            // (c) #{new Date().getFullYear()} Alasdair Mercer
+            // Freely distributable under the MIT license.
+            // For all details and documentation:
+            // http://neocotic.com/iOrder
             """
 
 compile = '`which coffee`'
