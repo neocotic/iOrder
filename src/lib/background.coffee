@@ -37,7 +37,7 @@ version = ''
 
 # Build the HTML to populate the popup with to optimize popup loading times.
 buildPopup = ->
-  errors  = false
+  errors  = no
   footer  = $ '<footer/>'
   footerF = $ '<div/>'
   footerL = $ '<div/>'
@@ -99,7 +99,7 @@ buildPopup = ->
   )
   # Add the column headers to the orders table.
   $('<thead/>').append(
-    $('<tr/>').append.apply @, [
+    $('<tr/>').append.apply this, [
       $ '<th/>', text: utils.i18n 'order_header'
       $ '<th/>', text: utils.i18n 'status_header'
       $ '<th/>', text: utils.i18n 'actions_header'
@@ -119,8 +119,8 @@ buildPopup = ->
   # Otherwise; let's create a row for each order.
   for order, i in ext.orders
     tbody.append(
-      $('<tr/>').append.apply @, [
-        $('<td/>').append.apply @, [
+      $('<tr/>').append.apply this, [
+        $('<td/>').append.apply this, [
           $ '<strong/>', text: order.label
           '<br />'
           $ '<a/>',
@@ -432,11 +432,11 @@ updateManager =
         notify()
         updatePopup()
         # Now read the message stack.
-        @[message]?() for message in @messages
+        this[message]?() for message in @messages
         @messages = []
 
     # Finish this now since no orders exist.
-    updated.apply @ unless ext.orders.length
+    updated.apply this unless ext.orders.length
     # Update each order by parsing its page on the Apple US store.
     updateOrder order, updated for order in ext.orders
 

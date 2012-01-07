@@ -1,51 +1,52 @@
 {exec} = require 'child_process'
 
+copyright = """
+            # [iOrder](http://neocotic.com/iOrder)
+            # (c) #{new Date().getFullYear()} Alasdair Mercer
+            # Freely distributable under the MIT license.
+            # For all details and documentation:
+            # http://neocotic.com/iOrder
+            """
+
+compile = '`which coffee`'
+minify  = '`which uglifyjs`'
+docGen  = '`which docco`'
+
 binDir   = 'bin'
 distDir  = 'dist'
 distFile = 'iOrder'
 docsDir  = 'docs'
 srcDir   = 'src'
 
-baseDirs     = [
-  binDir
-  "#{binDir}/_locales"
-  "#{binDir}/_locales/en"
-  "#{binDir}/images"
-  "#{binDir}/lib"
-  "#{binDir}/pages"
-  "#{binDir}/vendor"
-]
-baseFiles    = [
-  "#{srcDir}/lib/background.js"
-  "#{srcDir}/lib/install.js"
-  "#{srcDir}/lib/notification.js"
-  "#{srcDir}/lib/options.js"
-  "#{srcDir}/lib/popup.js"
-  "#{srcDir}/lib/utils.js"
-]
-baseBinFiles = (path.replace "#{srcDir}/", "#{binDir}/" for path in baseFiles)
+dirs = [
+         binDir
+         "#{binDir}/_locales"
+         "#{binDir}/_locales/en"
+         "#{binDir}/images"
+         "#{binDir}/lib"
+         "#{binDir}/pages"
+         "#{binDir}/vendor"
+       ]
 
 task 'build', 'builds extension', ->
   console.log 'Building iOrder...'
-  for path in baseDirs
+  for path in dirs
     exec("mkdir -p #{path}", (error) ->
       throw error if error
     )
   exec([
     "cp -r #{srcDir}/* #{binDir}"
     "find #{binDir}/ -name '.git*' -print0 | xargs -0 -IFILES rm FILES"
+    "#{compile} --compile #{binDir}/lib/"
+    "rm -f #{binDir}/lib/*.coffee"
+    "for file in #{binDir}/lib/*.js;
+ do echo \"#{copyright}\" > $file.tmp &&
+ #{minify} $file >> $file.tmp &&
+ mv -f $file.tmp $file;
+ done"
   ].join '&&', (error) ->
     throw error if error
   )
-  for path in baseBinFiles
-    console.log "Minifying #{path}..."
-    exec([
-      "`which uglifyjs` #{path} > #{path}.tmp"
-      "mv -f #{path}.tmp #{path}"
-      "rm -f #{path}.tmp"
-    ].join '&&', (error) ->
-      throw error if error
-    )
   console.log 'Build complete!'
 
 task 'clean', 'cleans directories', ->
@@ -70,6 +71,6 @@ task 'dist', 'creates distributable file', ->
 
 task 'docs', 'creates documentation', ->
   console.log 'Generating documentation...'
-  exec "`which docco` #{baseFiles.join ' '}", (error) ->
+  exec "#{docGen} #{srcDir}/lib/*.coffee", (error) ->
     throw error if error
   console.log 'Documentation created!'

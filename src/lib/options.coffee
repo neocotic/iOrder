@@ -67,7 +67,7 @@ loadOrderControlEvents = ->
   # Whenever the selected option changes we want all the controls to represent
   # the current selection (where possible).
   orders.change(->
-    $this  = $ @
+    $this  = $ this
     opt    = $this.find 'option:selected'
     optGrp = opt.parent 'optgroup'
     # Update the previously selected order.
@@ -190,7 +190,7 @@ saveOrders = ->
   orders = []
   # Update each individual order settings based on their corresponding options.
   $('#orders optgroup').each ->
-    order = deriveOrder $ @
+    order = deriveOrder $ this
     orders.push order
   # Persist the updated orders.
   utils.set 'orders', orders
@@ -212,13 +212,13 @@ updateOrder = (optGrp) ->
 isOrderNumberAvailable = (number) ->
   available = yes
   $('#orders optgroup').each ->
-    return available = no if $(@).attr('label') is number
+    return available = no if $(this).attr('label') is number
   return available
 
 # Validate that the specified `<optgroup>` element that should represents an
 # order does just that.  
 # This function adds any validation errors it encounters to an unordered list
-# which should be displayed to the user at some point if `true` is returned.
+# which should be displayed to the user at some point if `yes` is returned.
 validateOrder = (optGrp, isNew) ->
   opt    = optGrp.find 'option'
   code   = opt.data('code').trim().toUpperCase()
@@ -241,14 +241,14 @@ validateOrder = (optGrp, isNew) ->
 # Validate all `<optgroup>` elements that represent orders that are to be
 # persisted in `localStorage`.  
 # This function adds any validation errors it encounters to a unordered list
-# which should be displayed to the user at some point if `true` is returned.
+# which should be displayed to the user at some point if `yes` is returned.
 validateOrders = ->
   errors = $ '#errors'
   orders = $ '#orders optgroup'
   # Wipe any pre-existing errors.
   errors.remove 'li'
   orders.each ->
-    $this = $ @
+    $this = $ this
     unless validateOrder $this
       # Show user which validation failed validation.
       $this.find('option').attr 'selected', 'selected'
@@ -299,7 +299,7 @@ options = window.options =
         opt_footer: new Date().format 'Y'
     # Bind tab selection event to all tabs.
     $('#navigation li').click ->
-      $this = $ @
+      $this = $ this
       unless $this.hasClass 'selected'
         $this.siblings().removeClass 'selected'
         $this.addClass 'selected'
