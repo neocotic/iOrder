@@ -99,7 +99,7 @@ buildPopup = ->
   )
   # Add the column headers to the orders table.
   $('<thead/>').append(
-    $('<tr/>').append.apply this, [
+    $.prototype.append.apply $('<tr/>'), [
       $ '<th/>', text: utils.i18n 'order_header'
       $ '<th/>', text: utils.i18n 'status_header'
       $ '<th/>', text: utils.i18n 'actions_header'
@@ -119,8 +119,8 @@ buildPopup = ->
   # Otherwise; let's create a row for each order.
   for order, i in ext.orders
     tbody.append(
-      $('<tr/>').append.apply this, [
-        $('<td/>').append.apply this, [
+      $.prototype.append.apply $('<tr/>'), [
+        $.prototype.append.apply $('<td/>'), [
           $ '<strong/>', text: order.label
           '<br />'
           $ '<a/>',
