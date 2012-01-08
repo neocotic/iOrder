@@ -6,15 +6,19 @@
 
 #### Private variables
 
-# TODO: Comment
+# Mapping for internationalization handlers.  
+# Each handler represents an attribute (based on the property name) and is
+# called for each attribute found in the current `document`.
 i18nHandlers   =
 
-  # TODO: Comment
+  # Replace the HTML content of `element` with the message looked up for
+  # `value`.
   'i18n-content': (element, value, subMap) ->
     subs = i18nSubs element, value, subMap
     element.innerHTML = utils.i18n value, subs
 
-  # TODO: Comment
+  # Replace the value of the properties and/or attributes of `element` with the
+  # messages looked up for their corresponding values.
   'i18n-values':  (element, value, subMap) ->
     subs  = i18nSubs element, value, subMap
     parts = value.replace(/\s/g, '').split ';'
@@ -32,15 +36,17 @@ i18nHandlers   =
             i18nProcess element, subMap if path is 'innerHTML'
         else
           element.setAttribute propName, utils.i18n propExpr, subs
-# TODO: Comment
+# List of internationalization attributes/handlers available.
 i18nAttributes = []
 i18nAttributes.push key for key of i18nHandlers
-# TODO: Comment
+# Selector containing the available internationalization attributes/handlers
+# which is used by `i18nProcess` to query all elements.
 i18nSelector   = "[#{i18nAttributes.join '],['}]"
 
 #### Private functions
 
-# TODO: Comment
+# Find all elements to be internationalized and call their corresponding
+# handler(s).
 i18nProcess = (node, subMap) ->
   for element in node.querySelectorAll i18nSelector
     for name in i18nAttributes
