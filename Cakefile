@@ -47,7 +47,6 @@ task 'build', 'builds extension', ->
   ].join '&&', (error) ->
     throw error if error
   )
-  console.log 'Build complete!'
 
 task 'clean', 'cleans directories', ->
   console.log 'Spring cleaning...'
@@ -57,7 +56,6 @@ task 'clean', 'cleans directories', ->
   ].join '&&', (error) ->
     throw error if error
   )
-  console.log 'Cleaned!'
 
 task 'dist', 'creates distributable file', ->
   console.log 'Generating distributable....'
@@ -67,10 +65,8 @@ task 'dist', 'creates distributable file', ->
   ].join '&&', (error) ->
     throw error if error
   )
-  console.log 'Distributable created!'
 
 task 'docs', 'creates documentation', ->
   console.log 'Generating documentation...'
   exec "#{docGen} #{srcDir}/lib/*.coffee", (error) ->
     throw error if error
-  console.log 'Documentation created!'
