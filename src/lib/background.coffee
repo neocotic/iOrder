@@ -79,7 +79,7 @@ buildPopup = ->
     footerF.find('button:first-child').attr(
       disabled: 'disabled'
       title:    utils.i18n 'refreshing_title'
-    ).html(utils.i18n 'refreshing_text')
+    ).html utils.i18n 'refreshing_text'
   # Add the clear button if badges are visibile; they can be distracting.
   if updates
     footerF.append(
@@ -117,7 +117,7 @@ buildPopup = ->
     ).appendTo tbody
     footer.find('#refreshLink').remove()
   # Otherwise; let's create a row for each order.
-  for order, i in ext.orders
+  for order in ext.orders
     tbody.append(
       $.prototype.append.apply $('<tr/>'), [
         $.prototype.append.apply $('<td/>'), [
@@ -131,7 +131,7 @@ buildPopup = ->
             text:                order.number
             title:               utils.i18n 'order_title'
         ],
-        $('<td/>').append $ '<span/>', text: getStatusText i
+        $('<td/>').append $ '<span/>', text: getStatusText order
       ]
     )
     # Order had an error; I suppose I should tell the user.
@@ -196,14 +196,14 @@ getOrderUrl = (order) ->
   encode = encodeURIComponent
   return "#{ORDER_URL}#{encode order.number}/#{encode order.code}"
 
-# Attempt to derive the status text to be displayed for the indexed order.  
+# Attempt to derive the status text to be displayed for the order.  
 # The status text will either be that of the latest update or a single
 # whitespace character if no status updates have been detected yet for that
 # order.
-getStatusText = (index) ->
-  length = ext.orders[index].updates.length
-  return ' ' if length is 0
-  return ext.orders[index].updates[length - 1].status
+getStatusText = (order) ->
+  length = order.updates?.length
+  return ' ' unless length
+  return order.updates[length - 1].status
 
 # Return the total number of detected status updates for all existing orders
 # since the last time badges were cleared.
@@ -301,15 +301,15 @@ onRequest = (request, sender, sendResponse) ->
 # If no existing tab exists a new one is simply created.
 selectOrCreateTab = (url, callback) ->
   chrome.windows.getCurrent (win) ->
-    chrome.tabs.query 
-      active:   yes
-      windowId: win.id
-    , (tabs) ->
+    chrome.tabs.query windowId: win.id, (tabs) ->
       # Try to find an existing tab.
-      break for tab in tabs when tab.url.indexOf(url) is 0
-      if tab
+      for tab in tabs
+        if tab.url.indexOf(url) is 0
+          existingTab = tab
+          break
+      if existingTab
         # Found one! Now to select it.
-        chrome.tabs.update tab.id, selected: yes
+        chrome.tabs.update existingTab.id, selected: yes
         callback? no
       else
         # Ach well, let's just create a new one.
