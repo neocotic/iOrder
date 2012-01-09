@@ -16,9 +16,9 @@ In order to build [iOrder][], you need to have the following:
 Follow these steps to build [iOrder][];
 
 1. Clone a copy of the main [iOrder git repository](https://github.com/neocotic/iOrder) by running `git clone git://github.com/neocotic/iOrder.git`
-2. For the compiled and minified version `cd` to the repository directory and enter `cake build`
+2. For the compiled and runnable version `cd` to the repository directory and enter `cake build`
    * Outputs to the `bin` directory
-3. For the distributable file enter `cake dist`
+3. For the optimized distributable file enter `cake dist`
    * Outputs to the `dist` directory
 4. To update the documentation enter `cake docs`
 
