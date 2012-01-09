@@ -7,7 +7,7 @@
 #### Private variables
 
 # Easily accessible reference to the extension controller.
-ext = chrome.extension.getBackgroundPage().ext
+{ext} = chrome.extension.getBackgroundPage()
 
 #### Load functions
 
@@ -186,12 +186,10 @@ saveNotifications = ->
 # Update the settings with the values from the orders section of the options
 # page.
 saveOrders = ->
-  order  = {}
   orders = []
   # Update each individual order settings based on their corresponding options.
   $('#orders optgroup').each ->
-    order = deriveOrder $ this
-    orders.push order
+    orders.push deriveOrder $ this
   # Persist the updated orders.
   utils.set 'orders', orders
   ext.orders = orders
@@ -298,12 +296,12 @@ options = window.options =
       footer:
         opt_footer: new Date().format 'Y'
     # Bind tab selection event to all tabs.
-    $('#navigation li').click ->
+    $('[tabify]').click ->
       $this = $ this
       unless $this.hasClass 'selected'
         $this.siblings().removeClass 'selected'
         $this.addClass 'selected'
-        $($this.attr 'data-href').show().siblings('.tab').hide()
+        $($this.attr 'tabify').show().siblings('.tab').hide()
         utils.set 'options_active_tab', $this.attr 'id'
     # Reflect the persisted tab.
     utils.init 'options_active_tab', 'general_nav'
@@ -323,7 +321,8 @@ options = window.options =
     # Load the current option values.
     load()
     # Initialize all faceboxes.
-    $('a[rel*=facebox]').facebox()
+    $('a[facebox]').click ->
+      $.facebox div: $(this).attr 'facebox'
 
   # Ensure that the persisted tab is currently visible.  
   # This should be called if the user clicks the Options link in the popup while

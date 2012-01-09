@@ -7,7 +7,7 @@
 #### Private variables
 
 # Easily accessible reference to the extension controller.
-ext = chrome.extension.getBackgroundPage().ext
+{ext} = chrome.extension.getBackgroundPage()
 
 #### Private functions
 

@@ -50,30 +50,24 @@ buildPopup = ->
   footer.append footerF, footerL
   header.append headerF, headerL
   # Add the header links (Options, Orders).
-  headerL.append(
-    $ '<a/>',
-      href:    '#'
-      id:      'optionsLink'
-      onclick: 'popup.options()'
-      text:    utils.i18n 'options_text'
-      title:   utils.i18n 'options_title'
-  )
-  headerL.append(
-    $ '<a/>',
-      href:    '#'
-      id:      'ordersLink'
-      onclick: 'popup.viewAll()'
-      text:    utils.i18n 'orders_text'
-      title:   utils.i18n 'orders_title'
-  )
+  headerL.append $ '<a/>',
+    href:    '#'
+    id:      'optionsLink'
+    onclick: 'popup.options()'
+    text:    utils.i18n 'options_text'
+    title:   utils.i18n 'options_title'
+  headerL.append $ '<a/>',
+    href:    '#'
+    id:      'ordersLink'
+    onclick: 'popup.viewAll()'
+    text:    utils.i18n 'orders_text'
+    title:   utils.i18n 'orders_title'
   # Add the refresh button to the footer (can be removed though).
-  footerF.append(
-    $ '<button/>',
-      id:      'refreshLink'
-      onclick: 'popup.refresh()'
-      text:    utils.i18n 'refresh_text'
-      title:   utils.i18n 'refresh_title'
-  )
+  footerF.append $ '<button/>',
+    id:      'refreshLink'
+    onclick: 'popup.refresh()'
+    text:    utils.i18n 'refresh_text'
+    title:   utils.i18n 'refresh_title'
   # Change the refresh button to show I'm busy... I am y'know.
   if updateManager.updating
     footerF.find('button:first-child').attr(
@@ -81,22 +75,18 @@ buildPopup = ->
       title:    utils.i18n 'refreshing_title'
     ).html utils.i18n 'refreshing_text'
   # Add the clear button if badges are visibile; they can be distracting.
-  if updates
-    footerF.append(
-      $ '<button/>',
-        id:      'clearLink'
-        onclick: 'popup.clear()'
-        text:    utils.i18n 'clear_text'
-        title:   utils.i18n 'clear_title'
-    )
+  if updates and utils.get 'badges'
+    footerF.append $ '<button/>',
+      id:      'clearLink'
+      onclick: 'popup.clear()'
+      text:    utils.i18n 'clear_text'
+      title:   utils.i18n 'clear_title'
   # Add the update details to the footer.
-  footerL.append(
-    $ '<span/>',
-      text: utils.i18n('popup_footer_text', [
-        new Date(utils.get 'lastUpdated').format 'H:i'
-        getFrequency().text
-      ])
-  )
+  footerL.append $ '<span/>',
+    text: utils.i18n('popup_footer_text', [
+      new Date(utils.get 'lastUpdated').format 'H:i'
+      getFrequency().text
+    ])
   # Add the column headers to the orders table.
   $('<thead/>').append(
     $.prototype.append.apply $('<tr/>'), [
@@ -130,7 +120,7 @@ buildPopup = ->
             onclick:             'popup.view(this)'
             text:                order.number
             title:               utils.i18n 'order_title'
-        ],
+        ]
         $('<td/>').append $ '<span/>', text: getStatusText order
       ]
     )
@@ -142,17 +132,13 @@ buildPopup = ->
         title: utils.i18n order.error
     # Found the track link so I'll share it with the user. I'm good like that.
     if order.trackingUrl
-      tbody.find('tr:last-child').append(
-        $('<td/>').append(
-          $ '<a/>',
-            'data-order-code':   order.code
-            'data-order-number': order.number
-            href:                '#'
-            onclick:             'popup.track(this)'
-            text:                utils.i18n 'track_text'
-            title:               utils.i18n 'track_title'
-        )
-      )
+      tbody.find('tr:last-child').append $('<td/>').append $ '<a/>',
+          'data-order-code':   order.code
+          'data-order-number': order.number
+          href:                '#'
+          onclick:             'popup.track(this)'
+          text:                utils.i18n 'track_text'
+          title:               utils.i18n 'track_title'
     else
       tbody.find('tr:last-child').append $('<td/>').append ' '
   # One or more order has an error so I'll add a little icon.
@@ -262,12 +248,9 @@ notify = ->
   oldUpdates = updates
   updates = getStatusUpdates()
   # Update/clear badge depending on setting and updates available.
-  if utils.get 'badges'
-    setBadge updates or ''
-  else
-    setBadge()
+  setBadge if utils.get 'badges' then updates or ''
   # Show the notification if setting enabled and has new updates.
-  if utils.get('notifications') and updates > oldUpdates
+  if updates > oldUpdates and utils.get 'notifications'
     webkitNotifications.createHTMLNotification(
       chrome.extension.getURL 'pages/notification.html'
     ).show()

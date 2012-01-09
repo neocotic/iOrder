@@ -2,11 +2,23 @@
 (c) 2012 Alasdair Mercer <br />
 Freely distributable under the MIT license. <br />
 For all details and documentation: <br />
-<a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Notification page setup</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">notification = </span><span class="nb">window</span><span class="p">.</span><span class="nv">notification =</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Public functions</h3>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Initialize the notification page.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">init: </span><span class="o">-&gt;</span>
+<a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Notification page setup</h3>             </td>             <td class="code">               <div class="highlight"><pre>
+
+<span class="nv">notification = </span><span class="nb">window</span><span class="p">.</span><span class="nv">notification =</span>
+
+
+</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h3>Public functions</h3>             </td>             <td class="code">               <div class="highlight"><pre>
+
+
+</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Initialize the notification page.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+  <span class="nv">init: </span><span class="o">-&gt;</span>
     <span class="nx">utils</span><span class="p">.</span><span class="nx">i18nSetup</span><span class="p">()</span>
-    <span class="nv">duration = </span><span class="nx">utils</span><span class="p">.</span><span class="nx">get</span> <span class="s1">&#39;notificationDuration&#39;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Set a timer to close the notification after a specified period of time, if
+    <span class="nv">duration = </span><span class="nx">utils</span><span class="p">.</span><span class="nx">get</span> <span class="s1">&#39;notificationDuration&#39;</span>
+
+</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Set a timer to close the notification after a specified period of time, if
 user enabled the corresponding option; otherwise it should stay open until
-it is closed manually by user.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="nx">duration</span> <span class="o">&gt;</span> <span class="mi">0</span>
+it is closed manually by user.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+    <span class="k">if</span> <span class="nx">duration</span> <span class="o">&gt;</span> <span class="mi">0</span>
       <span class="nb">window</span><span class="p">.</span><span class="nx">setTimeout</span> <span class="o">-&gt;</span>
         <span class="nb">window</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
       <span class="p">,</span> <span class="nx">duration</span>

@@ -6,7 +6,7 @@
       body {background-color: #EBEFF9; font-family: Arial, sans-serif; font-size: 13px; margin: 10px;}
       a, a:active, a:link, a:visited {color: #3D5D6A; cursor: pointer; font-weight: bold; text-decoration: none;}
       a:hover {text-decoration: underline;}
-      a[rel="facebox"] {outline: 0;}
+      a[facebox] {cursor: pointer; outline: 0;}
       code, pre {font: 12px 'Bitstream Vera Sans Mono','Courier',monospace;}
       code {background-color: #F8F8F8; border: 1px solid #DEDEDE; font-size: 13px; padding: 0 2px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
       pre {background-color: #F8F8F8; border: 1px solid #CCC; font-size: 13px; line-height: 19px; margin: 20px 0; overflow: auto; padding: 6px 10px; order-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
@@ -63,8 +63,8 @@
   </head>
   <body>
     <ul id="navigation">
-      <li id="general_nav" data-href="#general_tab" i18n-content="opt_general_header"></li>
-      <li id="orders_nav" data-href="#orders_tab" i18n-content="opt_order_header"></li>
+      <li id="general_nav" tabify="#general_tab" i18n-content="opt_general_header"></li>
+      <li id="orders_nav" tabify="#orders_tab" i18n-content="opt_order_header"></li>
     </ul>
     <div id="navigation-footer"><div></div></div>
     <div class="content-box">
@@ -81,7 +81,7 @@
                 <span id="frequency_txt" i18n-content="opt_frequency_text"></span>
                 <select id="frequency" size="1"></select>
               </label>
-              <a href="#frequency_help" rel="facebox" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
+              <a facebox="#frequency_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
               <div id="frequency_help" class="help" i18n-content="help_frequency"></div>
             </div>
           </div>
@@ -94,7 +94,7 @@
                 <input type="checkbox" id="badges" />
                 <span id="badges_txt" i18n-content="opt_badge_text"></span>
               </label>
-              <a href="#badges_help" rel="facebox" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
+              <a facebox="#badges_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
               <div id="badges_help" class="help" i18n-content="help_badges"></div>
             </div>
             <div>
@@ -102,7 +102,7 @@
                 <input type="checkbox" id="notifications" />
                 <span id="notifications_txt" i18n-content="opt_notification_text"></span>
               </label>
-              <a href="#notifications_help" rel="facebox" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
+              <a facebox="#notifications_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
               <div id="notifications_help" class="help" i18n-content="help_notifications"></div>
             </div>
             <div style="margin: 0 0 0 4px">
@@ -111,7 +111,7 @@
                 <input id="notificationDuration" max="60" min="0" size="1" step="1" type="number" />
                 <span id="notificationDuration_txt2" i18n-content="opt_notification_timer_text2"></span>
               </label>
-              <a href="#notificationDuration_help" rel="facebox" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
+              <a facebox="#notificationDuration_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
               <div id="notificationDuration_help" class="help" i18n-content="help_notificationDuration"></div>
             </div>
           </div>
@@ -140,7 +140,7 @@
                           <label for="order_label">
                             <span id="order_label_txt" i18n-content="opt_order_label_text"></span>
                           </label>
-                          <a href="#order_label_help" rel="facebox" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
+                          <a facebox="#order_label_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
                           <div id="order_label_help" class="help" i18n-content="help_order_label"></div>
                         </td>
                         <td>
@@ -161,7 +161,7 @@
                           <label for="order_number">
                             <span id="order_number_txt" i18n-content="opt_order_number_text"></span>
                           </label>
-                          <a href="#order_number_help" rel="facebox" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
+                          <a facebox="#order_number_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
                           <div id="order_number_help" class="help" i18n-content="help_order_number"></div>
                         </td>
                         <td>
@@ -183,7 +183,7 @@
                           <label for="order_code">
                             <span id="order_code_txt" i18n-content="opt_order_code_text"></span>
                           </label>
-                          <a href="#order_code_help" rel="facebox" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
+                          <a facebox="#order_code_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
                           <div id="order_code_help" class="help" i18n-content="help_order_code"></div>
                         </td>
                         <td>
@@ -198,7 +198,7 @@
                     <label for="updates">
                       <span id="updates_txt" i18n-content="opt_order_updates_text"></span>
                     </label>
-                    <a href="#updates_help" rel="facebox" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
+                    <a facebox="#updates_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
                     <div id="updates_help" class="help" i18n-content="help_updates"></div>
                   </td>
                 </tr>
