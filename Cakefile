@@ -32,47 +32,41 @@ dirs = [
 task 'build', 'builds extension', ->
   console.log 'Building iOrder...'
   for path in dirs
-    exec("mkdir -p #{path}", (error) ->
+    exec "mkdir -p #{path}", (error) ->
       throw error if error
-    )
-  exec([
+  exec [
     "cp -r #{srcDir}/* #{binDir}"
     "find #{binDir}/ -name '.git*' -print0 | xargs -0 -IFILES rm FILES"
     "#{compile} --compile #{binDir}/lib/"
     "rm -f #{binDir}/lib/*.coffee"
-    "for file in #{binDir}/lib/*.js;
- do echo \"#{copyright}\" > $file.tmp &&
- cat $file >> $file.tmp &&
- mv -f $file.tmp $file;
- done"
-  ].join '&&', (error) ->
+    "for file in #{binDir}/lib/*.js; do echo \"#{copyright}\" > $file.tmp"
+    'cat $file >> $file.tmp'
+    'mv -f $file.tmp $file; done'
+  ].join('&&'), (error) ->
     throw error if error
-  )
 
 task 'clean', 'cleans directories', ->
   console.log 'Spring cleaning...'
-  exec([
+  exec [
     "rm -rf #{binDir}"
     "rm -rf #{distDir}"
-  ].join '&&', (error) ->
+  ].join('&&'), (error) ->
     throw error if error
-  )
 
 task 'dist', 'creates distributable file', ->
   console.log 'Generating distributable....'
-  exec([
+  exec [
     "mkdir -p #{distDir}"
     "mkdir -p #{distDir}/#{tempDir}"
     "cp -r #{binDir}/* #{distDir}/#{tempDir}"
-    "for file in #{distDir}/#{tempDir}/lib/*.js;
- do #{minify} $file > $file.tmp &&
- mv -f $file.tmp $file;
- done"
-    "cd #{distDir}/#{tempDir} && zip -r ../#{distFile} *"
-    "rm -rf #{distDir}/#{tempDir}"
-  ].join '&&', (error) ->
+    "for file in #{distDir}/#{tempDir}/lib/*.js; do #{minify} $file > $file.tmp"
+    'mv -f $file.tmp $file; done'
+    "cd #{distDir}/#{tempDir}"
+    "zip -r ../#{distFile} *"
+    'cd ../'
+    "rm -rf #{tempDir}"
+  ].join('&&'), (error) ->
     throw error if error
-  )
 
 task 'docs', 'creates documentation', ->
   console.log 'Generating documentation...'
