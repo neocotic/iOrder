@@ -17,6 +17,7 @@ distDir  = 'dist'
 distFile = 'iOrder'
 docsDir  = 'docs'
 srcDir   = 'src'
+tempDir  = 'temp'
 
 dirs = [
          binDir
@@ -41,7 +42,7 @@ task 'build', 'builds extension', ->
     "rm -f #{binDir}/lib/*.coffee"
     "for file in #{binDir}/lib/*.js;
  do echo \"#{copyright}\" > $file.tmp &&
- #{minify} $file >> $file.tmp &&
+ cat $file >> $file.tmp &&
  mv -f $file.tmp $file;
  done"
   ].join '&&', (error) ->
@@ -61,7 +62,14 @@ task 'dist', 'creates distributable file', ->
   console.log 'Generating distributable....'
   exec([
     "mkdir -p #{distDir}"
-    "cd #{binDir} && zip -r ../#{distDir}/#{distFile} *"
+    "mkdir -p #{distDir}/#{tempDir}"
+    "cp -r #{binDir}/* #{distDir}/#{tempDir}"
+    "for file in #{distDir}/#{tempDir}/lib/*.js;
+ do #{minify} $file > $file.tmp &&
+ mv -f $file.tmp $file;
+ done"
+    "cd #{distDir}/#{tempDir} && zip -r ../#{distFile} *"
+    "rm -rf #{distDir}/#{tempDir}"
   ].join '&&', (error) ->
     throw error if error
   )
