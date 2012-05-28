@@ -6,20 +6,17 @@
 
 #### Private variables
 
-# Names of the classes to be removed from the targeted elements.
-classes     = [
-                'chrome_install_button'
-                'primary'
-              ]
 # Extension ID of iOrder.
-extensionId = 'kflemogpkbophbipihnbcmlplbihbdhb'
-# "Install" links to be modified.
-links       = document.querySelectorAll("a.#{classes[0]}[href$=#{extensionId}]")
+extId = 'kflemogpkbophbipihnbcmlplbihbdhb'
+# Names of the classes to be added to the targeted elements.
+newClasses = ['disabled']
+# Names of the classes to be removed from the targeted elements.
+oldClasses = ['chrome_install_button']
 
 #### Functionality
 
-# Disable all "Install" links on the homepage for iOrder.
-for link in links
-  link.className += ' disabled'
-  link.innerText  = 'Installed'
-  link.className = link.className.replace cls, '' for cls in classes
+# Disable all "Install" links on the homepage for Undo Wikipedia Blackout.
+for link in document.querySelectorAll "a.#{oldClasses[0]}[href$=#{extId}]"
+  link.innerText = 'Installed'
+  link.classList.add    cls for cls in newClasses
+  link.classList.remove cls for cls in oldClasses

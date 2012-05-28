@@ -5,26 +5,23 @@ For all details and documentation: <br />
 <a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Private variables</h3>             </td>             <td class="code">               <div class="highlight"><pre>
 
 
-</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Names of the classes to be removed from the targeted elements.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">classes     = </span><span class="p">[</span>
-                <span class="s1">&#39;chrome_install_button&#39;</span>
-                <span class="s1">&#39;primary&#39;</span>
-              <span class="p">]</span>
+</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Extension ID of iOrder.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+<span class="nv">extId = </span><span class="s1">&#39;kflemogpkbophbipihnbcmlplbihbdhb&#39;</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Extension ID of iOrder.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">extensionId = </span><span class="s1">&#39;kflemogpkbophbipihnbcmlplbihbdhb&#39;</span>
+</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Names of the classes to be added to the targeted elements.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+<span class="nv">newClasses = </span><span class="p">[</span><span class="s1">&#39;disabled&#39;</span><span class="p">]</span>
 
-</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>"Install" links to be modified.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">links       = </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s2">&quot;a.#{classes[0]}[href$=#{extensionId}]&quot;</span><span class="p">)</span>
+</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Names of the classes to be removed from the targeted elements.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+<span class="nv">oldClasses = </span><span class="p">[</span><span class="s1">&#39;chrome_install_button&#39;</span><span class="p">]</span>
 
 
 </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>Functionality</h3>             </td>             <td class="code">               <div class="highlight"><pre>
 
 
-</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Disable all "Install" links on the homepage for iOrder.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="k">for</span> <span class="nx">link</span> <span class="k">in</span> <span class="nx">links</span>
-  <span class="nx">link</span><span class="p">.</span><span class="nx">className</span> <span class="o">+=</span> <span class="s1">&#39; disabled&#39;</span>
-  <span class="nv">link.innerText  = </span><span class="s1">&#39;Installed&#39;</span>
-  <span class="nv">link.className = </span><span class="nx">link</span><span class="p">.</span><span class="nx">className</span><span class="p">.</span><span class="nx">replace</span> <span class="nx">cls</span><span class="p">,</span> <span class="s1">&#39;&#39;</span> <span class="k">for</span> <span class="nx">cls</span> <span class="k">in</span> <span class="nx">classes</span>
+</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Disable all "Install" links on the homepage for Undo Wikipedia Blackout.</p>             </td>             <td class="code">               <div class="highlight"><pre>
+<span class="k">for</span> <span class="nx">link</span> <span class="k">in</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span> <span class="s2">&quot;a.#{oldClasses[0]}[href$=#{extId}]&quot;</span>
+  <span class="nv">link.innerText = </span><span class="s1">&#39;Installed&#39;</span>
+  <span class="nx">link</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span>    <span class="nx">cls</span> <span class="k">for</span> <span class="nx">cls</span> <span class="k">in</span> <span class="nx">newClasses</span>
+  <span class="nx">link</span><span class="p">.</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">cls</span> <span class="k">for</span> <span class="nx">cls</span> <span class="k">in</span> <span class="nx">oldClasses</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
