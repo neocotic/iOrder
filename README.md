@@ -9,12 +9,10 @@
 [iOrder][] is a Google Chrome extension that keeps users updated with their
 iDevice order progress.
 
-## Bugs
+## Help Desk
 
-If you have any problems with this extension or would like to see the changes
-currently in development you can do so here;
-
-https://github.com/neocotic/iOrder/issues
+If you have any problems with this extension or would like give us your feedback
+you can do so on our [Help Desk][].
 
 ## Questions?
 
@@ -29,4 +27,5 @@ please visit the project's homepage;
 http://neocotic.com/iOrder
 
 [@neocotic]: https://twitter.com/#!/neocotic
+[help desk]: https://iorder.uservoice.com
 [iOrder]: https://chrome.google.com/webstore/detail/kflemogpkbophbipihnbcmlplbihbdhb

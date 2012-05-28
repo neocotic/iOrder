@@ -2,8 +2,12 @@
 bin
 dist
 
+# npm generated files/folders #
+node_modules
+npm-debug.log
+
 # OS generated files #
-.DS_Store?
+.DS_Store
 ehthumbs.db
 Icon?
 Thumbs.db
