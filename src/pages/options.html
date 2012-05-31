@@ -33,7 +33,10 @@
       button, input[type="button"], input[type="file"]::-webkit-file-upload-button, input[type="reset"], input[type="submit"] {background-image: -webkit-gradient(linear, left top, left bottom, from(whiteSmoke), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, whiteSmoke, #F1F1F1); -webkit-border-radius: 2px; -webkit-user-select: none; background-color: whiteSmoke; background-image: linear-gradient(top, whiteSmoke, #F1F1F1); background-image: -o-linear-gradient(top, whiteSmoke, #F1F1F1); border: 1px solid gainsboro; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 2px; color: #666; cursor: pointer; font-size: 11px; font-weight: bold; height: 22px; line-height: 1em; margin: auto 6px auto auto; padding: 0 8px; text-align: center;}
       button:disabled, input[type="button"]:disabled, input[type="file"]:disabled::-webkit-file-upload-button, input[type="reset"]:disabled, input[type="submit"]:disabled {background-image: -webkit-gradient(linear,left top,left bottom, from(#EBEBE4), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, #EBEBE4, #F1F1F1); background-color: #EBEBE4; background-image: linear-gradient(top, #EBEBE4, #F1F1F1); background-image: -o-linear-gradient(top, #EBEBE4, #F1F1F1); border: 1px solid #C6C6C6; color: #AAA; cursor: default;}
       button:hover:not(:disabled), input[type="button"]:hover:not(:disabled), input[type="file"]::-webkit-file-upload-button:hover:not(:disabled), input[type="reset"]:hover:not(:disabled), input[type="submit"]:hover:not(:disabled) {background-image: -webkit-gradient(linear,left top,left bottom, from(#F8F8F8), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, #F8F8F8, #F1F1F1); -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1); background-color: #F8F8F8; background-image: linear-gradient(top, #F8F8F8, #F1F1F1); background-image: -o-linear-gradient(top, #F8F8F8, #F1F1F1); border: 1px solid #C6C6C6; box-shadow: 0 1px 1px rgba(0,0,0,0.1); color: #333;}
-      #footer {font-size: 13px; text-align: center;}
+      footer {font-size: 13px; text-align: center;}
+      #footer {display: inline;}
+      #donation {display: inline; margin: 0;}
+      #donation [type="image"] {border: 0; margin: 0 0 -4px 12px;}
       /* Facebox */
       #facebox {left: 0; position: absolute; text-align: left; top: 0; z-index: 100;}
       #facebox .popup {border: 3px solid rgba(0,0,0,0); border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; box-shadow:0 0 18px rgba(0,0,0,0.4); -moz-box-shadow: 0 0 18px rgba(0,0,0,0.4); -webkit-box-shadow: 0 0 18px rgba(0,0,0,0.4); position: relative;}
@@ -224,6 +227,13 @@
         </table>
       </div>
     </div>
-    <div id="footer" i18n-content="opt_footer"></div>
+    <footer>
+      <div id="footer" i18n-content="opt_footer"></div>
+      <form id="donation" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="2KJMS2YHQVMWU">
+        <input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif" name="submit" alt="Donate">
+      </form>
+    </footer>
   </body>
 </html>
