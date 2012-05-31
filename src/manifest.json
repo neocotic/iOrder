@@ -14,6 +14,7 @@
     ]
   , "default_locale": "en"
   , "description": "__MSG_description__"
+  , "homepage_url": "http://neocotic.com/iOrder"
   , "icons": {
         "16": "images/icon_16.png"
       , "19": "images/icon_19.png"
@@ -34,5 +35,5 @@
       , "http://*.neocotic.com/"
       , "https://store.apple.com/"
     ]
-  , "version": "1.1.1"
+  , "version": "1.1.2"
 }

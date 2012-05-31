@@ -1,3 +1,8 @@
+2012.05.31, Version 1.1.2
+
+* [#27](https://github.com/neocotic/iOrder/issues/27): Add donation button to footer of Options page
+* [#28](https://github.com/neocotic/iOrder/issues/28): Improve inline installation compatibility
+
 2012.05.28, Version 1.1.1
 
 * [#22](https://github.com/neocotic/iOrder/issues/22): No longer remove `btn-primary` class from inline installation buttons on homepage
