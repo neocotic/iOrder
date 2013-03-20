@@ -1,5 +1,5 @@
 # [iOrder](http://neocotic.com/iOrder)  
-# (c) 2012 Alasdair Mercer  
+# (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license.  
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
@@ -252,31 +252,31 @@ notify = ->
   # Show the notification if setting enabled and has new updates.
   if updates > oldUpdates and utils.get 'notifications'
     webkitNotifications.createHTMLNotification(
-      chrome.extension.getURL 'pages/notification.html'
+      utils.url 'pages/notification.html'
     ).show()
 
-# Listener for internal requests.  
-# This function will handle the request based on its type and the data
+# Listener for internal messages.  
+# This function will handle the message based on its type and the data
 # provided.
-onRequest = (request, sender, sendResponse) ->
+onMessage = (message, sender, sendResponse) ->
   order   = {}
   url     = ''
   # Check what needs to be done... and then do it.
-  switch request.type
+  switch message.type
     when 'clear' then markRead()
     when 'options'
       # Try using existing tabs for the options page before creating one.
-      url = chrome.extension.getURL 'pages/options.html'
+      url = utils.url 'pages/options.html'
       selectOrCreateTab url, (isNew) ->
         return if isNew
         win.options.refresh() for win in getWindows url
     when 'refresh' then updateManager.restart()
     when 'track'
-      order = ext.getOrder request.data.number, request.data.code
+      order = ext.getOrder message.data.number, message.data.code
       chrome.tabs.create url: order.trackingUrl if order and order.trackingUrl
     when 'viewAll' then chrome.tabs.create url: ORDERS_URL
     when 'view'
-      order = ext.getOrder request.data.number, request.data.code
+      order = ext.getOrder message.data.number, message.data.code
       chrome.tabs.create url: getOrderUrl order if order
 
 # Attempt to select a tab in the current window displaying a page whose
@@ -498,7 +498,7 @@ ext = window.ext =
       return order
 
   # Initialize the background page.  
-  # This will involve initializing the settings, adding the request listeners
+  # This will involve initializing the settings, adding the message listeners
   # and starting the update manager.
   init: ->
     utils.init 'update_progress', {}
@@ -510,9 +510,9 @@ ext = window.ext =
     utils.init 'notifications', on
     utils.init 'notificationDuration', 6 * 1000
     initOrders()
-    chrome.extension.onRequest.addListener onRequest
+    utils.onMessage 'extension', no, onMessage
     # It's nice knowing what version is running.
-    $.getJSON chrome.extension.getURL('manifest.json'), (data) ->
+    $.getJSON utils.url('manifest.json'), (data) ->
       version = data.version
       # Execute content scripts now that we know the version.
       executeScriptsInExistingWindows()
