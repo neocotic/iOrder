@@ -68,7 +68,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2012 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
+              <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2013 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
 <h3>Private variables</h3>
 <p>Easily accessible reference to the extension controller.</p>
 
@@ -86,11 +86,13 @@
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
               <h3>Private functions</h3>
-<p>Send a request to the background page using the information provided.</p>
+<p>Add a <code>handler</code> to all selected elements for the specified <code>event</code>.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">sendRequest</span></span> = (type, closeAfter, data = {}, element) -&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">addEventHandler</span></span> = (selector, event, handler, context = document) -&gt;
+  elements = context.querySelectorAll selector
+  element.addEventListener event, handler <span class="keyword">for</span> element <span class="keyword">in</span> elements</pre></div></div>
             
         </li>
         
@@ -100,6 +102,21 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Send a message to the background page using the information provided.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">sendMessage</span></span> = (type, closeAfter, data = {}, element) -&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Extract the related order data from the element, where possible.</p>
 
@@ -112,26 +129,26 @@
         </li>
         
         
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Send the request to the background page.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  chrome.extension.sendRequest data: data, type: type</pre></div></div>
-            
-        </li>
-        
-        
         <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Send the message to the background page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  utils.sendMessage <span class="string">'extension'</span>, data: data, type: type</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Close this pesky popup.</p>
 
@@ -142,11 +159,11 @@
         </li>
         
         
-        <li id="section-6">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <h3>Popup page setup</h3>
 
@@ -157,34 +174,19 @@
         </li>
         
         
-        <li id="section-7">
+        <li id="section-8">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h3>Public functions</h3>
-<p>Send a request to clear any badge being displayed.</p>
+<p>Send a message to clear any badge being displayed.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  clear: -&gt;
-    sendRequest <span class="string">'clear'</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-8">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
-              </div>
-              <p>Initialize the popup page.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  init: -&gt;</pre></div></div>
+    sendMessage <span class="string">'clear'</span></pre></div></div>
             
         </li>
         
@@ -195,11 +197,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Insert the prepared HTML in to the popup&#39;s body.</p>
+              <p>Initialize the popup page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    document.body.innerHTML = ext.popupHtml</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  init: -&gt;</pre></div></div>
             
         </li>
         
@@ -210,16 +212,19 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Send a request to open the Orders tab on the options page.</p>
+              <p>Insert the prepared HTML in to the popup&#39;s body and bind click events.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  options: (tab) -&gt;
-    suffix = <span class="string">'_nav'</span>
-    <span class="keyword">if</span> tab
-      tab += suffix <span class="keyword">if</span> tab.indexOf(suffix) <span class="keyword">isnt</span> tab.length - suffix.length
-      utils.set <span class="string">'options_active_tab'</span>, tab
-    sendRequest <span class="string">'options'</span>, <span class="literal">yes</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    document.body.innerHTML = ext.popupHtml
+    addEventHandler <span class="string">'#optionsLink'</span>,  <span class="string">'click'</span>, popup.options
+    addEventHandler <span class="string">'#ordersLink'</span>,   <span class="string">'click'</span>, popup.viewAll
+    addEventHandler <span class="string">'#clearLink'</span>,    <span class="string">'click'</span>, popup.clear
+    addEventHandler <span class="string">'#noOrdersLink'</span>, <span class="string">'click'</span>, popup.options
+    addEventHandler <span class="string">'#refreshLink'</span>,  <span class="string">'click'</span>, popup.refresh
+    <span class="keyword">for</span> orderRow <span class="keyword">in</span> document.querySelectorAll <span class="string">'#orders tbody tr'</span>
+      addEventHandler <span class="string">'td:first-child a'</span>, <span class="string">'click'</span>, popup.view,  orderRow
+      addEventHandler <span class="string">'td:last-child a'</span>,  <span class="string">'click'</span>, popup.track, orderRow</pre></div></div>
             
         </li>
         
@@ -230,12 +235,17 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Send a request to update the orders immediately.</p>
+              <p>Send a message to open the Orders tab on the options page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  refresh: -&gt;
-    sendRequest <span class="string">'refresh'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  options: -&gt;
+    suffix = <span class="string">'_nav'</span>
+    tab    = <span class="property">@getAttribute</span> <span class="string">'data-options-tab'</span>
+    <span class="keyword">if</span> tab
+      tab += suffix <span class="keyword">if</span> tab.indexOf(suffix) <span class="keyword">isnt</span> tab.length - suffix.length
+      utils.set <span class="string">'options_active_tab'</span>, tab
+    sendMessage <span class="string">'options'</span>, <span class="literal">yes</span></pre></div></div>
             
         </li>
         
@@ -246,13 +256,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Send a request to open the tracking page for the order relating to the
-clicked link.</p>
+              <p>Send a message to update the orders immediately.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  track: (element) -&gt;
-    sendRequest <span class="string">'track'</span>, <span class="literal">yes</span>, {}, element</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  refresh: -&gt;
+    sendMessage <span class="string">'refresh'</span></pre></div></div>
             
         </li>
         
@@ -263,13 +272,13 @@ clicked link.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Send a request to open the page on the Apple US store for the order
-relating to the clicked link.</p>
+              <p>Send a message to open the tracking page for the order relating to the
+clicked link.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  view: (element) -&gt;
-    sendRequest <span class="string">'view'</span>, <span class="literal">yes</span>, {}, element</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  track: -&gt;
+    sendMessage <span class="string">'track'</span>, <span class="literal">yes</span>, {}, <span class="keyword">this</span></pre></div></div>
             
         </li>
         
@@ -280,12 +289,44 @@ relating to the clicked link.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Send a request to open the order listing page on the Apple US store.</p>
+              <p>Send a message to open the page on the Apple US store for the order
+relating to the clicked link.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  view: -&gt;
+    sendMessage <span class="string">'view'</span>, <span class="literal">yes</span>, {}, <span class="keyword">this</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Send a message to open the order listing page on the Apple US store.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  viewAll: -&gt;
-    sendRequest <span class="string">'viewAll'</span>, <span class="literal">yes</span></pre></div></div>
+    sendMessage <span class="string">'viewAll'</span>, <span class="literal">yes</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Initialize <code>popup</code> when the DOM is ready.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>utils.ready -&gt; popup.init()</pre></div></div>
             
         </li>
         

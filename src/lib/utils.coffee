@@ -84,6 +84,16 @@ utils = window.utils =
       base = base.onMessage or base.onRequest
     base.addListener args...
 
+  # Bind `handler` to event indicating that the DOM is ready.
+  ready: (context, handler) ->
+    unless handler?
+      handler = context
+      context = window
+    if context.jQuery?
+      context.jQuery handler
+    else
+      context.document.addEventListener 'DOMContentLoaded', handler
+
   # Convenient shorthand for the different types of `sendMessage` methods
   # available in the chrome API.  
   # This also supports the old `sendRequest` variations for backwards

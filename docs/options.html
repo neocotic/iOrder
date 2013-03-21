@@ -68,7 +68,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2012 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
+              <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2013 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
 <h3>Private variables</h3>
 <p>Easily accessible reference to the extension controller.</p>
 
@@ -599,7 +599,7 @@ the current selection (where possible).</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  chrome.extension.sendRequest type: <span class="string">'refresh'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  utils.sendMessage <span class="string">'extension'</span>, type: <span class="string">'refresh'</span></pre></div></div>
             
         </li>
         
@@ -1106,6 +1106,21 @@ and options page is already open.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    $(<span class="string">"#<span class="subst">#{utils.get 'options_active_tab'}</span>"</span>).click()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>Initialize <code>options</code> when the DOM is ready.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>utils.ready -&gt; options.init()</pre></div></div>
             
         </li>
         

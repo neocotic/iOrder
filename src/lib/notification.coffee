@@ -21,3 +21,6 @@ notification = window.notification =
       window.setTimeout ->
         window.close()
       , duration
+
+# Initialize `notification` when the DOM is ready.
+utils.ready -> notification.init()

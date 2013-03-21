@@ -330,3 +330,6 @@ options = window.options =
   refresh: ->
     # Ensure the persisted tab is visible
     $("##{utils.get 'options_active_tab'}").click()
+
+# Initialize `options` when the DOM is ready.
+utils.ready -> options.init()

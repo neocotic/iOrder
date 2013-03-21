@@ -53,19 +53,16 @@ buildPopup = ->
   headerL.append $ '<a/>',
     href:    '#'
     id:      'optionsLink'
-    onclick: 'popup.options()'
     text:    utils.i18n 'options_text'
     title:   utils.i18n 'options_title'
   headerL.append $ '<a/>',
     href:    '#'
     id:      'ordersLink'
-    onclick: 'popup.viewAll()'
     text:    utils.i18n 'orders_text'
     title:   utils.i18n 'orders_title'
   # Add the refresh button to the footer (can be removed though).
   footerF.append $ '<button/>',
     id:      'refreshLink'
-    onclick: 'popup.refresh()'
     text:    utils.i18n 'refresh_text'
     title:   utils.i18n 'refresh_title'
   # Change the refresh button to show I'm busy... I am y'know.
@@ -78,7 +75,6 @@ buildPopup = ->
   if updates and utils.get 'badges'
     footerF.append $ '<button/>',
       id:      'clearLink'
-      onclick: 'popup.clear()'
       text:    utils.i18n 'clear_text'
       title:   utils.i18n 'clear_title'
   # Add the update details to the footer.
@@ -117,7 +113,6 @@ buildPopup = ->
             'data-order-code':   order.code
             'data-order-number': order.number
             href:                '#'
-            onclick:             'popup.view(this)'
             text:                order.number
             title:               utils.i18n 'order_title'
         ]
@@ -136,7 +131,6 @@ buildPopup = ->
           'data-order-code':   order.code
           'data-order-number': order.number
           href:                '#'
-          onclick:             'popup.track(this)'
           text:                utils.i18n 'track_text'
           title:               utils.i18n 'track_title'
     else
@@ -313,7 +307,7 @@ updateOrder = (order, callback) ->
     # Probably won't happen; more of a sanity check.
     return order.error = 'update_invalid_page_error' unless data
     # Extract the relevant elements wrapped in jQuery goodness.
-    heading     = $(data).find '.order .delivery-group .sb-heading'
+    heading     = $(data).find '.order .ship-group .sb-heading'
     status      = heading.find 'h4 span:first-child'
     trackingUrl = heading.find ".group-actions tr:first-child td
  a[href^='#{TRACKER_URL}']"
@@ -518,3 +512,6 @@ ext = window.ext =
       executeScriptsInExistingWindows()
     # It's alive!
     updateManager.start()
+
+# Initialize `ext` when the DOM is ready.
+utils.ready -> ext.init()
