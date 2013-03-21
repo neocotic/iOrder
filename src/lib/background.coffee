@@ -307,7 +307,7 @@ updateOrder = (order, callback) ->
     # Probably won't happen; more of a sanity check.
     return order.error = 'update_invalid_page_error' unless data
     # Extract the relevant elements wrapped in jQuery goodness.
-    heading     = $(data).find '.order .delivery-group .sb-heading'
+    heading     = $(data).find '.order .ship-group .sb-heading'
     status      = heading.find 'h4 span:first-child'
     trackingUrl = heading.find ".group-actions tr:first-child td
  a[href^='#{TRACKER_URL}']"
