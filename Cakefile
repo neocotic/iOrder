@@ -173,11 +173,12 @@ task 'dist', 'Create distributable file', ->
       )
       async.forEach files, optimizeMessage, (err) -> cb err
     (cb) ->
+      path = Path.join DIST_DIR, "#{DIST_FILE}.zip"
+      fs.exists path, (exists) ->
+        if exists then fs.unlink path, cb else cb()
+    (cb) ->
       # TODO: Support Windows
-      exec [
-        "rm ../#{DIST_FILE}.zip"
-        "zip -r ../#{DIST_FILE} *"
-      ].join('&&'), cwd: TEMP_PATH, cb
+      exec "zip -r ../#{DIST_FILE} *", cwd: TEMP_PATH, cb
   ], (err) ->
     throw err if err
     wrench.rmdirSyncRecursive TEMP_PATH
@@ -185,6 +186,7 @@ task 'dist', 'Create distributable file', ->
 
 task 'docs', 'Create documentation', ->
   console.log 'Generating documentation...'
+  # TODO: Call docco programmatically
   exec "docco -o #{DOCS_DIR} #{getCoffeeFiles(SOURCE_DIR).join ' '}", (err) ->
     throw err if err
     finish 'Documentation created!'
