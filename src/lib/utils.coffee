@@ -1,5 +1,5 @@
 # [iOrder](http://neocotic.com/iOrder)  
-# (c) 2012 Alasdair Mercer  
+# (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license.  
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
@@ -68,6 +68,18 @@ i18nSubs = (element, value, subMap) ->
 #### Utilities setup
 
 utils = window.utils =
+
+  #### General functions
+
+  # Bind `handler` to event indicating that the DOM is ready.
+  ready: (context, handler) ->
+    unless handler?
+      handler = context
+      context = window
+    if context.jQuery?
+      context.jQuery handler
+    else
+      context.document.addEventListener 'DOMContentLoaded', handler
 
   #### Data functions
 

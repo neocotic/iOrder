@@ -261,7 +261,7 @@
         "content": "</a>"
       },
       "o_link_1": {
-        "content": "<a href=\"#\" onclick=\"popup.options('orders')\">"
+        "content": "<a href=\"#\" id=\"noOrdersLink\" data-options-tab=\"orders\">"
       }
     }
   },
