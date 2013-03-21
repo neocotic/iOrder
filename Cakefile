@@ -25,7 +25,7 @@ COPYRIGHT = """
 
 """
 ENCODING  = 'utf8'
-MODE      = 0777
+MODE      = 0o777
 
 # Files & directories
 # -------------------
