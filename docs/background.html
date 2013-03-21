@@ -68,7 +68,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2012 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
+              <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2013 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
 <h3>Private constants</h3>
 <p>Domain of this extension&#39;s homepage.</p>
 
@@ -231,13 +231,11 @@ code, in that order.</p>
             <div class="content"><div class='highlight'><pre>  headerL.append $ <span class="string">'&lt;a/&gt;'</span>,
     href:    <span class="string">'#'</span>
     id:      <span class="string">'optionsLink'</span>
-    onclick: <span class="string">'popup.options()'</span>
     text:    utils.i18n <span class="string">'options_text'</span>
     title:   utils.i18n <span class="string">'options_title'</span>
   headerL.append $ <span class="string">'&lt;a/&gt;'</span>,
     href:    <span class="string">'#'</span>
     id:      <span class="string">'ordersLink'</span>
-    onclick: <span class="string">'popup.viewAll()'</span>
     text:    utils.i18n <span class="string">'orders_text'</span>
     title:   utils.i18n <span class="string">'orders_title'</span></pre></div></div>
             
@@ -256,7 +254,6 @@ code, in that order.</p>
             
             <div class="content"><div class='highlight'><pre>  footerF.append $ <span class="string">'&lt;button/&gt;'</span>,
     id:      <span class="string">'refreshLink'</span>
-    onclick: <span class="string">'popup.refresh()'</span>
     text:    utils.i18n <span class="string">'refresh_text'</span>
     title:   utils.i18n <span class="string">'refresh_title'</span></pre></div></div>
             
@@ -295,7 +292,6 @@ code, in that order.</p>
             <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> updates <span class="keyword">and</span> utils.get <span class="string">'badges'</span>
     footerF.append $ <span class="string">'&lt;button/&gt;'</span>,
       id:      <span class="string">'clearLink'</span>
-      onclick: <span class="string">'popup.clear()'</span>
       text:    utils.i18n <span class="string">'clear_text'</span>
       title:   utils.i18n <span class="string">'clear_title'</span></pre></div></div>
             
@@ -399,7 +395,6 @@ code, in that order.</p>
             <span class="string">'data-order-code'</span>:   order.code
             <span class="string">'data-order-number'</span>: order.number
             href:                <span class="string">'#'</span>
-            onclick:             <span class="string">'popup.view(this)'</span>
             text:                order.number
             title:               utils.i18n <span class="string">'order_title'</span>
         ]
@@ -444,7 +439,6 @@ code, in that order.</p>
           <span class="string">'data-order-code'</span>:   order.code
           <span class="string">'data-order-number'</span>: order.number
           href:                <span class="string">'#'</span>
-          onclick:             <span class="string">'popup.track(this)'</span>
           text:                utils.i18n <span class="string">'track_text'</span>
           title:               utils.i18n <span class="string">'track_title'</span>
     <span class="keyword">else</span>
@@ -1798,6 +1792,21 @@ and starting the update manager.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    updateManager.start()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-100">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-100">&#182;</a>
+              </div>
+              <p>Initialize <code>ext</code> when the DOM is ready.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>utils.ready -&gt; ext.init()</pre></div></div>
             
         </li>
         
