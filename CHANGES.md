@@ -4,7 +4,7 @@
 
 2013.03.21, Version 1.1.3
 
-* [#26](https://github.com/neocotic/iOrder/issues/26): Update [manifest versio][] to 2 and provide and support a [Content Security Policy][]
+* [#26](https://github.com/neocotic/iOrder/issues/26): Update [manifest version][] to 2 and provide and support a [Content Security Policy][]
 * [#29](https://github.com/neocotic/iOrder/issues/29): Replace calls to deprecated chrome API methods
 * [#31](https://github.com/neocotic/iOrder/issues/31): Fix bug preventing order status from updating
 * [#34](https://github.com/neocotic/iOrder/issues/34): Update development dependencies
