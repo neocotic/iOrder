@@ -1186,8 +1186,7 @@ updates any popup currently being displayed.</p>
             
             <div class="content"><div class='highlight'><pre><span class="function"><span class="title">updatePopup</span></span> = -&gt;
   buildPopup()
-  popup = chrome.extension.getViews(type: <span class="string">'popup'</span>)[<span class="number">0</span>]
-  popup.document.body.innerHTML = ext.popupHtml <span class="keyword">if</span> popup</pre></div></div>
+  chrome.extension.getViews(type: <span class="string">'popup'</span>)[<span class="number">0</span>]?.popup.init()</pre></div></div>
             
         </li>
         

@@ -344,8 +344,7 @@ updateOrder = (order, callback) ->
 # updates any popup currently being displayed.
 updatePopup = ->
   buildPopup()
-  popup = chrome.extension.getViews(type: 'popup')[0]
-  popup.document.body.innerHTML = ext.popupHtml if popup
+  chrome.extension.getViews(type: 'popup')[0]?.popup.init()
 
 #### Update Manager setup
 
