@@ -1,3 +1,11 @@
+2013.03.21, Version 1.1.3
+
+* [#26](https://github.com/neocotic/iOrder/issues/26): Update [manifest versio][] to 2 and provide and support a [Content Security Policy][]
+* [#29](https://github.com/neocotic/iOrder/issues/29): Replace calls to deprecated chrome API methods
+* [#31](https://github.com/neocotic/iOrder/issues/31): Fix bug preventing order status from updating
+* [#34](https://github.com/neocotic/iOrder/issues/34): Update development dependencies
+* Minor fixes and tweaks
+
 2012.05.31, Version 1.1.2
 
 * [#27](https://github.com/neocotic/iOrder/issues/27): Add donation button to footer of Options page
@@ -33,5 +41,7 @@
 
 [chrome 16]: http://code.google.com/chrome/extensions/whats_new.html#16
 [coffeescript]: http://coffeescript.org
+[content security policy]: http://code.google.com/chrome/extensions/contentSecurityPolicy.html
 [inline installation]: http://code.google.com/chrome/webstore/docs/inline_installation.html
+[manifest version]: http://code.google.com/chrome/extensions/manifestVersion.html
 [mit license]: http://www.opensource.org/licenses/mit-license.php

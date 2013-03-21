@@ -1,5 +1,5 @@
 # [iOrder](http://neocotic.com/iOrder)  
-# (c) 2012 Alasdair Mercer  
+# (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license.  
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
@@ -166,7 +166,7 @@ save = ->
   saveNotifications()
   saveFrequencies()
   # Reboot the boss so it knows of any changes.
-  chrome.extension.sendRequest type: 'refresh'
+  utils.sendMessage 'extension', type: 'refresh'
 
 # Update the settings with the values from the frequency section of the options
 # page.
@@ -330,3 +330,6 @@ options = window.options =
   refresh: ->
     # Ensure the persisted tab is visible
     $("##{utils.get 'options_active_tab'}").click()
+
+# Initialize `options` when the DOM is ready.
+utils.ready -> options.init()
