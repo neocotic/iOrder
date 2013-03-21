@@ -1,163 +1,519 @@
-<!DOCTYPE html>  <html> <head>   <title>utils.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="background.html">                 background.coffee               </a>                                           <a class="source" href="install.html">                 install.coffee               </a>                                           <a class="source" href="notification.html">                 notification.coffee               </a>                                           <a class="source" href="options.html">                 options.coffee               </a>                                           <a class="source" href="popup.html">                 popup.coffee               </a>                                           <a class="source" href="utils.html">                 utils.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               utils.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><a href="http://neocotic.com/iOrder">iOrder</a> <br />
-(c) 2012 Alasdair Mercer <br />
-Freely distributable under the MIT license. <br />
-For all details and documentation: <br />
-<a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Private variables</h3>             </td>             <td class="code">               <div class="highlight"><pre>
+<!DOCTYPE html>
 
+<html>
+<head>
+  <title>utils.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="background.html">
+                background.coffee
+              </a>
+            
+              
+              <a class="source" href="install.html">
+                install.coffee
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.coffee
+              </a>
+            
+              
+              <a class="source" href="options.html">
+                options.coffee
+              </a>
+            
+              
+              <a class="source" href="popup.html">
+                popup.coffee
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>utils.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2013 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
+<h3>Private variables</h3>
+<p>Mapping for internationalization handlers.<br>Each handler represents an attribute (based on the property name) and is
+called for each attribute found in the current <code>document</code>.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Mapping for internationalization handlers. <br />
-Each handler represents an attribute (based on the property name) and is
-called for each attribute found in the current <code>document</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">i18nHandlers   =</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>i18nHandlers   =</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Replace the HTML content of <code>element</code> with the message looked up for
+<code>value</code>.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="string">'i18n-content'</span>: (element, value, subMap) -&gt;
+    subs = i18nSubs element, value, subMap
+    element.innerHTML = utils.i18n value, subs</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Replace the value of the properties and/or attributes of <code>element</code> with the
+messages looked up for their corresponding values.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Replace the HTML content of <code>element</code> with the message looked up for
-<code>value</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="s1">&#39;i18n-content&#39;</span><span class="o">:</span> <span class="nf">(element, value, subMap) -&gt;</span>
-    <span class="nv">subs = </span><span class="nx">i18nSubs</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">subMap</span>
-    <span class="nv">element.innerHTML = </span><span class="nx">utils</span><span class="p">.</span><span class="nx">i18n</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">subs</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="string">'i18n-values'</span>:  (element, value, subMap) -&gt;
+    subs  = i18nSubs element, value, subMap
+    parts = value.replace(<span class="regexp">/\s/g</span>, <span class="string">''</span>).split <span class="string">';'</span>
+    <span class="keyword">for</span> part <span class="keyword">in</span> parts
+      prop = part.match <span class="regexp">/^([^:]+):(.+)$/</span>
+      <span class="keyword">if</span> prop
+        propName = prop[<span class="number">1</span>]
+        propExpr = prop[<span class="number">2</span>]
+        <span class="keyword">if</span> propName.indexOf(<span class="string">'.'</span>) <span class="keyword">is</span> <span class="number">0</span>
+          path = propName.slice(<span class="number">1</span>).split <span class="string">'.'</span>
+          obj = element
+          obj = obj[path.shift()] <span class="keyword">while</span> obj <span class="keyword">and</span> path.length &gt; <span class="number">1</span>
+          <span class="keyword">if</span> obj
+            obj[path] = utils.i18n value, subs
+            i18nProcess element, subMap <span class="keyword">if</span> path <span class="keyword">is</span> <span class="string">'innerHTML'</span>
+        <span class="keyword">else</span>
+          element.setAttribute propName, utils.i18n propExpr, subs</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>List of internationalization attributes/handlers available.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>i18nAttributes = []
+i18nAttributes.push key <span class="keyword">for</span> key <span class="keyword">of</span> i18nHandlers</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Selector containing the available internationalization attributes/handlers
+which is used by <code>i18nProcess</code> to query all elements.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Replace the value of the properties and/or attributes of <code>element</code> with the
-messages looked up for their corresponding values.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="s1">&#39;i18n-values&#39;</span><span class="o">:</span>  <span class="nf">(element, value, subMap) -&gt;</span>
-    <span class="nv">subs  = </span><span class="nx">i18nSubs</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">subMap</span>
-    <span class="nv">parts = </span><span class="nx">value</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\s/g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">split</span> <span class="s1">&#39;;&#39;</span>
-    <span class="k">for</span> <span class="nx">part</span> <span class="k">in</span> <span class="nx">parts</span>
-      <span class="nv">prop = </span><span class="nx">part</span><span class="p">.</span><span class="nx">match</span> <span class="sr">/^([^:]+):(.+)$/</span>
-      <span class="k">if</span> <span class="nx">prop</span>
-        <span class="nv">propName = </span><span class="nx">prop</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="nv">propExpr = </span><span class="nx">prop</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nx">propName</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="mi">0</span>
-          <span class="nv">path = </span><span class="nx">propName</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">split</span> <span class="s1">&#39;.&#39;</span>
-          <span class="nv">obj = </span><span class="nx">element</span>
-          <span class="nv">obj = </span><span class="nx">obj</span><span class="p">[</span><span class="nx">path</span><span class="p">.</span><span class="nx">shift</span><span class="p">()]</span> <span class="k">while</span> <span class="nx">obj</span> <span class="o">and</span> <span class="nx">path</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span>
-          <span class="k">if</span> <span class="nx">obj</span>
-            <span class="nx">obj</span><span class="p">[</span><span class="nx">path</span><span class="p">]</span> <span class="o">=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">i18n</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">subs</span>
-            <span class="nx">i18nProcess</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">subMap</span> <span class="k">if</span> <span class="nx">path</span> <span class="o">is</span> <span class="s1">&#39;innerHTML&#39;</span>
-        <span class="k">else</span>
-          <span class="nx">element</span><span class="p">.</span><span class="nx">setAttribute</span> <span class="nx">propName</span><span class="p">,</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">i18n</span> <span class="nx">propExpr</span><span class="p">,</span> <span class="nx">subs</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>i18nSelector   = <span class="string">"[<span class="subst">#{i18nAttributes.join '],['}</span>]"</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h3>Private functions</h3>
+<p>Find all elements to be internationalized and call their corresponding
+handler(s).</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>List of internationalization attributes/handlers available.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">i18nAttributes = </span><span class="p">[]</span>
-<span class="nx">i18nAttributes</span><span class="p">.</span><span class="nx">push</span> <span class="nx">key</span> <span class="k">for</span> <span class="nx">key</span> <span class="k">of</span> <span class="nx">i18nHandlers</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">i18nProcess</span></span> = (node, subMap) -&gt;
+  <span class="keyword">for</span> element <span class="keyword">in</span> node.querySelectorAll i18nSelector
+    <span class="keyword">for</span> name <span class="keyword">in</span> i18nAttributes
+      attribute = element.getAttribute name
+      i18nHandlers[name] element, attribute, subMap <span class="keyword">if</span> attribute?</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Find an array of substitution strings using the element&#39;s ID and the message
+key as the mapping.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Selector containing the available internationalization attributes/handlers
-which is used by <code>i18nProcess</code> to query all elements.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">i18nSelector   = </span><span class="s2">&quot;[#{i18nAttributes.join &#39;],[&#39;}]&quot;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">i18nSubs</span></span> = (element, value, subMap) -&gt;
+  <span class="keyword">if</span> subMap
+    <span class="keyword">for</span> prop <span class="keyword">of</span> subMap <span class="keyword">when</span> subMap.hasOwnProperty(prop) <span class="keyword">and</span> prop <span class="keyword">is</span> element.id
+      <span class="keyword">for</span> subProp <span class="keyword">of</span> subMap[prop] <span class="keyword">when</span> subMap[prop].hasOwnProperty subProp
+        <span class="keyword">if</span> subProp <span class="keyword">is</span> value
+          subs = subMap[prop][subProp]
+          <span class="keyword">break</span>
+      <span class="keyword">break</span>
+  <span class="keyword">return</span> subs</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h3>Utilities setup</h3>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>utils = window.utils =</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h3>General functions</h3>
+<p>Convenient shorthand for the different types of <code>onMessage</code> methods
+available in the chrome API.<br>This also supports the old <code>onRequest</code> variations for backwards
+compatibility.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>Private functions</h3>             </td>             <td class="code">               <div class="highlight"><pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  onMessage: (type = <span class="string">'extension'</span>, external, args...) -&gt;
+    base = chrome[type]
+    base = chrome.extension <span class="keyword">if</span> <span class="keyword">not</span> base <span class="keyword">and</span> type <span class="keyword">is</span> <span class="string">'runtime'</span>
+    <span class="keyword">if</span> external
+      base = base.onMessageExternal <span class="keyword">or</span> base.onRequestExternal
+    <span class="keyword">else</span>
+      base = base.onMessage <span class="keyword">or</span> base.onRequest
+    base.addListener args...</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Bind <code>handler</code> to event indicating that the DOM is ready.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  ready: (context, handler) -&gt;
+    <span class="keyword">unless</span> handler?
+      handler = context
+      context = window
+    <span class="keyword">if</span> context.jQuery?
+      context.jQuery handler
+    <span class="keyword">else</span>
+      context.document.addEventListener <span class="string">'DOMContentLoaded'</span>, handler</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Convenient shorthand for the different types of <code>sendMessage</code> methods
+available in the chrome API.<br>This also supports the old <code>sendRequest</code> variations for backwards
+compatibility.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Find all elements to be internationalized and call their corresponding
-handler(s).</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">i18nProcess = </span><span class="nf">(node, subMap) -&gt;</span>
-  <span class="k">for</span> <span class="nx">element</span> <span class="k">in</span> <span class="nx">node</span><span class="p">.</span><span class="nx">querySelectorAll</span> <span class="nx">i18nSelector</span>
-    <span class="k">for</span> <span class="nx">name</span> <span class="k">in</span> <span class="nx">i18nAttributes</span>
-      <span class="nv">attribute = </span><span class="nx">element</span><span class="p">.</span><span class="nx">getAttribute</span> <span class="nx">name</span>
-      <span class="nx">i18nHandlers</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">attribute</span><span class="p">,</span> <span class="nx">subMap</span> <span class="k">if</span> <span class="nx">attribute</span><span class="o">?</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  sendMessage: (type = <span class="string">'extension'</span>, args...) -&gt;
+    base = chrome[type]
+    base = chrome.extension <span class="keyword">if</span> <span class="keyword">not</span> base <span class="keyword">and</span> type <span class="keyword">is</span> <span class="string">'runtime'</span>
+    (base.sendMessage <span class="keyword">or</span> base.sendRequest).apply base, args</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Convenient shorthand for <code>chrome.extension.getURL</code>.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  url: -&gt; chrome.extension.getURL arguments...</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h3>Data functions</h3>
+<p>Determine whether or not the specified key exists in <code>localStorage</code>.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Find an array of substitution strings using the element's ID and the message
-key as the mapping.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">i18nSubs = </span><span class="nf">(element, value, subMap) -&gt;</span>
-  <span class="k">if</span> <span class="nx">subMap</span>
-    <span class="k">for</span> <span class="nx">prop</span> <span class="k">of</span> <span class="nx">subMap</span> <span class="k">when</span> <span class="nx">subMap</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">prop</span><span class="p">)</span> <span class="o">and</span> <span class="nx">prop</span> <span class="o">is</span> <span class="nx">element</span><span class="p">.</span><span class="nx">id</span>
-      <span class="k">for</span> <span class="nx">subProp</span> <span class="k">of</span> <span class="nx">subMap</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="k">when</span> <span class="nx">subMap</span><span class="p">[</span><span class="nx">prop</span><span class="p">].</span><span class="nx">hasOwnProperty</span> <span class="nx">subProp</span>
-        <span class="k">if</span> <span class="nx">subProp</span> <span class="o">is</span> <span class="nx">value</span>
-          <span class="nv">subs = </span><span class="nx">subMap</span><span class="p">[</span><span class="nx">prop</span><span class="p">][</span><span class="nx">subProp</span><span class="p">]</span>
-          <span class="k">break</span>
-      <span class="k">break</span>
-  <span class="k">return</span> <span class="nx">subs</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  exists: (key) -&gt;
+    <span class="keyword">return</span> localStorage.hasOwnProperty key</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Retrieve the value associated with the specified key from <code>localStorage</code>.<br>If the value is found, parse it as JSON before being returning it; otherwise
+return <code>undefined</code>.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  get: (key) -&gt;
+    value = localStorage[key]
+    <span class="keyword">return</span> <span class="keyword">if</span> value? <span class="keyword">then</span> JSON.parse value <span class="keyword">else</span> value</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Initialize the value of the specified key in <code>localStorage</code>.<br>If the value is currently <code>undefined</code>, assign the specified default value;
+otherwise reassign itself.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3>Utilities setup</h3>             </td>             <td class="code">               <div class="highlight"><pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  init: (key, defaultValue) -&gt;
+    value = utils.get key
+    <span class="keyword">return</span> utils.set key, value ? defaultValue</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Remove the specified key from <code>localStorage</code>.</p>
 
-<span class="nv">utils = </span><span class="nb">window</span><span class="p">.</span><span class="nv">utils =</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  remove: (key) -&gt;
+    exists = utils.exists key
+    <span class="keyword">delete</span> localStorage[key]
+    <span class="keyword">return</span> exists</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Copy the value of the existing key to that of the new key then remove the
+old key from <code>localStorage</code>.<br>If the old key doesn&#39;t exist in <code>localStorage</code>, assign the specified default
+value to it instead.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  rename: (oldKey, newKey, defaultValue) -&gt;
+    <span class="keyword">if</span> utils.exists oldKey
+      utils.init newKey, utils.get oldKey
+      utils.remove oldKey
+    <span class="keyword">else</span>
+      utils.init newKey, defaultValue</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Set the value of the specified key in <code>localStorage</code>.<br>If the specified value is <code>undefined</code>, assign that value directly to the
+key; otherwise transform it to a JSON string beforehand.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h3>Data functions</h3>             </td>             <td class="code">               <div class="highlight"><pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  set: (key, value) -&gt;
+    oldValue = utils.get key
+    localStorage[key] = <span class="keyword">if</span> value? <span class="keyword">then</span> JSON.stringify value <span class="keyword">else</span> value
+    <span class="keyword">return</span> oldValue</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <h3>Internationalization functions</h3>
+<p>Convenient shorthand for <code>chrome.i18n.getMessage</code>.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  i18n: -&gt;
+    chrome.i18n.getMessage.apply chrome.i18n, arguments</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Internationalize the specified attribute of all the selected elements.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Determine whether or not the specified key exists in <code>localStorage</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">exists: </span><span class="nf">(key) -&gt;</span>
-    <span class="k">return</span> <span class="nx">localStorage</span><span class="p">.</span><span class="nx">hasOwnProperty</span> <span class="nx">key</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  i18nAttribute: (selector, attribute, value, subs) -&gt;
+    elements = document.querySelectorAll selector</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Ensure the substitution string(s) are in an array.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    subs = [subs] <span class="keyword">if</span> <span class="keyword">typeof</span> subs <span class="keyword">is</span> <span class="string">'string'</span>
+    <span class="keyword">for</span> element <span class="keyword">in</span> elements
+      element.setAttribute attribute, utils.i18n value, subs</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Internationalize the contents of all the selected elements.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Retrieve the value associated with the specified key from <code>localStorage</code>. <br />
-If the value is found, parse it as JSON before being returning it; otherwise
-return <code>undefined</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">get: </span><span class="nf">(key) -&gt;</span>
-    <span class="nv">value = </span><span class="nx">localStorage</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
-    <span class="k">return</span> <span class="k">if</span> <span class="nx">value</span><span class="o">?</span> <span class="k">then</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span> <span class="nx">value</span> <span class="k">else</span> <span class="nx">value</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  i18nContent: (selector, value, subs) -&gt;
+    elements = document.querySelectorAll selector</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Ensure the substitution string(s) are in an array.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    subs = [subs] <span class="keyword">if</span> <span class="keyword">typeof</span> subs <span class="keyword">is</span> <span class="string">'string'</span>
+    element.innerHTML = utils.i18n value, subs <span class="keyword">for</span> element <span class="keyword">in</span> elements</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Perform all internationalization setup required for the current page.</p>
 
-</pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Initialize the value of the specified key in <code>localStorage</code>. <br />
-If the value is currently <code>undefined</code>, assign the specified default value;
-otherwise reassign itself.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">init: </span><span class="nf">(key, defaultValue) -&gt;</span>
-    <span class="nv">value = </span><span class="nx">utils</span><span class="p">.</span><span class="nx">get</span> <span class="nx">key</span>
-    <span class="k">return</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">set</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span> <span class="o">?</span> <span class="nx">defaultValue</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Remove the specified key from <code>localStorage</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">remove: </span><span class="nf">(key) -&gt;</span>
-    <span class="nv">exists = </span><span class="nx">utils</span><span class="p">.</span><span class="nx">exists</span> <span class="nx">key</span>
-    <span class="k">delete</span> <span class="nx">localStorage</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
-    <span class="k">return</span> <span class="nx">exists</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Copy the value of the existing key to that of the new key then remove the
-old key from <code>localStorage</code>. <br />
-If the old key doesn't exist in <code>localStorage</code>, assign the specified default
-value to it instead.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">rename: </span><span class="nf">(oldKey, newKey, defaultValue) -&gt;</span>
-    <span class="k">if</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">exists</span> <span class="nx">oldKey</span>
-      <span class="nx">utils</span><span class="p">.</span><span class="nx">init</span> <span class="nx">newKey</span><span class="p">,</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">get</span> <span class="nx">oldKey</span>
-      <span class="nx">utils</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">oldKey</span>
-    <span class="k">else</span>
-      <span class="nx">utils</span><span class="p">.</span><span class="nx">init</span> <span class="nx">newKey</span><span class="p">,</span> <span class="nx">defaultValue</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Set the value of the specified key in <code>localStorage</code>. <br />
-If the specified value is <code>undefined</code>, assign that value directly to the
-key; otherwise transform it to a JSON string beforehand.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">set: </span><span class="nf">(key, value) -&gt;</span>
-    <span class="nv">oldValue = </span><span class="nx">utils</span><span class="p">.</span><span class="nx">get</span> <span class="nx">key</span>
-    <span class="nx">localStorage</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="k">if</span> <span class="nx">value</span><span class="o">?</span> <span class="k">then</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">value</span> <span class="k">else</span> <span class="nx">value</span>
-    <span class="k">return</span> <span class="nx">oldValue</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <h3>Internationalization functions</h3>             </td>             <td class="code">               <div class="highlight"><pre>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Convenient shorthand for <code>chrome.i18n.getMessage</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">i18n: </span><span class="o">-&gt;</span>
-    <span class="nx">chrome</span><span class="p">.</span><span class="nx">i18n</span><span class="p">.</span><span class="nx">getMessage</span><span class="p">.</span><span class="nx">apply</span> <span class="nx">chrome</span><span class="p">.</span><span class="nx">i18n</span><span class="p">,</span> <span class="nx">arguments</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Internationalize the specified attribute of all the selected elements.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">i18nAttribute: </span><span class="nf">(selector, attribute, value, subs) -&gt;</span>
-    <span class="nv">elements = </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span> <span class="nx">selector</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Ensure the substitution string(s) are in an array.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nv">subs = </span><span class="p">[</span><span class="nx">subs</span><span class="p">]</span> <span class="k">if</span> <span class="k">typeof</span> <span class="nx">subs</span> <span class="o">is</span> <span class="s1">&#39;string&#39;</span>
-    <span class="k">for</span> <span class="nx">element</span> <span class="k">in</span> <span class="nx">elements</span>
-      <span class="nx">element</span><span class="p">.</span><span class="nx">setAttribute</span> <span class="nx">attribute</span><span class="p">,</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">i18n</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">subs</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Internationalize the contents of all the selected elements.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">i18nContent: </span><span class="nf">(selector, value, subs) -&gt;</span>
-    <span class="nv">elements = </span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span> <span class="nx">selector</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>Ensure the substitution string(s) are in an array.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nv">subs = </span><span class="p">[</span><span class="nx">subs</span><span class="p">]</span> <span class="k">if</span> <span class="k">typeof</span> <span class="nx">subs</span> <span class="o">is</span> <span class="s1">&#39;string&#39;</span>
-    <span class="nv">element.innerHTML = </span><span class="nx">utils</span><span class="p">.</span><span class="nx">i18n</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">subs</span> <span class="k">for</span> <span class="nx">element</span> <span class="k">in</span> <span class="nx">elements</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Perform all internationalization setup required for the current page.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">i18nSetup: </span><span class="nf">(subMap) -&gt;</span>
-    <span class="nx">i18nProcess</span> <span class="nb">document</span><span class="p">,</span> <span class="nx">subMap</span>
-
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  i18nSetup: (subMap) -&gt;
+    i18nProcess document, subMap</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

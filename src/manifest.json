@@ -1,5 +1,7 @@
 {
-    "background_page": "pages/background.html"
+    "background": {
+      "page": "pages/background.html"
+    }
   , "browser_action": {
         "default_icon": "images/icon_19.png"
       , "default_popup": "pages/popup.html"
@@ -12,6 +14,7 @@
         , "run_at": "document_end"
       }
     ]
+  , "content_security_policy": "script-src 'self'; object-src 'self'"
   , "default_locale": "en"
   , "description": "__MSG_description__"
   , "homepage_url": "http://neocotic.com/iOrder"
@@ -26,7 +29,8 @@
       , "96": "images/icon_96.png"
       , "128": "images/icon_128.png"
     }
-  , "minimum_chrome_version": "16"
+  , "manifest_version": 2
+  , "minimum_chrome_version": "18"
   , "name": "__MSG_name__"
   , "options_page": "pages/options.html"
   , "permissions": [
@@ -35,5 +39,5 @@
       , "http://*.neocotic.com/"
       , "https://store.apple.com/"
     ]
-  , "version": "1.1.2"
+  , "version": "1.1.3"
 }

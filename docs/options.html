@@ -1,395 +1,1130 @@
-<!DOCTYPE html>  <html> <head>   <title>options.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="background.html">                 background.coffee               </a>                                           <a class="source" href="install.html">                 install.coffee               </a>                                           <a class="source" href="notification.html">                 notification.coffee               </a>                                           <a class="source" href="options.html">                 options.coffee               </a>                                           <a class="source" href="popup.html">                 popup.coffee               </a>                                           <a class="source" href="utils.html">                 utils.coffee               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               options.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p><a href="http://neocotic.com/iOrder">iOrder</a> <br />
-(c) 2012 Alasdair Mercer <br />
-Freely distributable under the MIT license. <br />
-For all details and documentation: <br />
-<a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h3>Private variables</h3>             </td>             <td class="code">               <div class="highlight"><pre>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Easily accessible reference to the extension controller.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="p">{</span><span class="nx">ext</span><span class="p">}</span> <span class="o">=</span> <span class="nx">chrome</span><span class="p">.</span><span class="nx">extension</span><span class="p">.</span><span class="nx">getBackgroundPage</span><span class="p">()</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>Load functions</h3>             </td>             <td class="code">               <div class="highlight"><pre>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Update the options page with the values from the current settings.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">load = </span><span class="o">-&gt;</span>
-  <span class="nx">loadFrequencies</span><span class="p">()</span>
-  <span class="nx">loadNotifications</span><span class="p">()</span>
-  <span class="nx">loadOrders</span><span class="p">()</span>
-  <span class="nx">loadOrderControlEvents</span><span class="p">()</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Update the frequency section of the options page with the current settings.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">loadFrequencies = </span><span class="o">-&gt;</span>
-  <span class="nv">frequency = </span><span class="nx">$</span> <span class="s1">&#39;#frequency&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Start from a clean slate.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">frequency</span><span class="p">.</span><span class="nx">remove</span> <span class="s1">&#39;option&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Create and insert options representing each available update frequency.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="k">for</span> <span class="nx">freq</span> <span class="k">in</span> <span class="nx">ext</span><span class="p">.</span><span class="nx">FREQUENCIES</span>
-    <span class="nx">frequency</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span>
-      <span class="nx">$</span> <span class="s1">&#39;&lt;option/&gt;&#39;</span><span class="p">,</span>
-        <span class="nv">text: </span> <span class="nx">freq</span><span class="p">.</span><span class="nx">text</span>
-        <span class="nv">value: </span><span class="nx">freq</span><span class="p">.</span><span class="nx">value</span>
-    <span class="p">)</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Select the option for the current update frequency.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">frequency</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s2">&quot;option[value=&#39;#{utils.get &#39;frequency&#39;}&#39;]&quot;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span>
-    <span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="s1">&#39;selected&#39;</span>
-  <span class="p">)</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Update the notification section of the options page with the current settings.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">loadNotifications = </span><span class="o">-&gt;</span>
-  <span class="k">if</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">get</span> <span class="s1">&#39;badges&#39;</span>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#badges&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="s1">&#39;checked&#39;</span>
-  <span class="k">else</span>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#badges&#39;</span><span class="p">).</span><span class="nx">removeAttr</span> <span class="s1">&#39;checked&#39;</span>
-  <span class="k">if</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">get</span> <span class="s1">&#39;notifications&#39;</span>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#notifications&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="s1">&#39;checked&#39;</span>
-  <span class="k">else</span>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#notifications&#39;</span><span class="p">).</span><span class="nx">removeAttr</span> <span class="s1">&#39;checked&#39;</span>
-  <span class="nv">timeInSecs = </span><span class="mi">0</span>
-  <span class="k">if</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;notificationDuration&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nx">timeInSecs</span>
-    <span class="nv">timeInSecs = </span><span class="nx">utils</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;notificationDuration&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#notificationDuration&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="nx">timeInSecs</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Create a <code>&lt;optgroup&gt;</code> element representing the specified order. <br />
-The element returned should then be inserted in to the <code>&lt;select&gt;</code> managing
-the orders on the options page.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">loadOrder = </span><span class="nf">(order) -&gt;</span>
-  <span class="nv">opt = </span><span class="nx">$</span> <span class="s1">&#39;&lt;option/&gt;&#39;</span><span class="p">,</span> <span class="nv">text: </span><span class="nx">order</span><span class="p">.</span><span class="nx">label</span>
-  <span class="nx">opt</span><span class="p">.</span><span class="nx">data</span> <span class="s1">&#39;code&#39;</span><span class="p">,</span>    <span class="nx">order</span><span class="p">.</span><span class="nx">code</span>
-  <span class="nx">opt</span><span class="p">.</span><span class="nx">data</span> <span class="s1">&#39;updates&#39;</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span> <span class="nx">order</span><span class="p">.</span><span class="nx">updates</span>
-  <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;optgroup/&gt;&#39;</span><span class="p">,</span> <span class="nv">label: </span><span class="nx">order</span><span class="p">.</span><span class="nx">number</span><span class="p">).</span><span class="nx">append</span> <span class="nx">opt</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Bind the event handlers required for controlling the orders.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">loadOrderControlEvents = </span><span class="o">-&gt;</span>
-  <span class="nv">lastSelectedOrder = </span><span class="p">{}</span>
-  <span class="nv">orders            = </span><span class="nx">$</span> <span class="s1">&#39;#orders&#39;</span>
-  <span class="nv">updates           = </span><span class="nx">$</span> <span class="s1">&#39;#updates&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Whenever the selected option changes we want all the controls to represent
-the current selection (where possible).</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">orders</span><span class="p">.</span><span class="nx">change</span><span class="p">(</span><span class="o">-&gt;</span>
-    <span class="nv">$this  = </span><span class="nx">$</span> <span class="k">this</span>
-    <span class="nv">opt    = </span><span class="nx">$this</span><span class="p">.</span><span class="nx">find</span> <span class="s1">&#39;option:selected&#39;</span>
-    <span class="nv">optGrp = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">parent</span> <span class="s1">&#39;optgroup&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Update the previously selected order.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nx">updateOrder</span> <span class="nx">lastSelectedOrder</span><span class="p">.</span><span class="nx">parent</span> <span class="s1">&#39;optgroup&#39;</span> <span class="k">if</span> <span class="nx">lastSelectedOrder</span><span class="p">.</span><span class="nx">length</span>
-    <span class="k">if</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Disable all the controls as no option is selected.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="nv">lastSelectedOrder = </span><span class="p">{}</span>
-      <span class="nx">utils</span><span class="p">.</span><span class="nx">i18nContent</span> <span class="s1">&#39;#add_btn&#39;</span><span class="p">,</span> <span class="s1">&#39;opt_add_button&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.read-only, .read-only-always&#39;</span><span class="p">).</span><span class="nx">removeAttr</span> <span class="s1">&#39;disabled&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.read-only, .read-only-always&#39;</span><span class="p">).</span><span class="nx">removeAttr</span> <span class="s1">&#39;readonly&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#delete_btn&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="s1">&#39;disabled&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_code&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="s1">&#39;&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_label&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="s1">&#39;&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_number&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="s1">&#39;&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>Wipe the status updates.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="nx">updates</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;optgroup&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">()</span>
-    <span class="k">else</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>An order is selected; start cooking.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="nv">lastSelectedOrder = </span><span class="nx">opt</span>
-      <span class="nx">utils</span><span class="p">.</span><span class="nx">i18nContent</span> <span class="s1">&#39;#add_btn&#39;</span><span class="p">,</span> <span class="s1">&#39;opt_add_new_button&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.read-only-always&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="s1">&#39;disabled&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.read-only-always&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s1">&#39;readonly&#39;</span><span class="p">,</span> <span class="s1">&#39;readonly&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <p>Update the fields and controls to reflect selected option.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_code&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">data</span> <span class="s1">&#39;code&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_label&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_number&#39;</span><span class="p">).</span><span class="nx">val</span> <span class="nx">optGrp</span><span class="p">.</span><span class="nx">attr</span> <span class="s1">&#39;label&#39;</span>
-      <span class="nx">updates</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;optgroup&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">()</span>
-      <span class="nv">orderUpdates = </span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">data</span> <span class="s1">&#39;updates&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Populate the status updates.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="k">for</span> <span class="nx">orderUpdate</span> <span class="k">in</span> <span class="nx">orderUpdates</span>
-        <span class="nx">updates</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span>
-          <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;optgroup/&gt;&#39;</span><span class="p">,</span>
-            <span class="nv">label: </span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">orderUpdate</span><span class="p">.</span><span class="nx">timeStamp</span><span class="p">).</span><span class="nx">format</span> <span class="s1">&#39;d/m/Y @ H:i:s&#39;</span>
-          <span class="p">).</span><span class="nx">append</span><span class="p">(</span>
-            <span class="nx">$</span> <span class="s1">&#39;&lt;option/&gt;&#39;</span><span class="p">,</span> <span class="nv">text: </span><span class="nx">orderUpdate</span><span class="p">.</span><span class="nx">status</span>
-          <span class="p">)</span>
-        <span class="p">)</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.read-only&#39;</span><span class="p">).</span><span class="nx">removeAttr</span> <span class="s1">&#39;disabled&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.read-only&#39;</span><span class="p">).</span><span class="nx">removeAttr</span> <span class="s1">&#39;readonly&#39;</span>
-  <span class="p">).</span><span class="nx">change</span><span class="p">()</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Add a new order to the select based on the input values.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#add_btn&#39;</span><span class="p">).</span><span class="nx">click</span> <span class="o">-&gt;</span>
-    <span class="nv">opt    = </span><span class="nx">orders</span><span class="p">.</span><span class="nx">find</span> <span class="s1">&#39;option:selected&#39;</span>
-    <span class="nv">optGrp = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">parent</span> <span class="s1">&#39;optgroup&#39;</span>
-    <span class="k">if</span> <span class="nx">optGrp</span><span class="p">.</span><span class="nx">length</span> <span class="o">and</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">length</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Order was selected; clear that selection and allow creation.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="nx">orders</span><span class="p">.</span><span class="nx">val</span><span class="p">([]).</span><span class="nx">change</span><span class="p">()</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_label&#39;</span><span class="p">).</span><span class="nx">focus</span><span class="p">()</span>
-    <span class="k">else</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Wipe any pre-existing error messages.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#errors&#39;</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;li&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">()</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>User submitted new order so check it out already.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="nv">optGrp = </span><span class="nx">loadOrder</span>
-        <span class="nv">code: </span>       <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_code&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toUpperCase</span><span class="p">()</span>
-        <span class="nv">error: </span>      <span class="s1">&#39;&#39;</span>
-        <span class="nv">label: </span>      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_label&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">trim</span><span class="p">()</span>
-        <span class="nv">number: </span>     <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_number&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toUpperCase</span><span class="p">()</span>
-        <span class="nv">trackingUrl: </span><span class="s1">&#39;&#39;</span>
-        <span class="nv">updates: </span>    <span class="p">[]</span>
-      <span class="nv">opt = </span><span class="nx">optGrp</span><span class="p">.</span><span class="nx">find</span> <span class="s1">&#39;option&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>Confirm the order meets the criteria.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="k">if</span> <span class="nx">validateOrder</span> <span class="nx">optGrp</span><span class="p">,</span> <span class="kc">yes</span>
-        <span class="nx">orders</span><span class="p">.</span><span class="nx">append</span> <span class="nx">optGrp</span>
-        <span class="nx">opt</span><span class="p">.</span><span class="nx">attr</span> <span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="s1">&#39;selected&#39;</span>
-        <span class="nx">orders</span><span class="p">.</span><span class="nx">change</span><span class="p">().</span><span class="nx">focus</span><span class="p">()</span>
-      <span class="k">else</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Show the error messages to the user.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-        <span class="nx">$</span><span class="p">.</span><span class="nx">facebox</span> <span class="nv">div: </span><span class="s1">&#39;#message&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Prompt the user to confirm removal of the selected order.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#delete_btn&#39;</span><span class="p">).</span><span class="nx">click</span> <span class="o">-&gt;</span>
-    <span class="nx">$</span><span class="p">.</span><span class="nx">facebox</span> <span class="nv">div: </span><span class="s1">&#39;#delete_con&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>Cancel the order removal process.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.delete_no_btn&#39;</span><span class="p">).</span><span class="nx">live</span> <span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-    <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">trigger</span> <span class="s1">&#39;close.facebox&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>Finalize the order removal.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.delete_yes_btn&#39;</span><span class="p">).</span><span class="nx">live</span> <span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="o">-&gt;</span>
-    <span class="nv">optGrp = </span><span class="nx">orders</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;option:selected&#39;</span><span class="p">).</span><span class="nx">parent</span> <span class="s1">&#39;optgroup&#39;</span>
-    <span class="nx">optGrp</span><span class="p">.</span><span class="nx">remove</span><span class="p">()</span>
-    <span class="nx">orders</span><span class="p">.</span><span class="nx">change</span><span class="p">().</span><span class="nx">focus</span><span class="p">()</span>
-    <span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">trigger</span> <span class="s1">&#39;close.facebox&#39;</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>Update the orders section of the options page with the current settings.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">loadOrders = </span><span class="o">-&gt;</span>
-  <span class="nv">orders = </span><span class="nx">$</span> <span class="s1">&#39;#orders&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>Start from a clean slate.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">orders</span><span class="p">.</span><span class="nx">remove</span> <span class="s1">&#39;optgroup&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>Create and insert options representing each order.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">orders</span><span class="p">.</span><span class="nx">append</span> <span class="nx">loadOrder</span> <span class="nx">order</span> <span class="k">for</span> <span class="nx">order</span> <span class="k">in</span> <span class="nx">ext</span><span class="p">.</span><span class="nx">orders</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <h3>Save functions</h3>             </td>             <td class="code">               <div class="highlight"><pre>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>Update the settings with the values from the options page. <br />
-Restart the update manager once all settings have been updated.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">save = </span><span class="o">-&gt;</span>
-  <span class="nx">saveOrders</span><span class="p">()</span>
-  <span class="nx">saveNotifications</span><span class="p">()</span>
-  <span class="nx">saveFrequencies</span><span class="p">()</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>Reboot the boss so it knows of any changes.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">chrome</span><span class="p">.</span><span class="nx">extension</span><span class="p">.</span><span class="nx">sendRequest</span> <span class="nv">type: </span><span class="s1">&#39;refresh&#39;</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>Update the settings with the values from the frequency section of the options
-page.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">saveFrequencies = </span><span class="o">-&gt;</span>
-  <span class="nv">frequency = </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#frequency option:selected&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
-  <span class="nx">utils</span><span class="p">.</span><span class="nx">set</span> <span class="s1">&#39;frequency&#39;</span><span class="p">,</span> <span class="nb">parseInt</span> <span class="nx">frequency</span><span class="p">,</span> <span class="mi">10</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>Update the settings with the values from the notification section of the
-options page.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">saveNotifications = </span><span class="o">-&gt;</span>
-  <span class="nx">utils</span><span class="p">.</span><span class="nx">set</span> <span class="s1">&#39;badges&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#badges&#39;</span><span class="p">).</span><span class="o">is</span> <span class="s1">&#39;:checked&#39;</span>
-  <span class="nx">utils</span><span class="p">.</span><span class="nx">set</span> <span class="s1">&#39;notifications&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#notifications&#39;</span><span class="p">).</span><span class="o">is</span> <span class="s1">&#39;:checked&#39;</span>
-  <span class="nv">timeInSecs = </span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#notificationDuration&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span>
-  <span class="nv">timeInSecs = </span><span class="k">if</span> <span class="nx">timeInSecs</span><span class="o">?</span> <span class="k">then</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">timeInSecs</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span> <span class="k">else</span> <span class="mi">0</span>
-  <span class="nx">utils</span><span class="p">.</span><span class="nx">set</span> <span class="s1">&#39;notificationDuration&#39;</span><span class="p">,</span> <span class="nx">timeInSecs</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>Update the settings with the values from the orders section of the options
-page.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">saveOrders = </span><span class="o">-&gt;</span>
-  <span class="nv">orders = </span><span class="p">[]</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>Update each individual order settings based on their corresponding options.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#orders optgroup&#39;</span><span class="p">).</span><span class="nx">each</span> <span class="o">-&gt;</span>
-    <span class="nx">orders</span><span class="p">.</span><span class="nx">push</span> <span class="nx">deriveOrder</span> <span class="nx">$</span> <span class="k">this</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>Persist the updated orders.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">utils</span><span class="p">.</span><span class="nx">set</span> <span class="s1">&#39;orders&#39;</span><span class="p">,</span> <span class="nx">orders</span>
-  <span class="nv">ext.orders = </span><span class="nx">orders</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>Update the specified <code>&lt;optgroup&gt;</code> element that represents an order with values
-taken from the available fields.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">updateOrder = </span><span class="nf">(optGrp) -&gt;</span>
-  <span class="nv">opt = </span><span class="nx">optGrp</span><span class="p">.</span><span class="nx">find</span> <span class="s1">&#39;option&#39;</span>
-  <span class="k">if</span> <span class="nx">optGrp</span><span class="p">.</span><span class="nx">length</span> <span class="o">and</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">length</span>
-    <span class="nx">opt</span><span class="p">.</span><span class="nx">data</span> <span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_code&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toUpperCase</span><span class="p">()</span>
-    <span class="nx">opt</span><span class="p">.</span><span class="nx">text</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_label&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">trim</span><span class="p">()</span>
-    <span class="nx">optGrp</span><span class="p">.</span><span class="nx">attr</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#order_number&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">().</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toUpperCase</span><span class="p">()</span>
-    <span class="k">return</span> <span class="nx">opt</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <h3>Validation functions</h3>             </td>             <td class="code">               <div class="highlight"><pre>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>Determine whether or not an order already exists with the specified number.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">isOrderNumberAvailable = </span><span class="nf">(number) -&gt;</span>
-  <span class="nv">available = </span><span class="kc">yes</span>
-  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#orders optgroup&#39;</span><span class="p">).</span><span class="nx">each</span> <span class="o">-&gt;</span>
-    <span class="k">return</span> <span class="nv">available = </span><span class="kc">no</span> <span class="k">if</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">)</span> <span class="o">is</span> <span class="nx">number</span>
-  <span class="k">return</span> <span class="nx">available</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-43">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-43">&#182;</a>               </div>               <p>Validate that the specified <code>&lt;optgroup&gt;</code> element that should represents an
-order does just that. <br />
-This function adds any validation errors it encounters to an unordered list
-which should be displayed to the user at some point if <code>yes</code> is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">validateOrder = </span><span class="nf">(optGrp, isNew) -&gt;</span>
-  <span class="nv">opt    = </span><span class="nx">optGrp</span><span class="p">.</span><span class="nx">find</span> <span class="s1">&#39;option&#39;</span>
-  <span class="nv">code   = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">).</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toUpperCase</span><span class="p">()</span>
-  <span class="nv">errors = </span><span class="nx">$</span> <span class="s1">&#39;#errors&#39;</span>
-  <span class="nv">label  = </span><span class="nx">opt</span><span class="p">.</span><span class="nx">text</span><span class="p">().</span><span class="nx">trim</span><span class="p">()</span>
-  <span class="nv">number = </span><span class="nx">optGrp</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">).</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toUpperCase</span><span class="p">()</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-44">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-44">&#182;</a>               </div>               <p>Label is missing but is required.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">createError</span> <span class="s1">&#39;opt_order_label_invalid&#39;</span> <span class="k">if</span> <span class="nx">label</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-45">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-45">&#182;</a>               </div>               <p>Only validate new order numbers.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="k">if</span> <span class="nx">isNew</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-46">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-46">&#182;</a>               </div>               <p>Number is required and must be available.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="k">if</span> <span class="nx">number</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
-      <span class="nx">createError</span> <span class="s1">&#39;opt_order_number_invalid&#39;</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">isOrderNumberAvailable</span> <span class="nx">number</span>
-      <span class="nx">createError</span> <span class="s1">&#39;opt_order_number_unavailable&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-47">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-47">&#182;</a>               </div>               <p>Zip/post code is missing but is required.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">createError</span> <span class="s1">&#39;opt_order_code_invalid&#39;</span> <span class="k">if</span> <span class="nx">code</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
-  <span class="k">return</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;li&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-48">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-48">&#182;</a>               </div>               <p>Validate all <code>&lt;optgroup&gt;</code> elements that represent orders that are to be
-persisted in <code>localStorage</code>. <br />
-This function adds any validation errors it encounters to a unordered list
-which should be displayed to the user at some point if <code>yes</code> is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">validateOrders = </span><span class="o">-&gt;</span>
-  <span class="nv">errors = </span><span class="nx">$</span> <span class="s1">&#39;#errors&#39;</span>
-  <span class="nv">orders = </span><span class="nx">$</span> <span class="s1">&#39;#orders optgroup&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-49">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-49">&#182;</a>               </div>               <p>Wipe any pre-existing errors.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nx">errors</span><span class="p">.</span><span class="nx">remove</span> <span class="s1">&#39;li&#39;</span>
-  <span class="nx">orders</span><span class="p">.</span><span class="nx">each</span> <span class="o">-&gt;</span>
-    <span class="nv">$this = </span><span class="nx">$</span> <span class="k">this</span>
-    <span class="nx">unless</span> <span class="nx">validateOrder</span> <span class="nx">$this</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-50">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-50">&#182;</a>               </div>               <p>Show user which validation failed validation.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-      <span class="nx">$this</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">).</span><span class="nx">attr</span> <span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="s1">&#39;selected&#39;</span>
-      <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#orders&#39;</span><span class="p">).</span><span class="nx">change</span><span class="p">().</span><span class="nx">focus</span><span class="p">()</span>
-      <span class="k">return</span> <span class="kc">no</span>
-  <span class="k">return</span> <span class="nx">errors</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;li&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">0</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-51">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-51">&#182;</a>               </div>               <h3>Miscellaneous functions</h3>             </td>             <td class="code">               <div class="highlight"><pre>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-52">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-52">&#182;</a>               </div>               <p>Appends a new <code>&lt;li&gt;</code> element containing an internationalized error string,
-looked up using Chrome, to the unordered list of errors.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">createError = </span><span class="nf">(name) -&gt;</span>
-  <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;li/&gt;&#39;</span><span class="p">,</span> <span class="nv">html: </span><span class="nx">utils</span><span class="p">.</span><span class="nx">i18n</span> <span class="nx">name</span><span class="p">).</span><span class="nx">appendTo</span> <span class="nx">$</span> <span class="s1">&#39;#errors&#39;</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-53">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-53">&#182;</a>               </div>               <p>Create an order with the information derived from the specified <code>&lt;optgroup&gt;</code>
-element.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-<span class="nv">deriveOrder = </span><span class="nf">(optGrp) -&gt;</span>
-  <span class="nv">opt = </span><span class="nx">optGrp</span><span class="p">.</span><span class="nx">find</span> <span class="s1">&#39;option&#39;</span>
-  <span class="k">if</span> <span class="nx">optGrp</span><span class="p">.</span><span class="nx">length</span> <span class="o">and</span> <span class="nx">opt</span><span class="p">.</span><span class="nx">length</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-54">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-54">&#182;</a>               </div>               <p>Create order from the derived data.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nv">order =</span>
-      <span class="nv">code: </span>       <span class="nx">opt</span><span class="p">.</span><span class="nx">data</span> <span class="s1">&#39;code&#39;</span>
-      <span class="nv">error: </span>      <span class="s1">&#39;&#39;</span>
-      <span class="nv">label: </span>      <span class="nx">opt</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
-      <span class="nv">number: </span>     <span class="nx">optGrp</span><span class="p">.</span><span class="nx">attr</span> <span class="s1">&#39;label&#39;</span>
-      <span class="nv">trackingUrl: </span><span class="s1">&#39;&#39;</span>
-      <span class="nv">updates: </span>    <span class="p">[]</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-55">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-55">&#182;</a>               </div>               <p>Try to get the data from existing order.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nv">existingOrder = </span><span class="nx">ext</span><span class="p">.</span><span class="nx">getOrder</span> <span class="nx">order</span><span class="p">.</span><span class="nx">number</span><span class="p">,</span> <span class="nx">order</span><span class="p">.</span><span class="nx">code</span>
-    <span class="k">if</span> <span class="nx">existingOrder</span>
-      <span class="nv">order.error       = </span><span class="nx">existingOrder</span><span class="p">.</span><span class="nx">error</span>
-      <span class="nv">order.trackingUrl = </span><span class="nx">existingOrder</span><span class="p">.</span><span class="nx">trackingUrl</span>
-      <span class="nv">order.updates     = </span><span class="nx">existingOrder</span><span class="p">.</span><span class="nx">updates</span>
-  <span class="k">return</span> <span class="nx">order</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-56">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-56">&#182;</a>               </div>               <h3>Options page setup</h3>             </td>             <td class="code">               <div class="highlight"><pre>
-
-<span class="nv">options = </span><span class="nb">window</span><span class="p">.</span><span class="nv">options =</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-57">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-57">&#182;</a>               </div>               <h3>Public functions</h3>             </td>             <td class="code">               <div class="highlight"><pre>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-58">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-58">&#182;</a>               </div>               <p>Initialize the options page. <br />
-This will involve inserting and configuring the UI elements as well as
-loading the current settings.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">init: </span><span class="o">-&gt;</span>
-    <span class="nx">utils</span><span class="p">.</span><span class="nx">i18nSetup</span>
-      <span class="nv">footer:</span>
-        <span class="nv">opt_footer: </span><span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">format</span> <span class="s1">&#39;Y&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-59">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-59">&#182;</a>               </div>               <p>Bind tab selection event to all tabs.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;[tabify]&#39;</span><span class="p">).</span><span class="nx">click</span> <span class="o">-&gt;</span>
-      <span class="nv">$this = </span><span class="nx">$</span> <span class="k">this</span>
-      <span class="nx">unless</span> <span class="nx">$this</span><span class="p">.</span><span class="nx">hasClass</span> <span class="s1">&#39;selected&#39;</span>
-        <span class="nx">$this</span><span class="p">.</span><span class="nx">siblings</span><span class="p">().</span><span class="nx">removeClass</span> <span class="s1">&#39;selected&#39;</span>
-        <span class="nx">$this</span><span class="p">.</span><span class="nx">addClass</span> <span class="s1">&#39;selected&#39;</span>
-        <span class="nx">$</span><span class="p">(</span><span class="nx">$this</span><span class="p">.</span><span class="nx">attr</span> <span class="s1">&#39;tabify&#39;</span><span class="p">).</span><span class="nx">show</span><span class="p">().</span><span class="nx">siblings</span><span class="p">(</span><span class="s1">&#39;.tab&#39;</span><span class="p">).</span><span class="nx">hide</span><span class="p">()</span>
-        <span class="nx">utils</span><span class="p">.</span><span class="nx">set</span> <span class="s1">&#39;options_active_tab&#39;</span><span class="p">,</span> <span class="nx">$this</span><span class="p">.</span><span class="nx">attr</span> <span class="s1">&#39;id&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-60">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-60">&#182;</a>               </div>               <p>Reflect the persisted tab.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nx">utils</span><span class="p">.</span><span class="nx">init</span> <span class="s1">&#39;options_active_tab&#39;</span><span class="p">,</span> <span class="s1">&#39;general_nav&#39;</span>
-    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;##{utils.get &#39;options_active_tab&#39;}&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <p>Bind event to the "Save &amp; Close" button which will update the settings
-with the values from the options page and close the current tab. <br />
-None of this should happen if the invalid orders are found; in which case
-the user is notified of these errors.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.save-btn&#39;</span><span class="p">).</span><span class="nx">click</span> <span class="o">-&gt;</span>
-      <span class="nx">updateOrder</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#orders option:selected&#39;</span><span class="p">).</span><span class="nx">parent</span> <span class="s1">&#39;optgroup&#39;</span>
-      <span class="k">if</span> <span class="nx">validateOrders</span><span class="p">()</span>
-        <span class="nx">save</span><span class="p">()</span>
-        <span class="nx">chrome</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">getSelected</span> <span class="kc">null</span><span class="p">,</span> <span class="nf">(tab) -&gt;</span>
-          <span class="nx">chrome</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">remove</span> <span class="nx">tab</span><span class="p">.</span><span class="nx">id</span>
-      <span class="k">else</span>
-        <span class="nx">$</span><span class="p">.</span><span class="nx">facebox</span> <span class="nv">div: </span><span class="s1">&#39;#message&#39;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <p>Load the current option values.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nx">load</span><span class="p">()</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-63">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-63">&#182;</a>               </div>               <p>Initialize all faceboxes.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;a[facebox]&#39;</span><span class="p">).</span><span class="nx">click</span> <span class="o">-&gt;</span>
-      <span class="nx">$</span><span class="p">.</span><span class="nx">facebox</span> <span class="nv">div: </span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">attr</span> <span class="s1">&#39;facebox&#39;</span>
-
-
-</pre></div>             </td>           </tr>                               <tr id="section-64">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-64">&#182;</a>               </div>               <p>Ensure that the persisted tab is currently visible. <br />
-This should be called if the user clicks the Options link in the popup while
-and options page is already open.</p>             </td>             <td class="code">               <div class="highlight"><pre>
-  <span class="nv">refresh: </span><span class="o">-&gt;</span>
-
-</pre></div>             </td>           </tr>                               <tr id="section-65">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-65">&#182;</a>               </div>               <p>Ensure the persisted tab is visible</p>             </td>             <td class="code">               <div class="highlight"><pre>
-    <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;##{utils.get &#39;options_active_tab&#39;}&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">()</span>
-
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>options.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="background.html">
+                background.coffee
+              </a>
+            
+              
+              <a class="source" href="install.html">
+                install.coffee
+              </a>
+            
+              
+              <a class="source" href="notification.html">
+                notification.coffee
+              </a>
+            
+              
+              <a class="source" href="options.html">
+                options.coffee
+              </a>
+            
+              
+              <a class="source" href="popup.html">
+                popup.coffee
+              </a>
+            
+              
+              <a class="source" href="utils.html">
+                utils.coffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>options.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2013 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
+<h3>Private variables</h3>
+<p>Easily accessible reference to the extension controller.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>{ext} = chrome.extension.getBackgroundPage()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h3>Load functions</h3>
+<p>Update the options page with the values from the current settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">load</span></span> = -&gt;
+  loadFrequencies()
+  loadNotifications()
+  loadOrders()
+  loadOrderControlEvents()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Update the frequency section of the options page with the current settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">loadFrequencies</span></span> = -&gt;
+  frequency = $ <span class="string">'#frequency'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Start from a clean slate.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  frequency.remove <span class="string">'option'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Create and insert options representing each available update frequency.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">for</span> freq <span class="keyword">in</span> ext.FREQUENCIES
+    frequency.append(
+      $ <span class="string">'&lt;option/&gt;'</span>,
+        text:  freq.text
+        value: freq.value
+    )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Select the option for the current update frequency.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  frequency.find(<span class="string">"option[value='<span class="subst">#{utils.get 'frequency'}</span>']"</span>).attr(
+    <span class="string">'selected'</span>, <span class="string">'selected'</span>
+  )</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Update the notification section of the options page with the current settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">loadNotifications</span></span> = -&gt;
+  <span class="keyword">if</span> utils.get <span class="string">'badges'</span>
+    $(<span class="string">'#badges'</span>).attr <span class="string">'checked'</span>, <span class="string">'checked'</span>
+  <span class="keyword">else</span>
+    $(<span class="string">'#badges'</span>).removeAttr <span class="string">'checked'</span>
+  <span class="keyword">if</span> utils.get <span class="string">'notifications'</span>
+    $(<span class="string">'#notifications'</span>).attr <span class="string">'checked'</span>, <span class="string">'checked'</span>
+  <span class="keyword">else</span>
+    $(<span class="string">'#notifications'</span>).removeAttr <span class="string">'checked'</span>
+  timeInSecs = <span class="number">0</span>
+  <span class="keyword">if</span> utils.get(<span class="string">'notificationDuration'</span>) &gt; timeInSecs
+    timeInSecs = utils.get(<span class="string">'notificationDuration'</span>) / <span class="number">1000</span>
+  $(<span class="string">'#notificationDuration'</span>).val timeInSecs</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Create a <code>&lt;optgroup&gt;</code> element representing the specified order.<br>The element returned should then be inserted in to the <code>&lt;select&gt;</code> managing
+the orders on the options page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">loadOrder</span></span> = (order) -&gt;
+  opt = $ <span class="string">'&lt;option/&gt;'</span>, text: order.label
+  opt.data <span class="string">'code'</span>,    order.code
+  opt.data <span class="string">'updates'</span>, JSON.stringify order.updates
+  <span class="keyword">return</span> $(<span class="string">'&lt;optgroup/&gt;'</span>, label: order.number).append opt</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Bind the event handlers required for controlling the orders.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">loadOrderControlEvents</span></span> = -&gt;
+  lastSelectedOrder = {}
+  orders            = $ <span class="string">'#orders'</span>
+  updates           = $ <span class="string">'#updates'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Whenever the selected option changes we want all the controls to represent
+the current selection (where possible).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  orders.change(-&gt;
+    $<span class="keyword">this</span>  = $ <span class="keyword">this</span>
+    opt    = $<span class="keyword">this</span>.find <span class="string">'option:selected'</span>
+    optGrp = opt.parent <span class="string">'optgroup'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Update the previously selected order.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    updateOrder lastSelectedOrder.parent <span class="string">'optgroup'</span> <span class="keyword">if</span> lastSelectedOrder.length
+    <span class="keyword">if</span> opt.length <span class="keyword">is</span> <span class="number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Disable all the controls as no option is selected.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      lastSelectedOrder = {}
+      utils.i18nContent <span class="string">'#add_btn'</span>, <span class="string">'opt_add_button'</span>
+      $(<span class="string">'.read-only, .read-only-always'</span>).removeAttr <span class="string">'disabled'</span>
+      $(<span class="string">'.read-only, .read-only-always'</span>).removeAttr <span class="string">'readonly'</span>
+      $(<span class="string">'#delete_btn'</span>).attr <span class="string">'disabled'</span>, <span class="string">'disabled'</span>
+      $(<span class="string">'#order_code'</span>).val <span class="string">''</span>
+      $(<span class="string">'#order_label'</span>).val <span class="string">''</span>
+      $(<span class="string">'#order_number'</span>).val <span class="string">''</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Wipe the status updates.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      updates.find(<span class="string">'optgroup'</span>).remove()
+    <span class="keyword">else</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>An order is selected; start cooking.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      lastSelectedOrder = opt
+      utils.i18nContent <span class="string">'#add_btn'</span>, <span class="string">'opt_add_new_button'</span>
+      $(<span class="string">'.read-only-always'</span>).attr <span class="string">'disabled'</span>, <span class="string">'disabled'</span>
+      $(<span class="string">'.read-only-always'</span>).attr <span class="string">'readonly'</span>, <span class="string">'readonly'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Update the fields and controls to reflect selected option.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      $(<span class="string">'#order_code'</span>).val opt.data <span class="string">'code'</span>
+      $(<span class="string">'#order_label'</span>).val opt.text()
+      $(<span class="string">'#order_number'</span>).val optGrp.attr <span class="string">'label'</span>
+      updates.find(<span class="string">'optgroup'</span>).remove()
+      orderUpdates = JSON.parse opt.data <span class="string">'updates'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Populate the status updates.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">for</span> orderUpdate <span class="keyword">in</span> orderUpdates
+        updates.append(
+          $(<span class="string">'&lt;optgroup/&gt;'</span>,
+            label: <span class="keyword">new</span> Date(orderUpdate.timeStamp).format <span class="string">'d/m/Y @ H:i:s'</span>
+          ).append(
+            $ <span class="string">'&lt;option/&gt;'</span>, text: orderUpdate.status
+          )
+        )
+      $(<span class="string">'.read-only'</span>).removeAttr <span class="string">'disabled'</span>
+      $(<span class="string">'.read-only'</span>).removeAttr <span class="string">'readonly'</span>
+  ).change()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Add a new order to the select based on the input values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $(<span class="string">'#add_btn'</span>).click -&gt;
+    opt    = orders.find <span class="string">'option:selected'</span>
+    optGrp = opt.parent <span class="string">'optgroup'</span>
+    <span class="keyword">if</span> optGrp.length <span class="keyword">and</span> opt.length</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Order was selected; clear that selection and allow creation.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      orders.val([]).change()
+      $(<span class="string">'#order_label'</span>).focus()
+    <span class="keyword">else</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Wipe any pre-existing error messages.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      $(<span class="string">'#errors'</span>).find(<span class="string">'li'</span>).remove()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>User submitted new order so check it out already.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      optGrp = loadOrder
+        code:        $(<span class="string">'#order_code'</span>).val().trim().toUpperCase()
+        error:       <span class="string">''</span>
+        label:       $(<span class="string">'#order_label'</span>).val().trim()
+        number:      $(<span class="string">'#order_number'</span>).val().trim().toUpperCase()
+        trackingUrl: <span class="string">''</span>
+        updates:     []
+      opt = optGrp.find <span class="string">'option'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Confirm the order meets the criteria.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> validateOrder optGrp, <span class="literal">yes</span>
+        orders.append optGrp
+        opt.attr <span class="string">'selected'</span>, <span class="string">'selected'</span>
+        orders.change().focus()
+      <span class="keyword">else</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Show the error messages to the user.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $.facebox div: <span class="string">'#message'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Prompt the user to confirm removal of the selected order.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $(<span class="string">'#delete_btn'</span>).click -&gt;
+    $.facebox div: <span class="string">'#delete_con'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Cancel the order removal process.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $(<span class="string">'.delete_no_btn'</span>).live <span class="string">'click'</span>, -&gt;
+    $(document).trigger <span class="string">'close.facebox'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Finalize the order removal.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $(<span class="string">'.delete_yes_btn'</span>).live <span class="string">'click'</span>, -&gt;
+    optGrp = orders.find(<span class="string">'option:selected'</span>).parent <span class="string">'optgroup'</span>
+    optGrp.remove()
+    orders.change().focus()
+    $(document).trigger <span class="string">'close.facebox'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Update the orders section of the options page with the current settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">loadOrders</span></span> = -&gt;
+  orders = $ <span class="string">'#orders'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Start from a clean slate.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  orders.remove <span class="string">'optgroup'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Create and insert options representing each order.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  orders.append loadOrder order <span class="keyword">for</span> order <span class="keyword">in</span> ext.orders</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <h3>Save functions</h3>
+<p>Update the settings with the values from the options page.<br>Restart the update manager once all settings have been updated.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">save</span></span> = -&gt;
+  saveOrders()
+  saveNotifications()
+  saveFrequencies()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Reboot the boss so it knows of any changes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  utils.sendMessage <span class="string">'extension'</span>, type: <span class="string">'refresh'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Update the settings with the values from the frequency section of the options
+page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">saveFrequencies</span></span> = -&gt;
+  frequency = $(<span class="string">'#frequency option:selected'</span>).val()
+  utils.set <span class="string">'frequency'</span>, parseInt frequency, <span class="number">10</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Update the settings with the values from the notification section of the
+options page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">saveNotifications</span></span> = -&gt;
+  utils.set <span class="string">'badges'</span>, $(<span class="string">'#badges'</span>).<span class="keyword">is</span> <span class="string">':checked'</span>
+  utils.set <span class="string">'notifications'</span>, $(<span class="string">'#notifications'</span>).<span class="keyword">is</span> <span class="string">':checked'</span>
+  timeInSecs = $(<span class="string">'#notificationDuration'</span>).val()
+  timeInSecs = <span class="keyword">if</span> timeInSecs? <span class="keyword">then</span> parseInt(timeInSecs, <span class="number">10</span>) * <span class="number">1000</span> <span class="keyword">else</span> <span class="number">0</span>
+  utils.set <span class="string">'notificationDuration'</span>, timeInSecs</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Update the settings with the values from the orders section of the options
+page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">saveOrders</span></span> = -&gt;
+  orders = []</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Update each individual order settings based on their corresponding options.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  $(<span class="string">'#orders optgroup'</span>).each -&gt;
+    orders.push deriveOrder $ <span class="keyword">this</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Persist the updated orders.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  utils.set <span class="string">'orders'</span>, orders
+  ext.orders = orders</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>Update the specified <code>&lt;optgroup&gt;</code> element that represents an order with values
+taken from the available fields.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">updateOrder</span></span> = (optGrp) -&gt;
+  opt = optGrp.find <span class="string">'option'</span>
+  <span class="keyword">if</span> optGrp.length <span class="keyword">and</span> opt.length
+    opt.data <span class="string">'code'</span>, $(<span class="string">'#order_code'</span>).val().trim().toUpperCase()
+    opt.text $(<span class="string">'#order_label'</span>).val().trim()
+    optGrp.attr <span class="string">'number'</span>, $(<span class="string">'#order_number'</span>).val().trim().toUpperCase()
+    <span class="keyword">return</span> opt</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <h3>Validation functions</h3>
+<p>Determine whether or not an order already exists with the specified number.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">isOrderNumberAvailable</span></span> = (number) -&gt;
+  available = <span class="literal">yes</span>
+  $(<span class="string">'#orders optgroup'</span>).each -&gt;
+    <span class="keyword">return</span> available = <span class="literal">no</span> <span class="keyword">if</span> $(<span class="keyword">this</span>).attr(<span class="string">'label'</span>) <span class="keyword">is</span> number
+  <span class="keyword">return</span> available</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Validate that the specified <code>&lt;optgroup&gt;</code> element that should represents an
+order does just that.<br>This function adds any validation errors it encounters to an unordered list
+which should be displayed to the user at some point if <code>yes</code> is returned.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">validateOrder</span></span> = (optGrp, isNew) -&gt;
+  opt    = optGrp.find <span class="string">'option'</span>
+  code   = opt.data(<span class="string">'code'</span>).trim().toUpperCase()
+  errors = $ <span class="string">'#errors'</span>
+  label  = opt.text().trim()
+  number = optGrp.attr(<span class="string">'label'</span>).trim().toUpperCase()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>Label is missing but is required.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  createError <span class="string">'opt_order_label_invalid'</span> <span class="keyword">if</span> label.length <span class="keyword">is</span> <span class="number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>Only validate new order numbers.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> isNew</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Number is required and must be available.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> number.length <span class="keyword">is</span> <span class="number">0</span>
+      createError <span class="string">'opt_order_number_invalid'</span>
+    <span class="keyword">else</span> <span class="keyword">if</span> <span class="keyword">not</span> isOrderNumberAvailable number
+      createError <span class="string">'opt_order_number_unavailable'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Zip/post code is missing but is required.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  createError <span class="string">'opt_order_code_invalid'</span> <span class="keyword">if</span> code.length <span class="keyword">is</span> <span class="number">0</span>
+  <span class="keyword">return</span> errors.find(<span class="string">'li'</span>).length <span class="keyword">is</span> <span class="number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Validate all <code>&lt;optgroup&gt;</code> elements that represent orders that are to be
+persisted in <code>localStorage</code>.<br>This function adds any validation errors it encounters to a unordered list
+which should be displayed to the user at some point if <code>yes</code> is returned.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">validateOrders</span></span> = -&gt;
+  errors = $ <span class="string">'#errors'</span>
+  orders = $ <span class="string">'#orders optgroup'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <p>Wipe any pre-existing errors.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  errors.remove <span class="string">'li'</span>
+  orders.each -&gt;
+    $<span class="keyword">this</span> = $ <span class="keyword">this</span>
+    <span class="keyword">unless</span> validateOrder $<span class="keyword">this</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Show user which validation failed validation.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      $<span class="keyword">this</span>.find(<span class="string">'option'</span>).attr <span class="string">'selected'</span>, <span class="string">'selected'</span>
+      $(<span class="string">'#orders'</span>).change().focus()
+      <span class="keyword">return</span> <span class="literal">no</span>
+  <span class="keyword">return</span> errors.find(<span class="string">'li'</span>).length <span class="keyword">is</span> <span class="number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <h3>Miscellaneous functions</h3>
+<p>Appends a new <code>&lt;li&gt;</code> element containing an internationalized error string,
+looked up using Chrome, to the unordered list of errors.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">createError</span></span> = (name) -&gt;
+  <span class="keyword">return</span> $(<span class="string">'&lt;li/&gt;'</span>, html: utils.i18n name).appendTo $ <span class="string">'#errors'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>Create an order with the information derived from the specified <code>&lt;optgroup&gt;</code>
+element.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">deriveOrder</span></span> = (optGrp) -&gt;
+  opt = optGrp.find <span class="string">'option'</span>
+  <span class="keyword">if</span> optGrp.length <span class="keyword">and</span> opt.length</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Create order from the derived data.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    order =
+      code:        opt.data <span class="string">'code'</span>
+      error:       <span class="string">''</span>
+      label:       opt.text()
+      number:      optGrp.attr <span class="string">'label'</span>
+      trackingUrl: <span class="string">''</span>
+      updates:     []</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>Try to get the data from existing order.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    existingOrder = ext.getOrder order.number, order.code
+    <span class="keyword">if</span> existingOrder
+      order.error       = existingOrder.error
+      order.trackingUrl = existingOrder.trackingUrl
+      order.updates     = existingOrder.updates
+  <span class="keyword">return</span> order</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <h3>Options page setup</h3>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>options = window.options =</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <h3>Public functions</h3>
+<p>Initialize the options page.<br>This will involve inserting and configuring the UI elements as well as
+loading the current settings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  init: -&gt;
+    utils.i18nSetup
+      footer:
+        opt_footer: <span class="keyword">new</span> Date().format <span class="string">'Y'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>Bind tab selection event to all tabs.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $(<span class="string">'[tabify]'</span>).click -&gt;
+      $<span class="keyword">this</span> = $ <span class="keyword">this</span>
+      <span class="keyword">unless</span> $<span class="keyword">this</span>.hasClass <span class="string">'selected'</span>
+        $<span class="keyword">this</span>.siblings().removeClass <span class="string">'selected'</span>
+        $<span class="keyword">this</span>.addClass <span class="string">'selected'</span>
+        $($<span class="keyword">this</span>.attr <span class="string">'tabify'</span>).show().siblings(<span class="string">'.tab'</span>).hide()
+        utils.set <span class="string">'options_active_tab'</span>, $<span class="keyword">this</span>.attr <span class="string">'id'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Reflect the persisted tab.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    utils.init <span class="string">'options_active_tab'</span>, <span class="string">'general_nav'</span>
+    $(<span class="string">"#<span class="subst">#{utils.get 'options_active_tab'}</span>"</span>).click()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>Bind event to the &quot;Save &amp; Close&quot; button which will update the settings
+with the values from the options page and close the current tab.<br>None of this should happen if the invalid orders are found; in which case
+the user is notified of these errors.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $(<span class="string">'.save-btn'</span>).click -&gt;
+      updateOrder $(<span class="string">'#orders option:selected'</span>).parent <span class="string">'optgroup'</span>
+      <span class="keyword">if</span> validateOrders()
+        save()
+        chrome.tabs.getSelected <span class="literal">null</span>, (tab) -&gt;
+          chrome.tabs.remove tab.id
+      <span class="keyword">else</span>
+        $.facebox div: <span class="string">'#message'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>Load the current option values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    load()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>Initialize all faceboxes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $(<span class="string">'a[facebox]'</span>).click -&gt;
+      $.facebox div: $(<span class="keyword">this</span>).attr <span class="string">'facebox'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>Ensure that the persisted tab is currently visible.<br>This should be called if the user clicks the Options link in the popup while
+and options page is already open.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  refresh: -&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>Ensure the persisted tab is visible</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    $(<span class="string">"#<span class="subst">#{utils.get 'options_active_tab'}</span>"</span>).click()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>Initialize <code>options</code> when the DOM is ready.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>utils.ready -&gt; options.init()</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,5 +1,5 @@
 # [iOrder](http://neocotic.com/iOrder)  
-# (c) 2012 Alasdair Mercer  
+# (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license.  
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
@@ -53,19 +53,16 @@ buildPopup = ->
   headerL.append $ '<a/>',
     href:    '#'
     id:      'optionsLink'
-    onclick: 'popup.options()'
     text:    utils.i18n 'options_text'
     title:   utils.i18n 'options_title'
   headerL.append $ '<a/>',
     href:    '#'
     id:      'ordersLink'
-    onclick: 'popup.viewAll()'
     text:    utils.i18n 'orders_text'
     title:   utils.i18n 'orders_title'
   # Add the refresh button to the footer (can be removed though).
   footerF.append $ '<button/>',
     id:      'refreshLink'
-    onclick: 'popup.refresh()'
     text:    utils.i18n 'refresh_text'
     title:   utils.i18n 'refresh_title'
   # Change the refresh button to show I'm busy... I am y'know.
@@ -78,7 +75,6 @@ buildPopup = ->
   if updates and utils.get 'badges'
     footerF.append $ '<button/>',
       id:      'clearLink'
-      onclick: 'popup.clear()'
       text:    utils.i18n 'clear_text'
       title:   utils.i18n 'clear_title'
   # Add the update details to the footer.
@@ -117,7 +113,6 @@ buildPopup = ->
             'data-order-code':   order.code
             'data-order-number': order.number
             href:                '#'
-            onclick:             'popup.view(this)'
             text:                order.number
             title:               utils.i18n 'order_title'
         ]
@@ -136,7 +131,6 @@ buildPopup = ->
           'data-order-code':   order.code
           'data-order-number': order.number
           href:                '#'
-          onclick:             'popup.track(this)'
           text:                utils.i18n 'track_text'
           title:               utils.i18n 'track_title'
     else
@@ -252,31 +246,31 @@ notify = ->
   # Show the notification if setting enabled and has new updates.
   if updates > oldUpdates and utils.get 'notifications'
     webkitNotifications.createHTMLNotification(
-      chrome.extension.getURL 'pages/notification.html'
+      utils.url 'pages/notification.html'
     ).show()
 
-# Listener for internal requests.  
-# This function will handle the request based on its type and the data
+# Listener for internal messages.  
+# This function will handle the message based on its type and the data
 # provided.
-onRequest = (request, sender, sendResponse) ->
+onMessage = (message, sender, sendResponse) ->
   order   = {}
   url     = ''
   # Check what needs to be done... and then do it.
-  switch request.type
+  switch message.type
     when 'clear' then markRead()
     when 'options'
       # Try using existing tabs for the options page before creating one.
-      url = chrome.extension.getURL 'pages/options.html'
+      url = utils.url 'pages/options.html'
       selectOrCreateTab url, (isNew) ->
         return if isNew
         win.options.refresh() for win in getWindows url
     when 'refresh' then updateManager.restart()
     when 'track'
-      order = ext.getOrder request.data.number, request.data.code
+      order = ext.getOrder message.data.number, message.data.code
       chrome.tabs.create url: order.trackingUrl if order and order.trackingUrl
     when 'viewAll' then chrome.tabs.create url: ORDERS_URL
     when 'view'
-      order = ext.getOrder request.data.number, request.data.code
+      order = ext.getOrder message.data.number, message.data.code
       chrome.tabs.create url: getOrderUrl order if order
 
 # Attempt to select a tab in the current window displaying a page whose
@@ -313,7 +307,7 @@ updateOrder = (order, callback) ->
     # Probably won't happen; more of a sanity check.
     return order.error = 'update_invalid_page_error' unless data
     # Extract the relevant elements wrapped in jQuery goodness.
-    heading     = $(data).find '.order .delivery-group .sb-heading'
+    heading     = $(data).find '.order .ship-group .sb-heading'
     status      = heading.find 'h4 span:first-child'
     trackingUrl = heading.find ".group-actions tr:first-child td
  a[href^='#{TRACKER_URL}']"
@@ -350,8 +344,7 @@ updateOrder = (order, callback) ->
 # updates any popup currently being displayed.
 updatePopup = ->
   buildPopup()
-  popup = chrome.extension.getViews(type: 'popup')[0]
-  popup.document.body.innerHTML = ext.popupHtml if popup
+  chrome.extension.getViews(type: 'popup')[0]?.popup.init()
 
 #### Update Manager setup
 
@@ -498,7 +491,7 @@ ext = window.ext =
       return order
 
   # Initialize the background page.  
-  # This will involve initializing the settings, adding the request listeners
+  # This will involve initializing the settings, adding the message listeners
   # and starting the update manager.
   init: ->
     utils.init 'update_progress', {}
@@ -510,11 +503,14 @@ ext = window.ext =
     utils.init 'notifications', on
     utils.init 'notificationDuration', 6 * 1000
     initOrders()
-    chrome.extension.onRequest.addListener onRequest
+    utils.onMessage 'extension', no, onMessage
     # It's nice knowing what version is running.
-    $.getJSON chrome.extension.getURL('manifest.json'), (data) ->
+    $.getJSON utils.url('manifest.json'), (data) ->
       version = data.version
       # Execute content scripts now that we know the version.
       executeScriptsInExistingWindows()
     # It's alive!
     updateManager.start()
+
+# Initialize `ext` when the DOM is ready.
+utils.ready -> ext.init()
