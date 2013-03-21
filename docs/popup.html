@@ -103,11 +103,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Send a request to the background page using the information provided.</p>
+              <p>Send a message to the background page using the information provided.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">sendRequest</span></span> = (type, closeAfter, data = {}, element) -&gt;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">sendMessage</span></span> = (type, closeAfter, data = {}, element) -&gt;</pre></div></div>
             
         </li>
         
@@ -135,11 +135,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Send the request to the background page.</p>
+              <p>Send the message to the background page.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  chrome.extension.sendRequest data: data, type: type</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  utils.sendMessage <span class="string">'extension'</span>, data: data, type: type</pre></div></div>
             
         </li>
         
@@ -181,12 +181,12 @@
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
               <h3>Public functions</h3>
-<p>Send a request to clear any badge being displayed.</p>
+<p>Send a message to clear any badge being displayed.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  clear: -&gt;
-    sendRequest <span class="string">'clear'</span></pre></div></div>
+    sendMessage <span class="string">'clear'</span></pre></div></div>
             
         </li>
         
@@ -235,7 +235,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Send a request to open the Orders tab on the options page.</p>
+              <p>Send a message to open the Orders tab on the options page.</p>
 
             </div>
             
@@ -245,7 +245,7 @@
     <span class="keyword">if</span> tab
       tab += suffix <span class="keyword">if</span> tab.indexOf(suffix) <span class="keyword">isnt</span> tab.length - suffix.length
       utils.set <span class="string">'options_active_tab'</span>, tab
-    sendRequest <span class="string">'options'</span>, <span class="literal">yes</span></pre></div></div>
+    sendMessage <span class="string">'options'</span>, <span class="literal">yes</span></pre></div></div>
             
         </li>
         
@@ -256,12 +256,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Send a request to update the orders immediately.</p>
+              <p>Send a message to update the orders immediately.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  refresh: -&gt;
-    sendRequest <span class="string">'refresh'</span></pre></div></div>
+    sendMessage <span class="string">'refresh'</span></pre></div></div>
             
         </li>
         
@@ -272,13 +272,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Send a request to open the tracking page for the order relating to the
+              <p>Send a message to open the tracking page for the order relating to the
 clicked link.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  track: -&gt;
-    sendRequest <span class="string">'track'</span>, <span class="literal">yes</span>, {}, <span class="keyword">this</span></pre></div></div>
+    sendMessage <span class="string">'track'</span>, <span class="literal">yes</span>, {}, <span class="keyword">this</span></pre></div></div>
             
         </li>
         
@@ -289,13 +289,13 @@ clicked link.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Send a request to open the page on the Apple US store for the order
+              <p>Send a message to open the page on the Apple US store for the order
 relating to the clicked link.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  view: -&gt;
-    sendRequest <span class="string">'view'</span>, <span class="literal">yes</span>, {}, <span class="keyword">this</span></pre></div></div>
+    sendMessage <span class="string">'view'</span>, <span class="literal">yes</span>, {}, <span class="keyword">this</span></pre></div></div>
             
         </li>
         
@@ -306,12 +306,12 @@ relating to the clicked link.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Send a request to open the order listing page on the Apple US store.</p>
+              <p>Send a message to open the order listing page on the Apple US store.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  viewAll: -&gt;
-    sendRequest <span class="string">'viewAll'</span>, <span class="literal">yes</span></pre></div></div>
+    sendMessage <span class="string">'viewAll'</span>, <span class="literal">yes</span></pre></div></div>
             
         </li>
         

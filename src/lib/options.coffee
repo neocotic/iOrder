@@ -166,7 +166,7 @@ save = ->
   saveNotifications()
   saveFrequencies()
   # Reboot the boss so it knows of any changes.
-  chrome.extension.sendRequest type: 'refresh'
+  utils.sendMessage 'extension', type: 'refresh'
 
 # Update the settings with the values from the frequency section of the options
 # page.

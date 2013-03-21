@@ -811,7 +811,7 @@ been stored previously by <code>ext.init</code>.</p>
             
             <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> updates &gt; oldUpdates <span class="keyword">and</span> utils.get <span class="string">'notifications'</span>
     webkitNotifications.createHTMLNotification(
-      chrome.extension.getURL <span class="string">'pages/notification.html'</span>
+      utils.url <span class="string">'pages/notification.html'</span>
     ).show()</pre></div></div>
             
         </li>
@@ -823,12 +823,12 @@ been stored previously by <code>ext.init</code>.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-42">&#182;</a>
               </div>
-              <p>Listener for internal requests.<br>This function will handle the request based on its type and the data
+              <p>Listener for internal messages.<br>This function will handle the message based on its type and the data
 provided.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">onRequest</span></span> = (request, sender, sendResponse) -&gt;
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">onMessage</span></span> = (message, sender, sendResponse) -&gt;
   order   = {}
   url     = <span class="string">''</span></pre></div></div>
             
@@ -845,7 +845,7 @@ provided.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">switch</span> request.type
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">switch</span> message.type
     <span class="keyword">when</span> <span class="string">'clear'</span> <span class="keyword">then</span> markRead()
     <span class="keyword">when</span> <span class="string">'options'</span></pre></div></div>
             
@@ -862,17 +862,17 @@ provided.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      url = chrome.extension.getURL <span class="string">'pages/options.html'</span>
+            <div class="content"><div class='highlight'><pre>      url = utils.url <span class="string">'pages/options.html'</span>
       selectOrCreateTab url, (isNew) -&gt;
         <span class="keyword">return</span> <span class="keyword">if</span> isNew
         win.options.refresh() <span class="keyword">for</span> win <span class="keyword">in</span> getWindows url
     <span class="keyword">when</span> <span class="string">'refresh'</span> <span class="keyword">then</span> updateManager.restart()
     <span class="keyword">when</span> <span class="string">'track'</span>
-      order = ext.getOrder request.data.number, request.data.code
+      order = ext.getOrder message.data.number, message.data.code
       chrome.tabs.create url: order.trackingUrl <span class="keyword">if</span> order <span class="keyword">and</span> order.trackingUrl
     <span class="keyword">when</span> <span class="string">'viewAll'</span> <span class="keyword">then</span> chrome.tabs.create url: ORDERS_URL
     <span class="keyword">when</span> <span class="string">'view'</span>
-      order = ext.getOrder request.data.number, request.data.code
+      order = ext.getOrder message.data.number, message.data.code
       chrome.tabs.create url: getOrderUrl order <span class="keyword">if</span> order</pre></div></div>
             
         </li>
@@ -1730,7 +1730,7 @@ this is generated to improve performance and load times of the popup frame.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-96">&#182;</a>
               </div>
-              <p>Initialize the background page.<br>This will involve initializing the settings, adding the request listeners
+              <p>Initialize the background page.<br>This will involve initializing the settings, adding the message listeners
 and starting the update manager.</p>
 
             </div>
@@ -1745,7 +1745,7 @@ and starting the update manager.</p>
     utils.init <span class="string">'notifications'</span>, <span class="literal">on</span>
     utils.init <span class="string">'notificationDuration'</span>, <span class="number">6</span> * <span class="number">1000</span>
     initOrders()
-    chrome.extension.onRequest.addListener onRequest</pre></div></div>
+    utils.onMessage <span class="string">'extension'</span>, <span class="literal">no</span>, onMessage</pre></div></div>
             
         </li>
         
@@ -1760,7 +1760,7 @@ and starting the update manager.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    $.getJSON chrome.extension.getURL(<span class="string">'manifest.json'</span>), (data) -&gt;
+            <div class="content"><div class='highlight'><pre>    $.getJSON utils.url(<span class="string">'manifest.json'</span>), (data) -&gt;
       version = data.version</pre></div></div>
             
         </li>
