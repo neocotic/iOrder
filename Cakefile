@@ -8,6 +8,7 @@ fs       = require 'fs'
 {minify} = require 'uglify-js'
 Path     = require 'path'
 wrench   = require 'wrench'
+zip      = require('node-zip')()
 
 # Constants
 # ---------
@@ -63,6 +64,26 @@ compile = (path, cb) ->
   ws.on 'error', cb
   ws.write header
   ws.end coffee.compile(code), ENCODING
+
+createZip = (base, path, cb) ->
+  parent = Path.dirname path
+  async.waterfall [
+    (cb) ->
+      fs.stat path, cb
+  , (stats, cb) ->
+      if stats.isDirectory()
+        fs.readdir path, (err, files) ->
+          return cb err if err
+          files = Path.join parent, file for file in files
+          async.each files, (file, cb) ->
+            createZip base, file, cb
+          , cb
+      else
+        fs.readFile path, (err, data) ->
+          return cb err if err
+          path = Path.relative base, path
+          zip.file path, data, binary: yes, cb
+  ], cb
 
 extractHeader = (code = '', r_comment, replacement) ->
   header    = ''
@@ -139,7 +160,7 @@ task 'build', 'Build extension', ->
   console.log 'Building iOrder...'
   wrench.mkdirSyncRecursive path for path in TARGET_SUB_DIRS
   wrench.copyDirSyncRecursive SOURCE_DIR, TARGET_DIR
-  # TODO: Find & delete .git* files
+  # TODO: Find & delete hidden (.*) files
   async.forEach getCoffeeFiles(TARGET_DIR), compile, (err) ->
     throw err if err
     finish 'Build completed!'
@@ -177,8 +198,11 @@ task 'dist', 'Create distributable file', ->
       fs.exists path, (exists) ->
         if exists then fs.unlink path, cb else cb()
     (cb) ->
-      # TODO: Support Windows
-      exec "zip -r ../#{DIST_FILE} *", cwd: TEMP_PATH, cb
+      createZip TEMP_PATH, TEMP_PATH, (err) ->
+        return cb err if err
+        data = zip.generate base64: no, compression: 'DEFLATE'
+        path = Path.join DIST_DIR, "#{DIST_FILE}.zip"
+        fs.writeFile path, data, cb
   ], (err) ->
     throw err if err
     wrench.rmdirSyncRecursive TEMP_PATH
