@@ -1,3 +1,7 @@
+2013.03.21, Version 1.1.4
+
+* [#38](https://github.com/neocotic/iOrder/issues/38): Fix critical bug with malformed distribution file for version 1.1.3
+
 2013.03.21, Version 1.1.3
 
 * [#26](https://github.com/neocotic/iOrder/issues/26): Update [manifest versio][] to 2 and provide and support a [Content Security Policy][]
