@@ -71,6 +71,19 @@ utils = window.utils =
 
   #### General functions
 
+  # Convenient shorthand for the different types of `onMessage` methods
+  # available in the chrome API.  
+  # This also supports the old `onRequest` variations for backwards
+  # compatibility.
+  onMessage: (type = 'extension', external, args...) ->
+    base = chrome[type]
+    base = chrome.extension if not base and type is 'runtime'
+    if external
+      base = base.onMessageExternal or base.onRequestExternal
+    else
+      base = base.onMessage or base.onRequest
+    base.addListener args...
+
   # Bind `handler` to event indicating that the DOM is ready.
   ready: (context, handler) ->
     unless handler?
@@ -80,6 +93,18 @@ utils = window.utils =
       context.jQuery handler
     else
       context.document.addEventListener 'DOMContentLoaded', handler
+
+  # Convenient shorthand for the different types of `sendMessage` methods
+  # available in the chrome API.  
+  # This also supports the old `sendRequest` variations for backwards
+  # compatibility.
+  sendMessage: (type = 'extension', args...) ->
+    base = chrome[type]
+    base = chrome.extension if not base and type is 'runtime'
+    (base.sendMessage or base.sendRequest).apply base, args
+
+  # Convenient shorthand for `chrome.extension.getURL`.
+  url: -> chrome.extension.getURL arguments...
 
   #### Data functions
 

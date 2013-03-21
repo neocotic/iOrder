@@ -1,5 +1,5 @@
 # [iOrder](http://neocotic.com/iOrder)  
-# (c) 2012 Alasdair Mercer  
+# (c) 2013 Alasdair Mercer  
 # Freely distributable under the MIT license.  
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>

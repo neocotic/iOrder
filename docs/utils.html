@@ -229,7 +229,31 @@ key as the mapping.</p>
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
               <h3>General functions</h3>
-<p>Bind <code>handler</code> to event indicating that the DOM is ready.</p>
+<p>Convenient shorthand for the different types of <code>onMessage</code> methods
+available in the chrome API.<br>This also supports the old <code>onRequest</code> variations for backwards
+compatibility.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  onMessage: (type = <span class="string">'extension'</span>, external, args...) -&gt;
+    base = chrome[type]
+    base = chrome.extension <span class="keyword">if</span> <span class="keyword">not</span> base <span class="keyword">and</span> type <span class="keyword">is</span> <span class="string">'runtime'</span>
+    <span class="keyword">if</span> external
+      base = base.onMessageExternal <span class="keyword">or</span> base.onRequestExternal
+    <span class="keyword">else</span>
+      base = base.onMessage <span class="keyword">or</span> base.onRequest
+    base.addListener args...</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Bind <code>handler</code> to event indicating that the DOM is ready.</p>
 
             </div>
             
@@ -245,11 +269,46 @@ key as the mapping.</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Convenient shorthand for the different types of <code>sendMessage</code> methods
+available in the chrome API.<br>This also supports the old <code>sendRequest</code> variations for backwards
+compatibility.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  sendMessage: (type = <span class="string">'extension'</span>, args...) -&gt;
+    base = chrome[type]
+    base = chrome.extension <span class="keyword">if</span> <span class="keyword">not</span> base <span class="keyword">and</span> type <span class="keyword">is</span> <span class="string">'runtime'</span>
+    (base.sendMessage <span class="keyword">or</span> base.sendRequest).apply base, args</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Convenient shorthand for <code>chrome.extension.getURL</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  url: -&gt; chrome.extension.getURL arguments...</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
               <h3>Data functions</h3>
 <p>Determine whether or not the specified key exists in <code>localStorage</code>.</p>
@@ -262,11 +321,11 @@ key as the mapping.</p>
         </li>
         
         
-        <li id="section-11">
+        <li id="section-14">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-11">&#182;</a>
+                <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
               <p>Retrieve the value associated with the specified key from <code>localStorage</code>.<br>If the value is found, parse it as JSON before being returning it; otherwise
 return <code>undefined</code>.</p>
@@ -280,11 +339,11 @@ return <code>undefined</code>.</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>Initialize the value of the specified key in <code>localStorage</code>.<br>If the value is currently <code>undefined</code>, assign the specified default value;
 otherwise reassign itself.</p>
@@ -298,11 +357,11 @@ otherwise reassign itself.</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Remove the specified key from <code>localStorage</code>.</p>
 
@@ -316,11 +375,11 @@ otherwise reassign itself.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Copy the value of the existing key to that of the new key then remove the
 old key from <code>localStorage</code>.<br>If the old key doesn&#39;t exist in <code>localStorage</code>, assign the specified default
@@ -338,11 +397,11 @@ value to it instead.</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Set the value of the specified key in <code>localStorage</code>.<br>If the specified value is <code>undefined</code>, assign that value directly to the
 key; otherwise transform it to a JSON string beforehand.</p>
@@ -357,11 +416,11 @@ key; otherwise transform it to a JSON string beforehand.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <h3>Internationalization functions</h3>
 <p>Convenient shorthand for <code>chrome.i18n.getMessage</code>.</p>
@@ -374,11 +433,11 @@ key; otherwise transform it to a JSON string beforehand.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Internationalize the specified attribute of all the selected elements.</p>
 
@@ -390,11 +449,11 @@ key; otherwise transform it to a JSON string beforehand.</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Ensure the substitution string(s) are in an array.</p>
 
@@ -407,11 +466,11 @@ key; otherwise transform it to a JSON string beforehand.</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Internationalize the contents of all the selected elements.</p>
 
@@ -423,11 +482,11 @@ key; otherwise transform it to a JSON string beforehand.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Ensure the substitution string(s) are in an array.</p>
 
@@ -439,11 +498,11 @@ key; otherwise transform it to a JSON string beforehand.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Perform all internationalization setup required for the current page.</p>
 
