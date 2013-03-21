@@ -26,6 +26,6 @@ please visit the project's homepage;
 
 http://neocotic.com/iOrder
 
-[@neocotic]: https://twitter.com/#!/neocotic
+[@neocotic]: https://twitter.com/neocotic
 [help desk]: https://iorder.uservoice.com
 [iOrder]: https://chrome.google.com/webstore/detail/kflemogpkbophbipihnbcmlplbihbdhb
