@@ -1,12 +1,46 @@
 {
     "name": "iOrder"
+  , "description": "Browser extension that keeps users updated with their iDevice order progress"
   , "version": "1.1.4"
+  , "homepage": "http://neocotic.com/iOrder"
+  , "bugs": {
+      "url": "https://github.com/neocotic/iOrder/issues"
+    }
+  , "author": {
+        "name": "Alasdair Mercer"
+      , "email": "mercer.alasdair@gmail.com"
+      , "url": "http://neocotic.com"
+    }
+  , "licenses": [
+      {
+          "type": "MIT"
+        , "url": "https://github.com/neocotic/iOrder/raw/master/LICENSE.md"
+      }
+    ]
+  , "keywords": [
+        "iorder"
+      , "browser"
+      , "chrome"
+      , "extension"
+      , "apple"
+      , "store"
+      , "order"
+      , "track"
+      , "status"
+    ]
+  , "repository": {
+        "type": "git"
+      , "url": "git://github.com/neocotic/iOrder.git"
+    }
   , "devDependencies": {
-        "async": "0.2.6"
-      , "coffee-script": "1.6.2"
-      , "docco": "0.6.2"
-      , "node-zip": "1.0.1"
-      , "uglify-js": "2.2.5"
-      , "wrench": "1.4.4"
+        "async": "~0.2.6"
+      , "coffee-script": "~1.6.2"
+      , "docco": "~0.6.2"
+      , "node-zip": "~1.0.1"
+      , "uglify-js": "~2.2.5"
+      , "wrench": "~1.4.4"
+    }
+  , "engines": {
+      "node": "~0.8.0"
     }
 }
