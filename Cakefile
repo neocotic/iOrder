@@ -60,29 +60,30 @@ compile = (path, cb) ->
   ws.on 'close', ->
     fs.unlinkSync path
     console.log "Successfully compiled to #{newPath}!"
-    cb?()
+    cb()
   ws.on 'error', cb
   ws.write header
   ws.end coffee.compile(code), ENCODING
 
 createZip = (base, path, cb) ->
-  parent = Path.dirname path
   async.waterfall [
     (cb) ->
       fs.stat path, cb
   , (stats, cb) ->
       if stats.isDirectory()
+        console.log "Compressing directory: #{path}..."
         fs.readdir path, (err, files) ->
           return cb err if err
-          files = Path.join parent, file for file in files
           async.each files, (file, cb) ->
-            createZip base, file, cb
+            createZip base, Path.join(path, file), cb
           , cb
       else
         fs.readFile path, (err, data) ->
           return cb err if err
           path = Path.relative base, path
-          zip.file path, data, binary: yes, cb
+          data = toArrayBuffer data
+          zip.file path, data, binary: yes
+          cb()
   ], cb
 
 extractHeader = (code = '', r_comment, replacement) ->
@@ -135,7 +136,7 @@ optimize = (path, handler, cb) ->
     mode:     WRITE_MODE
   ws.on 'close', ->
     console.log "Successfully optimized #{path}!"
-    cb?()
+    cb()
   ws.on 'error', cb
   switch Path.extname path
     when EXT_JS
@@ -152,6 +153,12 @@ optimize = (path, handler, cb) ->
 
 optimizeMessage  = (file, cb)  -> optimize file, messageHandler, cb
 optimizeStandard = (file, cb)  -> optimize file, null, cb
+
+toArrayBuffer = (buffer) ->
+  ab   = new ArrayBuffer buffer.length
+  view = new Uint8Array ab
+  view[i] = buff for buff, i in buffer
+  ab
 
 # Tasks
 # -----
@@ -200,9 +207,10 @@ task 'dist', 'Create distributable file', ->
     (cb) ->
       createZip TEMP_PATH, TEMP_PATH, (err) ->
         return cb err if err
-        data = zip.generate base64: no, compression: 'DEFLATE'
         path = Path.join DIST_DIR, "#{DIST_FILE}.zip"
-        fs.writeFile path, data, cb
+        data = zip.generate base64: no, compression: 'DEFLATE'
+        console.log "Creating zip of compressed files: #{path}..."
+        fs.writeFile path, data, 'binary', cb
   ], (err) ->
     throw err if err
     wrench.rmdirSyncRecursive TEMP_PATH
