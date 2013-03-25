@@ -4,12 +4,14 @@
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
 
-#### Private variables
+# Private variables
+# -----------------
 
-# Easily accessible reference to the extension controller.
-{ext} = chrome.extension.getBackgroundPage()
+# Easily accessible reference store, utilities, and to the extension controller.
+{ext, store, utils} = chrome.extension.getBackgroundPage()
 
-#### Private functions
+# Private functions
+# -----------------
 
 # Add a `handler` to all selected elements for the specified `event`.
 addEventHandler = (selector, event, handler, context = document) ->
@@ -27,11 +29,13 @@ sendMessage = (type, closeAfter, data = {}, element) ->
   # Close this pesky popup.
   window.close() if closeAfter
 
-#### Popup page setup
+# Popup page setup
+# ----------------
 
-popup = window.popup =
+popup = window.popup = new class Popup extends utils.Class
 
-  #### Public functions
+  # Public functions
+  # ----------------
 
   # Send a message to clear any badge being displayed.
   clear: ->
@@ -56,20 +60,19 @@ popup = window.popup =
     tab    = @getAttribute 'data-options-tab'
     if tab
       tab += suffix if tab.indexOf(suffix) isnt tab.length - suffix.length
-      utils.set 'options_active_tab', tab
+      store.set 'options_active_tab', tab
     sendMessage 'options', yes
 
   # Send a message to update the orders immediately.
   refresh: ->
     sendMessage 'refresh'
 
-  # Send a message to open the tracking page for the order relating to the
-  # clicked link.
+  # Send a message to open the tracking page for the order relating to the clicked link.
   track: ->
     sendMessage 'track', yes, {}, this
 
-  # Send a message to open the page on the Apple US store for the order
-  # relating to the clicked link.
+  # Send a message to open the page on the Apple US store for the order relating to the clicked
+  # link.
   view: ->
     sendMessage 'view', yes, {}, this
 
@@ -77,6 +80,5 @@ popup = window.popup =
   viewAll: ->
     sendMessage 'viewAll', yes
 
-
 # Initialize `popup` when the DOM is ready.
-utils.ready -> popup.init()
+utils.ready this, -> popup.init()

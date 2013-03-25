@@ -4,7 +4,9 @@
 // For all details and documentation:
 // <http://neocotic.com/iOrder>
 (function() {
-  var createError, deriveOrder, ext, isOrderNumberAvailable, load, loadFrequencies, loadNotifications, loadOrder, loadOrderControlEvents, loadOrders, options, save, saveFrequencies, saveNotifications, saveOrders, updateOrder, validateOrder, validateOrders;
+  var Options, createError, deriveOrder, ext, isOrderNumberAvailable, load, loadFrequencies, loadNotifications, loadOrder, loadOrderControlEvents, loadOrders, options, save, saveFrequencies, saveNotifications, saveOrders, updateOrder, validateOrder, validateOrders, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   ext = chrome.extension.getBackgroundPage().ext;
 
@@ -28,25 +30,25 @@
         value: freq.value
       }));
     }
-    return frequency.find("option[value='" + (utils.get('frequency')) + "']").attr('selected', 'selected');
+    return frequency.find("option[value='" + (store.get('frequency')) + "']").attr('selected', 'selected');
   };
 
   loadNotifications = function() {
     var timeInSecs;
 
-    if (utils.get('badges')) {
+    if (store.get('badges')) {
       $('#badges').attr('checked', 'checked');
     } else {
       $('#badges').removeAttr('checked');
     }
-    if (utils.get('notifications')) {
+    if (store.get('notifications')) {
       $('#notifications').attr('checked', 'checked');
     } else {
       $('#notifications').removeAttr('checked');
     }
     timeInSecs = 0;
-    if (utils.get('notificationDuration') > timeInSecs) {
-      timeInSecs = utils.get('notificationDuration') / 1000;
+    if (store.get('notificationDuration') > timeInSecs) {
+      timeInSecs = store.get('notificationDuration') / 1000;
     }
     return $('#notificationDuration').val(timeInSecs);
   };
@@ -81,7 +83,7 @@
       }
       if (opt.length === 0) {
         lastSelectedOrder = {};
-        utils.i18nContent('#add_btn', 'opt_add_button');
+        i18n.content('#add_btn', 'opt_add_button');
         $('.read-only, .read-only-always').removeAttr('disabled');
         $('.read-only, .read-only-always').removeAttr('readonly');
         $('#delete_btn').attr('disabled', 'disabled');
@@ -91,7 +93,7 @@
         return updates.find('optgroup').remove();
       } else {
         lastSelectedOrder = opt;
-        utils.i18nContent('#add_btn', 'opt_add_new_button');
+        i18n.content('#add_btn', 'opt_add_new_button');
         $('.read-only-always').attr('disabled', 'disabled');
         $('.read-only-always').attr('readonly', 'readonly');
         $('#order_code').val(opt.data('code'));
@@ -186,17 +188,17 @@
     var frequency;
 
     frequency = $('#frequency option:selected').val();
-    return utils.set('frequency', parseInt(frequency, 10));
+    return store.set('frequency', parseInt(frequency, 10));
   };
 
   saveNotifications = function() {
     var timeInSecs;
 
-    utils.set('badges', $('#badges').is(':checked'));
-    utils.set('notifications', $('#notifications').is(':checked'));
+    store.set('badges', $('#badges').is(':checked'));
+    store.set('notifications', $('#notifications').is(':checked'));
     timeInSecs = $('#notificationDuration').val();
     timeInSecs = timeInSecs != null ? parseInt(timeInSecs, 10) * 1000 : 0;
-    return utils.set('notificationDuration', timeInSecs);
+    return store.set('notificationDuration', timeInSecs);
   };
 
   saveOrders = function() {
@@ -206,7 +208,7 @@
     $('#orders optgroup').each(function() {
       return orders.push(deriveOrder($(this)));
     });
-    utils.set('orders', orders);
+    store.set('orders', orders);
     return ext.orders = orders;
   };
 
@@ -279,7 +281,7 @@
 
   createError = function(name) {
     return $('<li/>', {
-      html: utils.i18n(name)
+      html: i18n.get(name)
     }).appendTo($('#errors'));
   };
 
@@ -306,9 +308,16 @@
     return order;
   };
 
-  options = window.options = {
-    init: function() {
-      utils.i18nSetup({
+  options = window.options = new (Options = (function(_super) {
+    __extends(Options, _super);
+
+    function Options() {
+      _ref = Options.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Options.prototype.init = function() {
+      i18n.init({
         footer: {
           opt_footer: new Date().format('Y')
         }
@@ -321,11 +330,11 @@
           $this.siblings().removeClass('selected');
           $this.addClass('selected');
           $($this.attr('tabify')).show().siblings('.tab').hide();
-          return utils.set('options_active_tab', $this.attr('id'));
+          return store.set('options_active_tab', $this.attr('id'));
         }
       });
-      utils.init('options_active_tab', 'general_nav');
-      $("#" + (utils.get('options_active_tab'))).click();
+      store.init('options_active_tab', 'general_nav');
+      $("#" + (store.get('options_active_tab'))).click();
       $('.save-btn').click(function() {
         updateOrder($('#orders option:selected').parent('optgroup'));
         if (validateOrders()) {
@@ -345,11 +354,15 @@
           div: $(this).attr('facebox')
         });
       });
-    },
-    refresh: function() {
-      return $("#" + (utils.get('options_active_tab'))).click();
-    }
-  };
+    };
+
+    Options.prototype.refresh = function() {
+      return $("#" + (store.get('options_active_tab'))).click();
+    };
+
+    return Options;
+
+  })(utils.Class));
 
   utils.ready(function() {
     return options.init();

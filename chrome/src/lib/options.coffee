@@ -4,12 +4,14 @@
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
 
-#### Private variables
+# Private variables
+# -----------------
 
 # Easily accessible reference to the extension controller.
 {ext} = chrome.extension.getBackgroundPage()
 
-#### Load functions
+# Load functions
+# --------------
 
 # Update the options page with the values from the current settings.
 load = ->
@@ -31,28 +33,26 @@ loadFrequencies = ->
         value: freq.value
     )
   # Select the option for the current update frequency.
-  frequency.find("option[value='#{utils.get 'frequency'}']").attr(
-    'selected', 'selected'
-  )
+  frequency.find("option[value='#{store.get 'frequency'}']").attr 'selected', 'selected'
 
 # Update the notification section of the options page with the current settings.
 loadNotifications = ->
-  if utils.get 'badges'
+  if store.get 'badges'
     $('#badges').attr 'checked', 'checked'
   else
     $('#badges').removeAttr 'checked'
-  if utils.get 'notifications'
+  if store.get 'notifications'
     $('#notifications').attr 'checked', 'checked'
   else
     $('#notifications').removeAttr 'checked'
   timeInSecs = 0
-  if utils.get('notificationDuration') > timeInSecs
-    timeInSecs = utils.get('notificationDuration') / 1000
+  if store.get('notificationDuration') > timeInSecs
+    timeInSecs = store.get('notificationDuration') / 1000
   $('#notificationDuration').val timeInSecs
 
 # Create a `<optgroup>` element representing the specified order.  
-# The element returned should then be inserted in to the `<select>` managing
-# the orders on the options page.
+# The element returned should then be inserted in to the `<select>` managing the orders on the
+# options page.
 loadOrder = (order) ->
   opt = $ '<option/>', text: order.label
   opt.data 'code',    order.code
@@ -64,8 +64,8 @@ loadOrderControlEvents = ->
   lastSelectedOrder = {}
   orders            = $ '#orders'
   updates           = $ '#updates'
-  # Whenever the selected option changes we want all the controls to represent
-  # the current selection (where possible).
+  # Whenever the selected option changes we want all the controls to represent the current
+  # selection (where possible).
   orders.change(->
     $this  = $ this
     opt    = $this.find 'option:selected'
@@ -75,7 +75,7 @@ loadOrderControlEvents = ->
     if opt.length is 0
       # Disable all the controls as no option is selected.
       lastSelectedOrder = {}
-      utils.i18nContent '#add_btn', 'opt_add_button'
+      i18n.content '#add_btn', 'opt_add_button'
       $('.read-only, .read-only-always').removeAttr 'disabled'
       $('.read-only, .read-only-always').removeAttr 'readonly'
       $('#delete_btn').attr 'disabled', 'disabled'
@@ -87,7 +87,7 @@ loadOrderControlEvents = ->
     else
       # An order is selected; start cooking.
       lastSelectedOrder = opt
-      utils.i18nContent '#add_btn', 'opt_add_new_button'
+      i18n.content '#add_btn', 'opt_add_new_button'
       $('.read-only-always').attr 'disabled', 'disabled'
       $('.read-only-always').attr 'readonly', 'readonly'
       # Update the fields and controls to reflect selected option.
@@ -157,7 +157,8 @@ loadOrders = ->
   # Create and insert options representing each order.
   orders.append loadOrder order for order in ext.orders
 
-#### Save functions
+# Save functions
+# --------------
 
 # Update the settings with the values from the options page.  
 # Restart the update manager once all settings have been updated.
@@ -168,34 +169,31 @@ save = ->
   # Reboot the boss so it knows of any changes.
   utils.sendMessage 'extension', type: 'refresh'
 
-# Update the settings with the values from the frequency section of the options
-# page.
+# Update the settings with the values from the frequency section of the options page.
 saveFrequencies = ->
   frequency = $('#frequency option:selected').val()
-  utils.set 'frequency', parseInt frequency, 10
+  store.set 'frequency', parseInt frequency, 10
 
-# Update the settings with the values from the notification section of the
-# options page.
+# Update the settings with the values from the notification section of the options page.
 saveNotifications = ->
-  utils.set 'badges', $('#badges').is ':checked'
-  utils.set 'notifications', $('#notifications').is ':checked'
+  store.set 'badges', $('#badges').is ':checked'
+  store.set 'notifications', $('#notifications').is ':checked'
   timeInSecs = $('#notificationDuration').val()
   timeInSecs = if timeInSecs? then parseInt(timeInSecs, 10) * 1000 else 0
-  utils.set 'notificationDuration', timeInSecs
+  store.set 'notificationDuration', timeInSecs
 
-# Update the settings with the values from the orders section of the options
-# page.
+# Update the settings with the values from the orders section of the options page.
 saveOrders = ->
   orders = []
   # Update each individual order settings based on their corresponding options.
   $('#orders optgroup').each ->
     orders.push deriveOrder $ this
   # Persist the updated orders.
-  utils.set 'orders', orders
+  store.set 'orders', orders
   ext.orders = orders
 
-# Update the specified `<optgroup>` element that represents an order with values
-# taken from the available fields.
+# Update the specified `<optgroup>` element that represents an order with values taken from the
+# available fields.
 updateOrder = (optGrp) ->
   opt = optGrp.find 'option'
   if optGrp.length and opt.length
@@ -204,7 +202,8 @@ updateOrder = (optGrp) ->
     optGrp.attr 'number', $('#order_number').val().trim().toUpperCase()
     return opt
 
-#### Validation functions
+# Validation functions
+# --------------------
 
 # Determine whether or not an order already exists with the specified number.
 isOrderNumberAvailable = (number) ->
@@ -213,10 +212,10 @@ isOrderNumberAvailable = (number) ->
     return available = no if $(this).attr('label') is number
   return available
 
-# Validate that the specified `<optgroup>` element that should represents an
-# order does just that.  
-# This function adds any validation errors it encounters to an unordered list
-# which should be displayed to the user at some point if `yes` is returned.
+# Validate that the specified `<optgroup>` element that should represents an order does just
+# that.  
+# This function adds any validation errors it encounters to an unordered list which should be
+# displayed to the user at some point if `yes` is returned.
 validateOrder = (optGrp, isNew) ->
   opt    = optGrp.find 'option'
   code   = opt.data('code').trim().toUpperCase()
@@ -236,10 +235,10 @@ validateOrder = (optGrp, isNew) ->
   createError 'opt_order_code_invalid' if code.length is 0
   return errors.find('li').length is 0
 
-# Validate all `<optgroup>` elements that represent orders that are to be
-# persisted in `localStorage`.  
-# This function adds any validation errors it encounters to a unordered list
-# which should be displayed to the user at some point if `yes` is returned.
+# Validate all `<optgroup>` elements that represent orders that are to be persisted in
+# `localStorage`.  
+# This function adds any validation errors it encounters to a unordered list which should be
+# displayed to the user at some point if `yes` is returned.
 validateOrders = ->
   errors = $ '#errors'
   orders = $ '#orders optgroup'
@@ -254,15 +253,15 @@ validateOrders = ->
       return no
   return errors.find('li').length is 0
 
-#### Miscellaneous functions
+# Miscellaneous functions
+# -----------------------
 
-# Appends a new `<li>` element containing an internationalized error string,
-# looked up using Chrome, to the unordered list of errors.
+# Appends a new `<li>` element containing an internationalized error string, looked up using
+# Chrome, to the unordered list of errors.
 createError = (name) ->
-  return $('<li/>', html: utils.i18n name).appendTo $ '#errors'
+  return $('<li/>', html: i18n.get name).appendTo $ '#errors'
 
-# Create an order with the information derived from the specified `<optgroup>`
-# element.
+# Create an order with the information derived from the specified `<optgroup>` element.
 deriveOrder = (optGrp) ->
   opt = optGrp.find 'option'
   if optGrp.length and opt.length
@@ -282,19 +281,20 @@ deriveOrder = (optGrp) ->
       order.updates     = existingOrder.updates
   return order
 
-#### Options page setup
+# Options page setup
+# ------------------
 
-options = window.options =
+options = window.options = new class Options extends utils.Class
 
-  #### Public functions
+  # Public functions
+  # ----------------
 
   # Initialize the options page.  
-  # This will involve inserting and configuring the UI elements as well as
-  # loading the current settings.
+  # This will involve inserting and configuring the UI elements as well as loading the current
+  # settings.
   init: ->
-    utils.i18nSetup
-      footer:
-        opt_footer: new Date().format 'Y'
+    i18n.init
+      footer: opt_footer: new Date().format 'Y'
     # Bind tab selection event to all tabs.
     $('[tabify]').click ->
       $this = $ this
@@ -302,14 +302,14 @@ options = window.options =
         $this.siblings().removeClass 'selected'
         $this.addClass 'selected'
         $($this.attr 'tabify').show().siblings('.tab').hide()
-        utils.set 'options_active_tab', $this.attr 'id'
+        store.set 'options_active_tab', $this.attr 'id'
     # Reflect the persisted tab.
-    utils.init 'options_active_tab', 'general_nav'
-    $("##{utils.get 'options_active_tab'}").click()
-    # Bind event to the "Save & Close" button which will update the settings
-    # with the values from the options page and close the current tab.  
-    # None of this should happen if the invalid orders are found; in which case
-    # the user is notified of these errors.
+    store.init 'options_active_tab', 'general_nav'
+    $("##{store.get 'options_active_tab'}").click()
+    # Bind event to the "Save & Close" button which will update the settings with the values from
+    # the options page and close the current tab.  
+    # None of this should happen if the invalid orders are found; in which case the user is
+    # notified of these errors.
     $('.save-btn').click ->
       updateOrder $('#orders option:selected').parent 'optgroup'
       if validateOrders()
@@ -325,11 +325,11 @@ options = window.options =
       $.facebox div: $(this).attr 'facebox'
 
   # Ensure that the persisted tab is currently visible.  
-  # This should be called if the user clicks the Options link in the popup while
-  # and options page is already open.
+  # This should be called if the user clicks the Options link in the popup while and options page
+  # is already open.
   refresh: ->
     # Ensure the persisted tab is visible
-    $("##{utils.get 'options_active_tab'}").click()
+    $("##{store.get 'options_active_tab'}").click()
 
 # Initialize `options` when the DOM is ready.
 utils.ready -> options.init()

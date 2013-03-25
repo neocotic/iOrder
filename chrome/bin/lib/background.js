@@ -4,8 +4,10 @@
 // For all details and documentation:
 // <http://neocotic.com/iOrder>
 (function() {
-  var HOMEPAGE_DOMAIN, ORDERS_URL, ORDER_URL, STATUS, TRACKER_URL, buildPopup, executeScriptsInExistingTabs, executeScriptsInExistingWindows, ext, getFrequency, getOrderStatusUpdates, getOrderUrl, getStatusText, getStatusUpdates, getWindows, initOrders, init_update, isOrderStatusNew, isValidOrderStatus, markRead, notify, onMessage, selectOrCreateTab, setBadge, updateManager, updateOrder, updatePopup, updates, version,
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  var Extension, HOMEPAGE_DOMAIN, ORDERS_URL, ORDER_URL, STATUS, TRACKER_URL, buildPopup, executeScriptsInExistingTabs, executeScriptsInExistingWindows, ext, getFrequency, getOrderStatusUpdates, getOrderUrl, getStatusText, getStatusUpdates, getWindows, initOrders, init_update, isOrderStatusNew, isValidOrderStatus, markRead, notify, onMessage, selectOrCreateTab, setBadge, updateManager, updateOrder, updatePopup, updates, version, _ref,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   HOMEPAGE_DOMAIN = 'neocotic.com';
 
@@ -38,43 +40,43 @@
     headerL.append($('<a/>', {
       href: '#',
       id: 'optionsLink',
-      text: utils.i18n('options_text'),
-      title: utils.i18n('options_title')
+      text: i18n.get('options_text'),
+      title: i18n.get('options_title')
     }));
     headerL.append($('<a/>', {
       href: '#',
       id: 'ordersLink',
-      text: utils.i18n('orders_text'),
-      title: utils.i18n('orders_title')
+      text: i18n.get('orders_text'),
+      title: i18n.get('orders_title')
     }));
     footerF.append($('<button/>', {
       id: 'refreshLink',
-      text: utils.i18n('refresh_text'),
-      title: utils.i18n('refresh_title')
+      text: i18n.get('refresh_text'),
+      title: i18n.get('refresh_title')
     }));
     if (updateManager.updating) {
       footerF.find('button:first-child').attr({
         disabled: 'disabled',
-        title: utils.i18n('refreshing_title')
-      }).html(utils.i18n('refreshing_text'));
+        title: i18n.get('refreshing_title')
+      }).html(i18n.get('refreshing_text'));
     }
-    if (updates && utils.get('badges')) {
+    if (updates && store.get('badges')) {
       footerF.append($('<button/>', {
         id: 'clearLink',
-        text: utils.i18n('clear_text'),
-        title: utils.i18n('clear_title')
+        text: i18n.get('clear_text'),
+        title: i18n.get('clear_title')
       }));
     }
     footerL.append($('<span/>', {
-      text: utils.i18n('popup_footer_text', [new Date(utils.get('lastUpdated')).format('H:i'), getFrequency().text])
+      text: i18n.get('popup_footer_text', [new Date(store.get('lastUpdated')).format('H:i'), getFrequency().text])
     }));
     $('<thead/>').append($.prototype.append.apply($('<tr/>'), [
       $('<th/>', {
-        text: utils.i18n('order_header')
+        text: i18n.get('order_header')
       }), $('<th/>', {
-        text: utils.i18n('status_header')
+        text: i18n.get('status_header')
       }), $('<th/>', {
-        text: utils.i18n('actions_header')
+        text: i18n.get('actions_header')
       })
     ])).appendTo(table);
     table.append(tbody);
@@ -82,7 +84,7 @@
       $('<tr/>').append($('<td/>', {
         "class": 'empty',
         colspan: 3
-      }).html(utils.i18n('no_orders_text'))).appendTo(tbody);
+      }).html(i18n.get('no_orders_text'))).appendTo(tbody);
       footer.find('#refreshLink').remove();
     }
     _ref = ext.orders;
@@ -97,7 +99,7 @@
             'data-order-number': order.number,
             href: '#',
             text: order.number,
-            title: utils.i18n('order_title')
+            title: i18n.get('order_title')
           })
         ]), $('<td/>').append($('<span/>', {
           text: getStatusText(order)
@@ -107,7 +109,7 @@
         errors = true;
         tbody.find('tr:last-child td:first-child strong').attr({
           "class": 'error',
-          title: utils.i18n(order.error)
+          title: i18n.get(order.error)
         });
       }
       if (order.trackingUrl) {
@@ -115,8 +117,8 @@
           'data-order-code': order.code,
           'data-order-number': order.number,
           href: '#',
-          text: utils.i18n('track_text'),
-          title: utils.i18n('track_title')
+          text: i18n.get('track_text'),
+          title: i18n.get('track_title')
         })));
       } else {
         tbody.find('tr:last-child').append($('<td/>').append(' '));
@@ -127,7 +129,7 @@
         height: 14,
         id: 'errorIcon',
         src: '../images/exclamation_red.png',
-        title: utils.i18n('update_errors_text'),
+        title: i18n.get('update_errors_text'),
         width: 14
       }).prependTo(footerL);
     }
@@ -167,7 +169,7 @@
   getFrequency = function() {
     var freq, frequency, _i, _len, _ref;
 
-    frequency = utils.get('frequency');
+    frequency = store.get('frequency');
     _ref = ext.FREQUENCIES;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       freq = _ref[_i];
@@ -212,7 +214,7 @@
     var count, lastRead, order, _i, _len, _ref;
 
     count = 0;
-    lastRead = utils.get('lastRead');
+    lastRead = store.get('lastRead');
     _ref = ext.orders;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       order = _ref[_i];
@@ -232,24 +234,24 @@
   init_update = function() {
     var freq, frequency, update_progress, _ref;
 
-    update_progress = utils.get('update_progress');
+    update_progress = store.get('update_progress');
     if ((_ref = update_progress.settings) == null) {
       update_progress.settings = [];
     }
     if (update_progress.settings.indexOf('1.1.0') === -1) {
       freq = ext.FREQUENCIES[1].value;
-      frequency = utils.get('frequency');
+      frequency = store.get('frequency');
       if (frequency > -1 && frequency < freq) {
-        utils.set('frequency', freq);
+        store.set('frequency', freq);
       }
       update_progress.settings.push('1.1.0');
-      return utils.set('update_progress', update_progress);
+      return store.set('update_progress', update_progress);
     }
   };
 
   initOrders = function() {
-    utils.init('orders', []);
-    return ext.orders = utils.get('orders');
+    store.init('orders', []);
+    return ext.orders = store.get('orders');
   };
 
   isOrderStatusNew = function(order, status) {
@@ -272,7 +274,7 @@
   markRead = function(retainTimeStamp) {
     updates = 0;
     if (!retainTimeStamp) {
-      utils.set('lastRead', $.now());
+      store.set('lastRead', $.now());
     }
     setBadge();
     return updatePopup();
@@ -283,8 +285,8 @@
 
     oldUpdates = updates;
     updates = getStatusUpdates();
-    setBadge(utils.get('badges') ? updates || '' : void 0);
-    if (updates > oldUpdates && utils.get('notifications')) {
+    setBadge(store.get('badges') ? updates || '' : void 0);
+    if (updates > oldUpdates && store.get('notifications')) {
       return webkitNotifications.createHTMLNotification(utils.url('pages/notification.html')).show();
     }
   };
@@ -428,7 +430,7 @@
     restart: function() {
       var frequency;
 
-      frequency = utils.get('frequency');
+      frequency = store.get('frequency');
       if (this.updating) {
         return this.messages.push('restart');
       }
@@ -456,8 +458,8 @@
         progress++;
         if (progress >= ext.orders.length) {
           this.updating = false;
-          utils.set('orders', ext.orders);
-          utils.set('lastUpdated', $.now());
+          store.set('orders', ext.orders);
+          store.set('lastUpdated', $.now());
           notify();
           updatePopup();
           _ref = this.messages;
@@ -484,7 +486,7 @@
     start: function() {
       var frequency;
 
-      frequency = utils.get('frequency');
+      frequency = store.get('frequency');
       if (frequency === -1) {
         if (this.id) {
           clearInterval(this.id);
@@ -509,50 +511,61 @@
     }
   };
 
-  ext = window.ext = {
-    FREQUENCIES: [
+  ext = window.ext = new (Extension = (function(_super) {
+    __extends(Extension, _super);
+
+    function Extension() {
+      _ref = Extension.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Extension.prototype.FREQUENCIES = [
       {
-        text: utils.i18n('freq_disabled'),
+        text: i18n.get('freq_disabled'),
         value: -1
       }, {
-        text: utils.i18n('freq_minutes', '15'),
+        text: i18n.get('freq_minutes', '15'),
         value: 15 * 60 * 1000
       }, {
-        text: utils.i18n('freq_minutes', '30'),
+        text: i18n.get('freq_minutes', '30'),
         value: 30 * 60 * 1000
       }, {
-        text: utils.i18n('freq_minutes', '45'),
+        text: i18n.get('freq_minutes', '45'),
         value: 45 * 60 * 1000
       }, {
-        text: utils.i18n('freq_hour'),
+        text: i18n.get('freq_hour'),
         value: 60 * 60 * 1000
       }, {
-        text: utils.i18n('freq_hours', '2'),
+        text: i18n.get('freq_hours', '2'),
         value: 2 * 60 * 60 * 1000
       }
-    ],
-    orders: [],
-    popupHtml: '',
-    getOrder: function(number, code) {
-      var order, _i, _len, _ref;
+    ];
 
-      _ref = ext.orders;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        order = _ref[_i];
+    Extension.prototype.orders = [];
+
+    Extension.prototype.popupHtml = '';
+
+    Extension.prototype.getOrder = function(number, code) {
+      var order, _i, _len, _ref1;
+
+      _ref1 = ext.orders;
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        order = _ref1[_i];
         if (order.number === number && order.code === code) {
           return order;
         }
       }
-    },
-    init: function() {
-      utils.init('update_progress', {});
+    };
+
+    Extension.prototype.init = function() {
+      store.init('update_progress', {});
       init_update();
-      utils.init('badges', true);
-      utils.init('frequency', ext.FREQUENCIES[1].value);
-      utils.init('lastRead', $.now());
-      utils.init('lastUpdated', $.now());
-      utils.init('notifications', true);
-      utils.init('notificationDuration', 6 * 1000);
+      store.init('badges', true);
+      store.init('frequency', ext.FREQUENCIES[1].value);
+      store.init('lastRead', $.now());
+      store.init('lastUpdated', $.now());
+      store.init('notifications', true);
+      store.init('notificationDuration', 6 * 1000);
       initOrders();
       utils.onMessage('extension', false, onMessage);
       $.getJSON(utils.url('manifest.json'), function(data) {
@@ -560,8 +573,11 @@
         return executeScriptsInExistingWindows();
       });
       return updateManager.start();
-    }
-  };
+    };
+
+    return Extension;
+
+  })(utils.Class));
 
   utils.ready(function() {
     return ext.init();

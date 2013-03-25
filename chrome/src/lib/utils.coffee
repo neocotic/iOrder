@@ -4,77 +4,62 @@
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
 
-#### Private variables
+# Private classes
+# ---------------
 
-# Mapping for internationalization handlers.  
-# Each handler represents an attribute (based on the property name) and is
-# called for each attribute found in the current `document`.
-i18nHandlers   =
+# `Class` makes for more readable logs etc. as it overrides `toString` to output the name of the
+# implementing class.
+class Class
 
-  # Replace the HTML content of `element` with the message looked up for
-  # `value`.
-  'i18n-content': (element, value, subMap) ->
-    subs = i18nSubs element, value, subMap
-    element.innerHTML = utils.i18n value, subs
+  # Override the default `toString` implementation to provide a cleaner output.
+  toString: -> @constructor.name
 
-  # Replace the value of the properties and/or attributes of `element` with the
-  # messages looked up for their corresponding values.
-  'i18n-values':  (element, value, subMap) ->
-    subs  = i18nSubs element, value, subMap
-    parts = value.replace(/\s/g, '').split ';'
-    for part in parts
-      prop = part.match /^([^:]+):(.+)$/
-      if prop
-        propName = prop[1]
-        propExpr = prop[2]
-        if propName.indexOf('.') is 0
-          path = propName.slice(1).split '.'
-          obj = element
-          obj = obj[path.shift()] while obj and path.length > 1
-          if obj
-            obj[path] = utils.i18n value, subs
-            i18nProcess element, subMap if path is 'innerHTML'
-        else
-          element.setAttribute propName, utils.i18n propExpr, subs
-# List of internationalization attributes/handlers available.
-i18nAttributes = []
-i18nAttributes.push key for key of i18nHandlers
-# Selector containing the available internationalization attributes/handlers
-# which is used by `i18nProcess` to query all elements.
-i18nSelector   = "[#{i18nAttributes.join '],['}]"
+# Private variables
+# -----------------
 
-#### Private functions
+# Mapping of all timers currently being managed.
+timings = {}
+# Map of class names to understable types.
+typeMap = {}
+# Populate the type map for all classes.
+[
+  'Boolean'
+  'Number'
+  'String'
+  'Function'
+  'Array'
+  'Date'
+  'RegExp'
+  'Object'
+].forEach (name) ->
+  typeMap["[object #{name}]"] = name.toLowerCase()
 
-# Find all elements to be internationalized and call their corresponding
-# handler(s).
-i18nProcess = (node, subMap) ->
-  for element in node.querySelectorAll i18nSelector
-    for name in i18nAttributes
-      attribute = element.getAttribute name
-      i18nHandlers[name] element, attribute, subMap if attribute?
+# Utilities setup
+# ---------------
 
-# Find an array of substitution strings using the element's ID and the message
-# key as the mapping.
-i18nSubs = (element, value, subMap) ->
-  if subMap
-    for prop of subMap when subMap.hasOwnProperty(prop) and prop is element.id
-      for subProp of subMap[prop] when subMap[prop].hasOwnProperty subProp
-        if subProp is value
-          subs = subMap[prop][subProp]
-          break
-      break
-  return subs
+utils = window.utils = new class Utils extends Class
 
-#### Utilities setup
+  # Public functions
+  # ----------------
 
-utils = window.utils =
+  # Create a clone of an object.
+  clone: (obj, deep) ->
+    return obj unless @isObject obj
+    return obj.slice() if @isArray obj
+    copy = {}
+    for own key, value of obj
+      copy[key] = if deep then @clone value, yes else value
+    copy
 
-  #### General functions
+  # Indicate whether an object is an array.
+  isArray: Array.isArray or (obj) -> 'array' is @type obj
 
-  # Convenient shorthand for the different types of `onMessage` methods
-  # available in the chrome API.  
-  # This also supports the old `onRequest` variations for backwards
-  # compatibility.
+  # Indicate whether an object is an object.
+  isObject: (obj) -> obj is Object obj
+
+  # Convenient shorthand for the different types of `onMessage` methods available in the chrome
+  # API.  
+  # This also supports the old `onRequest` variations for backwards compatibility.
   onMessage: (type = 'extension', external, args...) ->
     base = chrome[type]
     base = chrome.extension if not base and type is 'runtime'
@@ -83,6 +68,13 @@ utils = window.utils =
     else
       base = base.onMessage or base.onRequest
     base.addListener args...
+
+  # Retrieve the first entity/all entities that pass the specified `filter`.
+  query: (entities, singular, filter) ->
+    if singular
+      return entity for entity in entities when filter entity
+    else
+      entity for entity in entities when filter entity
 
   # Bind `handler` to event indicating that the DOM is ready.
   ready: (context, handler) ->
@@ -94,84 +86,42 @@ utils = window.utils =
     else
       context.document.addEventListener 'DOMContentLoaded', handler
 
-  # Convenient shorthand for the different types of `sendMessage` methods
-  # available in the chrome API.  
-  # This also supports the old `sendRequest` variations for backwards
-  # compatibility.
+  # Convenient shorthand for the different types of `sendMessage` methods available in the chrome
+  # API.  
+  # This also supports the old `sendRequest` variations for backwards compatibility.
   sendMessage: (type = 'extension', args...) ->
     base = chrome[type]
     base = chrome.extension if not base and type is 'runtime'
     (base.sendMessage or base.sendRequest).apply base, args
 
+  # Start a new timer for the specified `key`.  
+  # If a timer already exists for `key`, return the time difference in milliseconds.
+  time: (key) ->
+    if timings.hasOwnProperty key
+      new Date().getTime() - timings[key]
+    else
+      timings[key] = new Date().getTime()
+
+  # End the timer for the specified `key` and return the time difference in milliseconds and remove
+  # the timer.  
+  # If no timer exists for `key`, simply return `0'.
+  timeEnd: (key) ->
+    if timings.hasOwnProperty key
+      start = timings[key]
+      delete timings[key]
+      new Date().getTime() - start
+    else
+      0
+
+  # Retrieve the understable type name for an object.
+  type: (obj) ->
+    if obj? then typeMap[Object::toString.call obj] || 'object' else String obj
+
   # Convenient shorthand for `chrome.extension.getURL`.
   url: -> chrome.extension.getURL arguments...
 
-  #### Data functions
+# Public classes
+# --------------
 
-  # Determine whether or not the specified key exists in `localStorage`.
-  exists: (key) ->
-    return localStorage.hasOwnProperty key
-
-  # Retrieve the value associated with the specified key from `localStorage`.  
-  # If the value is found, parse it as JSON before being returning it; otherwise
-  # return `undefined`.
-  get: (key) ->
-    value = localStorage[key]
-    return if value? then JSON.parse value else value
-
-  # Initialize the value of the specified key in `localStorage`.  
-  # If the value is currently `undefined`, assign the specified default value;
-  # otherwise reassign itself.
-  init: (key, defaultValue) ->
-    value = utils.get key
-    return utils.set key, value ? defaultValue
-
-  # Remove the specified key from `localStorage`.
-  remove: (key) ->
-    exists = utils.exists key
-    delete localStorage[key]
-    return exists
-
-  # Copy the value of the existing key to that of the new key then remove the
-  # old key from `localStorage`.  
-  # If the old key doesn't exist in `localStorage`, assign the specified default
-  # value to it instead.
-  rename: (oldKey, newKey, defaultValue) ->
-    if utils.exists oldKey
-      utils.init newKey, utils.get oldKey
-      utils.remove oldKey
-    else
-      utils.init newKey, defaultValue
-
-  # Set the value of the specified key in `localStorage`.  
-  # If the specified value is `undefined`, assign that value directly to the
-  # key; otherwise transform it to a JSON string beforehand.
-  set: (key, value) ->
-    oldValue = utils.get key
-    localStorage[key] = if value? then JSON.stringify value else value
-    return oldValue
-
-  #### Internationalization functions
-
-  # Convenient shorthand for `chrome.i18n.getMessage`.
-  i18n: ->
-    chrome.i18n.getMessage.apply chrome.i18n, arguments
-
-  # Internationalize the specified attribute of all the selected elements.
-  i18nAttribute: (selector, attribute, value, subs) ->
-    elements = document.querySelectorAll selector
-    # Ensure the substitution string(s) are in an array.
-    subs = [subs] if typeof subs is 'string'
-    for element in elements
-      element.setAttribute attribute, utils.i18n value, subs
-
-  # Internationalize the contents of all the selected elements.
-  i18nContent: (selector, value, subs) ->
-    elements = document.querySelectorAll selector
-    # Ensure the substitution string(s) are in an array.
-    subs = [subs] if typeof subs is 'string'
-    element.innerHTML = utils.i18n value, subs for element in elements
-
-  # Perform all internationalization setup required for the current page.
-  i18nSetup: (subMap) ->
-    i18nProcess document, subMap
+# Objects within the extension should extend this class wherever possible.
+utils.Class = Class
