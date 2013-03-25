@@ -5,6 +5,7 @@
         "async": "0.2.6"
       , "coffee-script": "1.6.2"
       , "docco": "0.6.2"
+      , "node-zip": "1.0.1"
       , "uglify-js": "2.2.5"
       , "wrench": "1.4.4"
     }
