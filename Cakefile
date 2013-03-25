@@ -8,6 +8,7 @@ fs       = require 'fs'
 {minify} = require 'uglify-js'
 Path     = require 'path'
 wrench   = require 'wrench'
+zip      = require('node-zip')()
 
 # Constants
 # ---------
@@ -59,10 +60,31 @@ compile = (path, cb) ->
   ws.on 'close', ->
     fs.unlinkSync path
     console.log "Successfully compiled to #{newPath}!"
-    cb?()
+    cb()
   ws.on 'error', cb
   ws.write header
   ws.end coffee.compile(code), ENCODING
+
+createZip = (base, path, cb) ->
+  async.waterfall [
+    (cb) ->
+      fs.stat path, cb
+  , (stats, cb) ->
+      if stats.isDirectory()
+        console.log "Compressing directory: #{path}..."
+        fs.readdir path, (err, files) ->
+          return cb err if err
+          async.each files, (file, cb) ->
+            createZip base, Path.join(path, file), cb
+          , cb
+      else
+        fs.readFile path, (err, data) ->
+          return cb err if err
+          path = Path.relative base, path
+          data = toArrayBuffer data
+          zip.file path, data, binary: yes
+          cb()
+  ], cb
 
 extractHeader = (code = '', r_comment, replacement) ->
   header    = ''
@@ -114,7 +136,7 @@ optimize = (path, handler, cb) ->
     mode:     WRITE_MODE
   ws.on 'close', ->
     console.log "Successfully optimized #{path}!"
-    cb?()
+    cb()
   ws.on 'error', cb
   switch Path.extname path
     when EXT_JS
@@ -132,6 +154,12 @@ optimize = (path, handler, cb) ->
 optimizeMessage  = (file, cb)  -> optimize file, messageHandler, cb
 optimizeStandard = (file, cb)  -> optimize file, null, cb
 
+toArrayBuffer = (buffer) ->
+  ab   = new ArrayBuffer buffer.length
+  view = new Uint8Array ab
+  view[i] = buff for buff, i in buffer
+  ab
+
 # Tasks
 # -----
 
@@ -139,7 +167,7 @@ task 'build', 'Build extension', ->
   console.log 'Building iOrder...'
   wrench.mkdirSyncRecursive path for path in TARGET_SUB_DIRS
   wrench.copyDirSyncRecursive SOURCE_DIR, TARGET_DIR
-  # TODO: Find & delete .git* files
+  # TODO: Find & delete hidden (.*) files
   async.forEach getCoffeeFiles(TARGET_DIR), compile, (err) ->
     throw err if err
     finish 'Build completed!'
@@ -177,8 +205,12 @@ task 'dist', 'Create distributable file', ->
       fs.exists path, (exists) ->
         if exists then fs.unlink path, cb else cb()
     (cb) ->
-      # TODO: Support Windows
-      exec "zip -r ../#{DIST_FILE} *", cwd: TEMP_PATH, cb
+      createZip TEMP_PATH, TEMP_PATH, (err) ->
+        return cb err if err
+        path = Path.join DIST_DIR, "#{DIST_FILE}.zip"
+        data = zip.generate base64: no, compression: 'DEFLATE'
+        console.log "Creating zip of compressed files: #{path}..."
+        fs.writeFile path, data, 'binary', cb
   ], (err) ->
     throw err if err
     wrench.rmdirSyncRecursive TEMP_PATH
