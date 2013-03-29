@@ -7,15 +7,22 @@
 # Private constants
 # -----------------
 
+# Extension ID being used by iOrder.
+EXTENSION_ID      = i18n.get '@@extension_id'
 # Domain of this extension's homepage.
-HOMEPAGE_DOMAIN = 'neocotic.com'
+HOMEPAGE_DOMAIN   = 'neocotic.com'
 # Base URL (incl. domain and path) of order pages on the Apple US store.  
 # The remaining path segments include the number and delivery zip/post code, in that order.
-ORDER_URL       = 'https://store.apple.com/us/order/guest/'
+# TODO: Replace with relevant value in `config`
+ORDER_URL         = 'https://store.apple.com/us/order/guest/'
 # URL of the Apple US store orders list for an account.
-ORDERS_URL      = 'https://store.apple.com/us/order/list'
+# TODO: Replace with relevant value in `config`
+ORDERS_URL        = 'https://store.apple.com/us/order/list'
+# Extension ID of the production version of iOrder.
+REAL_EXTENSION_ID = 'kflemogpkbophbipihnbcmlplbihbdhb'
 # List of recognised order status used by the Apple US store.
-STATUS          = [
+# TODO: Replace with relevant value in `config`
+STATUS            = [
   'We\'ve received your order'
   'Processing Items'
   'Preparing for Shipment'
@@ -24,15 +31,18 @@ STATUS          = [
 ]
 # Base URL (incl. domain) of the track link on the Apple US store order page.  
 # This should be used to find and extract the track URL for a specific order.
-TRACKER_URL     = 'https://applestore.bridge-point.com/'
+# TODO: Replace with relevant value in `config`
+TRACKER_URL       = 'https://applestore.bridge-point.com/'
 
 # Private variables
 # -----------------
 
+# Indicate whether or not iOrder has just been installed.
+isNewInstall      = no
+# Indicate whether or not iOrder is currently running the production build.
+isProductionBuild = EXTENSION_ID is REAL_EXTENSION_ID
 # Number of status updates since the user last cleared it.
-updates = 0
-# Current version of iOrder.
-version = ''
+updates           = 0
 
 # Private functions
 # -----------------
@@ -74,7 +84,7 @@ buildPopup = ->
       title:    i18n.get 'refreshing_title'
     ).html i18n.get 'refreshing_text'
   # Add the clear button if badges are visibile; they can be distracting.
-  if updates and store.get 'badges'
+  if updates and store.get 'notifications.badges'
     footerF.append $ '<button/>',
       id:      'clearLink'
       text:    i18n.get 'clear_text'
@@ -201,31 +211,74 @@ getWindows = (url) ->
 # Handle the conversion/removal of older version of settings that may have been stored previously
 # by `ext.init`.
 init_update = ->
-  update_progress = store.get 'update_progress'
-  update_progress.settings ?= []
-  # Check if the settings need updated for 1.1.0.
-  if update_progress.settings.indexOf('1.1.0') is -1
-    # Update the settings for 1.1.0.
+  log.trace()
+  # Update the update progress indicator itself.
+  if store.exists 'update_progress'
+    store.modify 'updates', (updates) ->
+      progress = store.remove 'update_progress'
+      for own namespace, versions of progress
+        updates[namespace] = if versions?.length then versions.pop() else ''
+  # Create updater for the `settings` namespace.
+  updater      = new store.Updater 'settings'
+  isNewInstall = updater.isNew
+  # Define the processes for all required updates to the `settings` namespace.
+  updater.update '1.1.0', ->
+    log.info 'Updating general settings for 1.1.0'
     freq      = ext.FREQUENCIES[1].value
     frequency = store.get 'frequency'
     store.set 'frequency', freq if frequency > -1 and frequency < freq
-    # Ensure that settings are not updated for 1.1.0 again.
-    update_progress.settings.push '1.1.0'
-    store.set 'update_progress', update_progress
+  updater.update '1.2.0', ->
+    log.info 'Updating general settings for 1.2.0'
+    store.set 'notifications',
+      badges:   store.get('badges')               ? on
+      duration: store.get('notificationDuration') ? 3000
+      enabled:  store.get('notifications')        ? yes
+    store.remove 'badges', 'notificationDuration'
+
+# Initialize `order` and its properties.
+initOrder = (order) ->
+  log.trace()
+  order.error       ?= ''
+  order.code        ?= ''
+  order.label       ?= ''
+  order.number      ?= ''
+  order.trackingUrl ?= ''
+  order.updates     ?= []
+  for update in order.updates
+    update.status    ?= ''
+    update.timeStamp ?= $.now()
+  order
 
 # Initialize the persisted managed orders.
 initOrders = ->
-  store.init 'orders', []
-  ext.orders = store.get 'orders'
+  log.trace()
+  do initOrders_update
+  # Initialize all orders to ensure their properties are valid.
+  store.modify 'orders', (orders) ->
+    initOrder order for order in orders
+  ext.updateOrders()
+
+# Handle the conversion/removal of older version of settings that may have been stored previously
+# by `initOrders`.
+initOrders_update = ->
+  log.trace()
+  # Create updater for the `orders` namespace.
+  updater = new store.Updater 'orders'
+  # Define the processes for all required updates to the `orders` namespace.
+  updater.update '1.2.0', ->
+    log.info 'Updating order settings for 1.2.0'
+    store.modify 'orders', (orders) ->
+      for order in orders when not order.key?
+        order.key = utils.keyGen()
 
 # Determine whether or not an order already has the specified status.
 isOrderStatusNew = (order, status) ->
   return no for update in order.updates when update.status is status
-  return yes
+  yes
 
 # Determine whether or not the specified status is recognised by iOrder.
 isValidOrderStatus = (status) ->
-  return status in STATUS
+  status in STATUS
 
 # Ensure any badge notification is cleared.
 markRead = (retainTimeStamp) ->
@@ -238,12 +291,13 @@ markRead = (retainTimeStamp) ->
 # Attempt to notify the user of any unread status updates.  
 # If there are no status updates, remove any visible badge.
 notify = ->
-  oldUpdates = updates
-  updates = getStatusUpdates()
+  notifications = store.get 'notifications'
+  oldUpdates    = updates
+  updates       = getStatusUpdates()
   # Update/clear badge depending on setting and updates available.
-  setBadge if store.get 'badges' then updates or ''
+  setBadge if notifications.badges then updates or ''
   # Show the notification if setting enabled and has new updates.
-  if updates > oldUpdates and store.get 'notifications'
+  if updates > oldUpdates and notifications.enabled
     webkitNotifications.createHTMLNotification(
       utils.url 'pages/notification.html'
     ).show()
@@ -251,8 +305,12 @@ notify = ->
 # Listener for internal messages.  
 # This function will handle the message based on its type and the data provided.
 onMessage = (message, sender, sendResponse) ->
-  order   = {}
-  url     = ''
+  order = {}
+  url   = ''
+  # Attempt to return the order whose details match the specified criteria.
+  getOrder = (data) ->
+    {code, number} = data
+    ext.queryOrder (order) -> order.number is number and order.code is code
   # Check what needs to be done... and then do it.
   switch message.type
     when 'clear' then markRead()
@@ -262,13 +320,13 @@ onMessage = (message, sender, sendResponse) ->
       selectOrCreateTab url, (isNew) ->
         return if isNew
         win.options.refresh() for win in getWindows url
-    when 'refresh' then updateManager.restart()
+    when 'refresh' then ext.updateOrders()
     when 'track'
-      order = ext.getOrder message.data.number, message.data.code
+      order = getOrder message.data
       chrome.tabs.create url: order.trackingUrl if order and order.trackingUrl
     when 'viewAll' then chrome.tabs.create url: ORDERS_URL
     when 'view'
-      order = ext.getOrder message.data.number, message.data.code
+      order = getOrder message.data
       chrome.tabs.create url: getOrderUrl order if order
 
 # Attempt to select a tab in the current window displaying a page whose location begins with the
@@ -306,8 +364,7 @@ updateOrder = (order, callback) ->
     # Extract the relevant elements wrapped in jQuery goodness.
     heading     = $(data).find '.order .ship-group .sb-heading'
     status      = heading.find 'h4 span:first-child'
-    trackingUrl = heading.find ".group-actions tr:first-child td
- a[href^='#{TRACKER_URL}']"
+    trackingUrl = heading.find ".group-actions tr:first-child td a[href^='#{TRACKER_URL}']"
     # Dig deeper and try and get the actual values.
     status      = if status.length then status.text() else ''
     trackingUrl = if trackingUrl.length then trackingUrl.attr 'href' else ''
@@ -340,7 +397,7 @@ updateOrder = (order, callback) ->
 # Build the HTML to populate the popup with to optimize popup loading times and updates any popup
 # currently being displayed.
 updatePopup = ->
-  buildPopup()
+  do buildPopup
   chrome.extension.getViews(type: 'popup')[0]?.popup.init()
 
 # Update Manager setup
@@ -368,7 +425,7 @@ updateManager =
   restart: ->
     frequency = store.get 'frequency'
     # I'm busy; I'll do it later.
-    return this.messages.push 'restart' if @updating
+    return @messages.push 'restart' if @updating
     # Clear the current cycle, where applicable.
     if @id
       clearInterval @id
@@ -377,30 +434,30 @@ updateManager =
     # Start a new cycle if required.
     @id = setInterval @run, frequency if frequency isnt -1
     # Run the initial process.
-    @run()
+    do @run
 
   # Core of the update manager which actually performs the update process.  
   # This process updates all orders and ensures the results are reflected in the popup.
   run: ->
-    progress  = 0
+    @progress = 0
     @updating = yes
     # Update the UI to show that I'm busy.
-    notify()
-    updatePopup()
+    do notify
+    do updatePopup
 
     # Called when the AJAX request has been parsed and read for each order.  
     # This should be called regardless of errors being encountered.
     updated = (order) ->
-      progress++
+      @progress++
       # Check if all orders have been updated; supports no orders.
-      if progress >= ext.orders.length
+      if @progress >= ext.orders.length
         @updating = no
         # Persist orders and update time stamp.
         store.set 'orders', ext.orders
         store.set 'lastUpdated', $.now()
         # Update the UI again to reflect the changes.
-        notify()
-        updatePopup()
+        do notify
+        do updatePopup
         # Now read the message stack.
         this[message]?() for message in @messages
         @messages = []
@@ -425,7 +482,7 @@ updateManager =
       # Start a new cycle.
       @id = setInterval @run, frequency
     # Run the initial process.
-    @run()
+    do @run
 
   # Stop the update manager.  
   # If this is called during an active update process the manager will stop upon completion.
@@ -446,6 +503,7 @@ ext = window.ext = new class Extension extends utils.Class
   # ----------------
 
   # Details for the supported update frequencies.
+  # TODO: Move `FREQUENCIES` to `config` and apply i18n during initialization
   FREQUENCIES: [
     text:  i18n.get 'freq_disabled'
     value: -1
@@ -469,44 +527,83 @@ ext = window.ext = new class Extension extends utils.Class
   # Public variables
   # ----------------
 
+  # Configuration data loaded at runtime.
+  config: {}
+
   # List of orders currently being maintained.  
   # This should always be an exact reflection of the orders persisted in `localStorage`.
-  orders:    []
+  orders: []
 
   # Pre-prepared HTML for the popup to be populated using.  
   # This should be updated whenever orders are changed/updated in any way as this is generated to
   # improve performance and load times of the popup frame.
   popupHtml: ''
 
+  # Current version of iOrder.
+  version: ''
+
   # Public functions
   # ----------------
-
-  # Attempt to return the order whose details match the specified criteria.
-  getOrder: (number, code) ->
-    for order in ext.orders when order.number is number and order.code is code
-      return order
 
   # Initialize the background page.  
   # This will involve initializing the settings, adding the message listeners and starting the
   # update manager.
   init: ->
-    store.init 'update_progress', {}
-    init_update()
-    store.init 'badges', on
-    store.init 'frequency', ext.FREQUENCIES[1].value
-    store.init 'lastRead', $.now()
-    store.init 'lastUpdated', $.now()
-    store.init 'notifications', on
-    store.init 'notificationDuration', 6 * 1000
-    initOrders()
-    utils.onMessage 'extension', no, onMessage
+    log.trace()
+    log.info 'Initializing extension controller'
+    # Add support for analytics if the user hasn't opted out.
+    analytics.add() if store.get 'analytics'
+    tasks = []
     # It's nice knowing what version is running.
-    $.getJSON utils.url('manifest.json'), (data) ->
-      version = data.version
+    tasks.push (callback) =>
+      $.getJSON utils.url('manifest.json'), (data) =>
+        @version = data.version
+        do callback
+    # Load and store the configuration data.
+    tasks.push (callback) =>
+      $.getJSON utils.url('configuration.json'), (data) =>
+        @config = data
+        do callback
+    # Begin initialization.
+    tasks.push (callback) =>
+      store.init
+        frequency:     @FREQUENCIES[1].value
+        lastRead:      $.now()
+        lastUpdated:   $.now()
+        notifications: {}
+        orders:        []
+      do init_update
+      store.modify 'notifications', (notifications) ->
+        notifications.badges   ?= on
+        notifications.duration ?= 3000
+        notifications.enabled  ?= yes
+      utils.onMessage 'extension', no, onMessage
+      do initOrders
+      do callback
+    async.series tasks, (err) ->
+      throw err if err
+      analytics.track 'Installs', 'New', @version, Number isProductionBuild if isNewInstall
       # Execute content scripts now that we know the version.
-      executeScriptsInExistingWindows()
-    # It's alive!
-    updateManager.start()
+      do executeScriptsInExistingWindows
+
+  # Retrieve the first order that passes the specified `filter`.
+  queryOrder: (filter, singular = yes) ->
+    log.trace()
+    utils.query @orders, singular, filter
+
+  # Retrieve all orders that pass the specified `filter`.
+  queryOrders: (filter) -> @queryOrder filter, no
+
+  # Update the local list of orders to reflect those persisted.  
+  # It is very important that this is called whenever orders may have been changed in order to
+  # prepare the popup HTML and optimize performance, while also ensuring orders are correctly
+  # managed during by the next update.
+  updateOrders: ->
+    log.trace()
+    @orders = store.get 'orders'
+    @orders.sort (a, b) -> a.index - b.index
+    do updatePopup
+    updateManager.restart()
 
 # Initialize `ext` when the DOM is ready.
 utils.ready -> ext.init()

@@ -7,8 +7,8 @@
 # Private variables
 # -----------------
 
-# Easily accessible reference to internationalization, store, and utilities.
-{i18n, store, utils} = chrome.extension.getBackgroundPage()
+# Easily accessible reference to analytics, internationalization, logging, storage, and utilities.
+{analytics, i18n, log, store, utils} = chrome.extension.getBackgroundPage()
 
 # Notification page setup
 # -----------------------
@@ -20,14 +20,15 @@ notification = window.notification = new class Notification extends utils.Class
 
   # Initialize the notification page.
   init: ->
+    log.trace()
+    log.info 'Initializing a notification'
+    analytics.track 'Frames', 'Displayed', 'Notification'
     i18n.init()
-    duration = store.get 'notificationDuration'
-    # Set a timer to close the notification after a specified period of time, if user enabled the
-    # corresponding option; otherwise it should stay open until it is closed manually by user.
-    if duration > 0
-      window.setTimeout ->
-        window.close()
-      , duration
+    # Set a timer to close the notification after a specified period of time, if the user enabled
+    # the corresponding option; otherwise it should stay open until it is closed manually by the
+    # user.
+    duration = store.get 'notifications.duration'
+    setTimeout (-> do close), duration if duration > 0
 
 # Initialize `notification` when the DOM is ready.
 utils.ready this, -> notification.init()

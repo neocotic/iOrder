@@ -4,11 +4,11 @@
 // For all details and documentation:
 // <http://neocotic.com/iOrder>
 (function() {
-  var Notification, i18n, notification, store, utils, _ref, _ref1,
+  var Notification, analytics, i18n, log, notification, store, utils, _ref, _ref1,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  _ref = chrome.extension.getBackgroundPage(), i18n = _ref.i18n, store = _ref.store, utils = _ref.utils;
+  _ref = chrome.extension.getBackgroundPage(), analytics = _ref.analytics, i18n = _ref.i18n, log = _ref.log, store = _ref.store, utils = _ref.utils;
 
   notification = window.notification = new (Notification = (function(_super) {
     __extends(Notification, _super);
@@ -21,12 +21,15 @@
     Notification.prototype.init = function() {
       var duration;
 
+      log.trace();
+      log.info('Initializing a notification');
+      analytics.track('Frames', 'Displayed', 'Notification');
       i18n.init();
-      duration = store.get('notificationDuration');
+      duration = store.get('notifications.duration');
       if (duration > 0) {
-        return window.setTimeout(function() {
-          return window.close();
-        }, duration);
+        return setTimeout((function() {
+          return close();
+        }), duration);
       }
     };
 

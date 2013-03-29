@@ -24,7 +24,7 @@
   };
 
   log = window.log = new (Log = (function(_super) {
-    var array, key, value;
+    var key, levels, value;
 
     __extends(Log, _super);
 
@@ -44,16 +44,16 @@
     Log.prototype.ERROR = LEVELS.error;
 
     Log.prototype.LEVELS = ((function() {
-      array = [];
+      levels = [];
       for (key in LEVELS) {
         if (!__hasProp.call(LEVELS, key)) continue;
         value = LEVELS[key];
-        array.push({
+        levels.push({
           name: key,
           value: value
         });
       }
-      return array.sort(function(a, b) {
+      return levels.sort(function(a, b) {
         return a.value - b.value;
       });
     })());

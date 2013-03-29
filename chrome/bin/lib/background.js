@@ -4,10 +4,12 @@
 // For all details and documentation:
 // <http://neocotic.com/iOrder>
 (function() {
-  var Extension, HOMEPAGE_DOMAIN, ORDERS_URL, ORDER_URL, STATUS, TRACKER_URL, buildPopup, executeScriptsInExistingTabs, executeScriptsInExistingWindows, ext, getFrequency, getOrderStatusUpdates, getOrderUrl, getStatusText, getStatusUpdates, getWindows, initOrders, init_update, isOrderStatusNew, isValidOrderStatus, markRead, notify, onMessage, selectOrCreateTab, setBadge, updateManager, updateOrder, updatePopup, updates, version, _ref,
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
+  var EXTENSION_ID, Extension, HOMEPAGE_DOMAIN, ORDERS_URL, ORDER_URL, REAL_EXTENSION_ID, STATUS, TRACKER_URL, buildPopup, executeScriptsInExistingTabs, executeScriptsInExistingWindows, ext, getFrequency, getOrderStatusUpdates, getOrderUrl, getStatusText, getStatusUpdates, getWindows, initOrder, initOrders, initOrders_update, init_update, isNewInstall, isOrderStatusNew, isProductionBuild, isValidOrderStatus, markRead, notify, onMessage, selectOrCreateTab, setBadge, updateManager, updateOrder, updatePopup, updates, _ref,
     __hasProp = {}.hasOwnProperty,
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; },
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  EXTENSION_ID = i18n.get('@@extension_id');
 
   HOMEPAGE_DOMAIN = 'neocotic.com';
 
@@ -15,13 +17,17 @@
 
   ORDERS_URL = 'https://store.apple.com/us/order/list';
 
+  REAL_EXTENSION_ID = 'kflemogpkbophbipihnbcmlplbihbdhb';
+
   STATUS = ['We\'ve received your order', 'Processing Items', 'Preparing for Shipment', 'Shipped', 'Complete'];
 
   TRACKER_URL = 'https://applestore.bridge-point.com/';
 
-  updates = 0;
+  isNewInstall = false;
 
-  version = '';
+  isProductionBuild = EXTENSION_ID === REAL_EXTENSION_ID;
+
+  updates = 0;
 
   buildPopup = function() {
     var errors, footer, footerF, footerL, header, headerF, headerL, order, table, tbody, _i, _len, _ref;
@@ -60,7 +66,7 @@
         title: i18n.get('refreshing_title')
       }).html(i18n.get('refreshing_text'));
     }
-    if (updates && store.get('badges')) {
+    if (updates && store.get('notifications.badges')) {
       footerF.append($('<button/>', {
         id: 'clearLink',
         text: i18n.get('clear_text'),
@@ -232,26 +238,119 @@
   };
 
   init_update = function() {
-    var freq, frequency, update_progress, _ref;
+    var updater;
 
-    update_progress = store.get('update_progress');
-    if ((_ref = update_progress.settings) == null) {
-      update_progress.settings = [];
+    log.trace();
+    if (store.exists('update_progress')) {
+      store.modify('updates', function(updates) {
+        var namespace, progress, versions, _results;
+
+        progress = store.remove('update_progress');
+        _results = [];
+        for (namespace in progress) {
+          if (!__hasProp.call(progress, namespace)) continue;
+          versions = progress[namespace];
+          _results.push(updates[namespace] = (versions != null ? versions.length : void 0) ? versions.pop() : '');
+        }
+        return _results;
+      });
     }
-    if (update_progress.settings.indexOf('1.1.0') === -1) {
+    updater = new store.Updater('settings');
+    isNewInstall = updater.isNew;
+    updater.update('1.1.0', function() {
+      var freq, frequency;
+
+      log.info('Updating general settings for 1.1.0');
       freq = ext.FREQUENCIES[1].value;
       frequency = store.get('frequency');
       if (frequency > -1 && frequency < freq) {
-        store.set('frequency', freq);
+        return store.set('frequency', freq);
       }
-      update_progress.settings.push('1.1.0');
-      return store.set('update_progress', update_progress);
+    });
+    return updater.update('1.2.0', function() {
+      var _ref, _ref1, _ref2;
+
+      log.info('Updating general settings for 1.2.0');
+      store.set('notifications', {
+        badges: (_ref = store.get('badges')) != null ? _ref : true,
+        duration: (_ref1 = store.get('notificationDuration')) != null ? _ref1 : 3000,
+        enabled: (_ref2 = store.get('notifications')) != null ? _ref2 : true
+      });
+      return store.remove('badges', 'notificationDuration');
+    });
+  };
+
+  initOrder = function(order) {
+    var update, _i, _len, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+
+    log.trace();
+    if ((_ref = order.error) == null) {
+      order.error = '';
     }
+    if ((_ref1 = order.code) == null) {
+      order.code = '';
+    }
+    if ((_ref2 = order.label) == null) {
+      order.label = '';
+    }
+    if ((_ref3 = order.number) == null) {
+      order.number = '';
+    }
+    if ((_ref4 = order.trackingUrl) == null) {
+      order.trackingUrl = '';
+    }
+    if ((_ref5 = order.updates) == null) {
+      order.updates = [];
+    }
+    _ref6 = order.updates;
+    for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
+      update = _ref6[_i];
+      if ((_ref7 = update.status) == null) {
+        update.status = '';
+      }
+      if ((_ref8 = update.timeStamp) == null) {
+        update.timeStamp = $.now();
+      }
+    }
+    return order;
   };
 
   initOrders = function() {
-    store.init('orders', []);
-    return ext.orders = store.get('orders');
+    log.trace();
+    initOrders_update();
+    store.modify('orders', function(orders) {
+      var order, _i, _len, _results;
+
+      _results = [];
+      for (_i = 0, _len = orders.length; _i < _len; _i++) {
+        order = orders[_i];
+        _results.push(initOrder(order));
+      }
+      return _results;
+    });
+    return ext.updateOrders();
+  };
+
+  initOrders_update = function() {
+    var updater;
+
+    log.trace();
+    updater = new store.Updater('orders');
+    return updater.update('1.2.0', function() {
+      log.info('Updating order settings for 1.2.0');
+      return store.modify('orders', function(orders) {
+        var order, _i, _len, _results;
+
+        _results = [];
+        for (_i = 0, _len = orders.length; _i < _len; _i++) {
+          order = orders[_i];
+          if (order.key == null) {
+            _results.push(order.key = utils.keyGen());
+          }
+        }
+        return _results;
+      });
+    });
   };
 
   isOrderStatusNew = function(order, status) {
@@ -281,21 +380,30 @@
   };
 
   notify = function() {
-    var oldUpdates;
+    var notifications, oldUpdates;
 
+    notifications = store.get('notifications');
     oldUpdates = updates;
     updates = getStatusUpdates();
-    setBadge(store.get('badges') ? updates || '' : void 0);
-    if (updates > oldUpdates && store.get('notifications')) {
+    setBadge(notifications.badges ? updates || '' : void 0);
+    if (updates > oldUpdates && notifications.enabled) {
       return webkitNotifications.createHTMLNotification(utils.url('pages/notification.html')).show();
     }
   };
 
   onMessage = function(message, sender, sendResponse) {
-    var order, url;
+    var getOrder, order, url;
 
     order = {};
     url = '';
+    getOrder = function(data) {
+      var code, number;
+
+      code = data.code, number = data.number;
+      return ext.queryOrder(function(order) {
+        return order.number === number && order.code === code;
+      });
+    };
     switch (message.type) {
       case 'clear':
         return markRead();
@@ -316,9 +424,9 @@
           return _results;
         });
       case 'refresh':
-        return updateManager.restart();
+        return ext.updateOrders();
       case 'track':
-        order = ext.getOrder(message.data.number, message.data.code);
+        order = getOrder(message.data);
         if (order && order.trackingUrl) {
           return chrome.tabs.create({
             url: order.trackingUrl
@@ -330,7 +438,7 @@
           url: ORDERS_URL
         });
       case 'view':
-        order = ext.getOrder(message.data.number, message.data.code);
+        order = getOrder(message.data);
         if (order) {
           return chrome.tabs.create({
             url: getOrderUrl(order)
@@ -446,17 +554,17 @@
       return this.run();
     },
     run: function() {
-      var order, progress, updated, _i, _len, _ref, _results;
+      var order, updated, _i, _len, _ref, _results;
 
-      progress = 0;
+      this.progress = 0;
       this.updating = true;
       notify();
       updatePopup();
       updated = function(order) {
         var message, _i, _len, _ref;
 
-        progress++;
-        if (progress >= ext.orders.length) {
+        this.progress++;
+        if (this.progress >= ext.orders.length) {
           this.updating = false;
           store.set('orders', ext.orders);
           store.set('lastUpdated', $.now());
@@ -541,38 +649,91 @@
       }
     ];
 
+    Extension.prototype.config = {};
+
     Extension.prototype.orders = [];
 
     Extension.prototype.popupHtml = '';
 
-    Extension.prototype.getOrder = function(number, code) {
-      var order, _i, _len, _ref1;
-
-      _ref1 = ext.orders;
-      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-        order = _ref1[_i];
-        if (order.number === number && order.code === code) {
-          return order;
-        }
-      }
-    };
+    Extension.prototype.version = '';
 
     Extension.prototype.init = function() {
-      store.init('update_progress', {});
-      init_update();
-      store.init('badges', true);
-      store.init('frequency', ext.FREQUENCIES[1].value);
-      store.init('lastRead', $.now());
-      store.init('lastUpdated', $.now());
-      store.init('notifications', true);
-      store.init('notificationDuration', 6 * 1000);
-      initOrders();
-      utils.onMessage('extension', false, onMessage);
-      $.getJSON(utils.url('manifest.json'), function(data) {
-        version = data.version;
+      var tasks,
+        _this = this;
+
+      log.trace();
+      log.info('Initializing extension controller');
+      if (store.get('analytics')) {
+        analytics.add();
+      }
+      tasks = [];
+      tasks.push(function(callback) {
+        return $.getJSON(utils.url('manifest.json'), function(data) {
+          _this.version = data.version;
+          return callback();
+        });
+      });
+      tasks.push(function(callback) {
+        return $.getJSON(utils.url('configuration.json'), function(data) {
+          _this.config = data;
+          return callback();
+        });
+      });
+      tasks.push(function(callback) {
+        store.init({
+          frequency: _this.FREQUENCIES[1].value,
+          lastRead: $.now(),
+          lastUpdated: $.now(),
+          notifications: {},
+          orders: []
+        });
+        init_update();
+        store.modify('notifications', function(notifications) {
+          var _ref1, _ref2, _ref3;
+
+          if ((_ref1 = notifications.badges) == null) {
+            notifications.badges = true;
+          }
+          if ((_ref2 = notifications.duration) == null) {
+            notifications.duration = 3000;
+          }
+          return (_ref3 = notifications.enabled) != null ? _ref3 : notifications.enabled = true;
+        });
+        utils.onMessage('extension', false, onMessage);
+        initOrders();
+        return callback();
+      });
+      return async.series(tasks, function(err) {
+        if (err) {
+          throw err;
+        }
+        if (isNewInstall) {
+          analytics.track('Installs', 'New', this.version, Number(isProductionBuild));
+        }
         return executeScriptsInExistingWindows();
       });
-      return updateManager.start();
+    };
+
+    Extension.prototype.queryOrder = function(filter, singular) {
+      if (singular == null) {
+        singular = true;
+      }
+      log.trace();
+      return utils.query(this.orders, singular, filter);
+    };
+
+    Extension.prototype.queryOrders = function(filter) {
+      return this.queryOrder(filter, false);
+    };
+
+    Extension.prototype.updateOrders = function() {
+      log.trace();
+      this.orders = store.get('orders');
+      this.orders.sort(function(a, b) {
+        return a.index - b.index;
+      });
+      updatePopup();
+      return updateManager.restart();
     };
 
     return Extension;

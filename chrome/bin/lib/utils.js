@@ -62,6 +62,42 @@
       return obj === Object(obj);
     };
 
+    Utils.prototype.keyGen = function(separator, length, prefix, upperCase) {
+      var i, key, max, min, part, parts, _i, _len;
+
+      if (separator == null) {
+        separator = '.';
+      }
+      if (length == null) {
+        length = 5;
+      }
+      if (prefix == null) {
+        prefix = '';
+      }
+      if (upperCase == null) {
+        upperCase = true;
+      }
+      parts = [];
+      parts.push(new Date().getTime());
+      if (length > 0) {
+        min = this.repeat('1', '0', length === 1 ? 1 : length - 1);
+        max = this.repeat('f', 'f', length === 1 ? 1 : length - 1);
+        min = parseInt(min, 16);
+        max = parseInt(max, 16);
+        parts.push(this.random(min, max));
+      }
+      for (i = _i = 0, _len = parts.length; _i < _len; i = ++_i) {
+        part = parts[i];
+        parts[i] = part.toString(16);
+      }
+      key = prefix + parts.join(separator);
+      if (upperCase) {
+        return key.toUpperCase();
+      } else {
+        return key.toLowerCase();
+      }
+    };
+
     Utils.prototype.onMessage = function() {
       var args, base, external, type;
 
@@ -73,11 +109,7 @@
       if (!base && type === 'runtime') {
         base = chrome.extension;
       }
-      if (external) {
-        base = base.onMessageExternal || base.onRequestExternal;
-      } else {
-        base = base.onMessage || base.onRequest;
-      }
+      base = external ? base.onMessageExternal || base.onRequestExternal : base.onMessage || base.onRequest;
       return base.addListener.apply(base, args);
     };
 
@@ -103,6 +135,10 @@
       }
     };
 
+    Utils.prototype.random = function(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
     Utils.prototype.ready = function(context, handler) {
       if (handler == null) {
         handler = context;
@@ -113,6 +149,33 @@
       } else {
         return context.document.addEventListener('DOMContentLoaded', handler);
       }
+    };
+
+    Utils.prototype.repeat = function(str, repeatStr, count) {
+      var i, _i, _j, _ref1;
+
+      if (str == null) {
+        str = '';
+      }
+      if (repeatStr == null) {
+        repeatStr = str;
+      }
+      if (count == null) {
+        count = 1;
+      }
+      if (count !== 0) {
+        if (count > 0) {
+          for (i = _i = 1; 1 <= count ? _i <= count : _i >= count; i = 1 <= count ? ++_i : --_i) {
+            str += repeatStr;
+          }
+        }
+        if (count < 0) {
+          for (i = _j = 1, _ref1 = count * -1; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 1 <= _ref1 ? ++_j : --_j) {
+            str = repeatStr + str;
+          }
+        }
+      }
+      return str;
     };
 
     Utils.prototype.sendMessage = function() {

@@ -44,9 +44,9 @@ log = window.log = new class Log extends utils.Class
 
   # A collection of all of the levels to allow iteration.
   LEVELS: (
-    array = []
-    array.push name: key, value: value for own key, value of LEVELS
-    array.sort (a, b) -> a.value - b.value
+    levels = []
+    levels.push name: key, value: value for own key, value of LEVELS
+    levels.sort (a, b) -> a.value - b.value
   )
 
   # Public variables

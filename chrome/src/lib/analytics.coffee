@@ -34,7 +34,8 @@ analytics = window.analytics = new class Analytics extends utils.Class
     script.parentNode.insertBefore ga, script
 
   # Determine whether or not analytics are enabled.
-  enabled: -> not store? or store.get 'analytics'
+  enabled: ->
+    not store? or store.get 'analytics'
 
   # Remove analytics from the current page.
   remove: ->

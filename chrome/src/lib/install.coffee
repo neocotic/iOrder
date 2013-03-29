@@ -4,7 +4,8 @@
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
 
-#### Private variables
+# Private variables
+# -----------------
 
 # Extension ID of iOrder.
 extId      = 'kflemogpkbophbipihnbcmlplbihbdhb'
@@ -13,7 +14,8 @@ newClasses = ['disabled']
 # Names of the classes to be removed from the targeted elements.
 oldClasses = ['chrome_install_button']
 
-#### Functionality
+# Functionality
+# -------------
 
 # Disable all "Install" links on the homepage for Undo Wikipedia Blackout.
 for link in document.querySelectorAll "a.#{oldClasses[0]}[href$=#{extId}]"
