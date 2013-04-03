@@ -1088,6 +1088,7 @@ by <code>initOrders</code>.</p>
       selectOrCreateTab url, (isNew) -&gt;
         <span class="keyword">return</span> <span class="keyword">if</span> isNew
         win.options.refresh() <span class="keyword">for</span> win <span class="keyword">in</span> getWindows url
+    <span class="keyword">when</span> <span class="string">'info'</span>, <span class="string">'version'</span> <span class="keyword">then</span> sendResponse? id: EXTENSION_ID, version: ext.version
     <span class="keyword">when</span> <span class="string">'refresh'</span> <span class="keyword">then</span> ext.updateOrders()
     <span class="keyword">when</span> <span class="string">'track'</span>
       order = getOrder message.data

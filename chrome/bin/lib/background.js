@@ -480,6 +480,12 @@
           }
           return _results;
         });
+      case 'info':
+      case 'version':
+        return typeof sendResponse === "function" ? sendResponse({
+          id: EXTENSION_ID,
+          version: ext.version
+        }) : void 0;
       case 'refresh':
         return ext.updateOrders();
       case 'track':

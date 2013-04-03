@@ -343,6 +343,7 @@ onMessage = (message, sender, sendResponse) ->
       selectOrCreateTab url, (isNew) ->
         return if isNew
         win.options.refresh() for win in getWindows url
+    when 'info', 'version' then sendResponse? id: EXTENSION_ID, version: ext.version
     when 'refresh' then ext.updateOrders()
     when 'track'
       order = getOrder message.data
