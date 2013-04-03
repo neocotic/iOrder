@@ -164,11 +164,11 @@
     var i, status, _i, _len, _ref, _results;
 
     log.trace();
-    _ref = ext.config.status;
+    _ref = ext.config.apple.status;
     _results = [];
     for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
       status = _ref[i];
-      _results.push(ext.config.status[i] = {
+      _results.push(ext.config.apple.status[i] = {
         text: i18n.get("status_" + i + "_text"),
         value: RegExp("^" + status + "$", "i")
       });
@@ -239,7 +239,7 @@
 
   getStatus = function(text) {
     log.trace();
-    return ext.config.status[getStatusIndex(text)];
+    return ext.config.apple.status[getStatusIndex(text)];
   };
 
   getStatusIndex = function(text) {
@@ -247,7 +247,7 @@
 
     log.trace();
     text = text != null ? text.trim() : void 0;
-    _ref = ext.config.status;
+    _ref = ext.config.apple.status;
     for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
       status = _ref[i];
       if (status.value.test(text)) {
@@ -779,7 +779,7 @@
 
       log.trace();
       index = ((_ref1 = order.updates) != null ? _ref1.length : void 0) ? order.updates.slice(-1).status : -1;
-      return (_ref2 = ext.config.status[index]) != null ? _ref2.text : void 0;
+      return (_ref2 = ext.config.apple.status[index]) != null ? _ref2.text : void 0;
     };
 
     Extension.prototype.queryOrder = function(filter, singular) {

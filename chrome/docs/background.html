@@ -567,8 +567,8 @@ useable and localized.</p>
             
             <div class="content"><div class='highlight'><pre><span class="function"><span class="title">buildStatus</span></span> = -&gt;
   log.trace()
-  <span class="keyword">for</span> status, i <span class="keyword">in</span> ext.config.status
-    ext.config.status[i] =
+  <span class="keyword">for</span> status, i <span class="keyword">in</span> ext.config.apple.status
+    ext.config.apple.status[i] =
       text:  i18n.get <span class="string">"status_<span class="subst">#{i}</span>_text"</span>
       value: <span class="regexp">/// ^ <span class="comment">#{status} $ ///i</span></pre></div></div>
             
@@ -662,7 +662,7 @@ time.</p>
             
             <div class="content"><div class='highlight'><pre><span class="function"><span class="title">getStatus</span></span> = (text) -&gt;
   log.trace()
-  ext.config.status[getStatusIndex text]</pre></div></div>
+  ext.config.apple.status[getStatusIndex text]</pre></div></div>
             
         </li>
         
@@ -680,7 +680,7 @@ time.</p>
             <div class="content"><div class='highlight'><pre><span class="function"><span class="title">getStatusIndex</span></span> = (text) -&gt;
   log.trace()
   text = text?.trim()
-  <span class="keyword">return</span> i <span class="keyword">for</span> status, i <span class="keyword">in</span> ext.config.status <span class="keyword">when</span> status.value.test text
+  <span class="keyword">return</span> i <span class="keyword">for</span> status, i <span class="keyword">in</span> ext.config.apple.status <span class="keyword">when</span> status.value.test text
   -<span class="number">1</span></pre></div></div>
             
         </li>
@@ -2100,7 +2100,7 @@ status updates have been detected yet for that order.</p>
             <div class="content"><div class='highlight'><pre>  getStatusText: (order) -&gt;
     log.trace()
     index = <span class="keyword">if</span> order.updates?.length <span class="keyword">then</span> order.updates[-<span class="number">1.</span>.].status <span class="keyword">else</span> -<span class="number">1</span>
-    ext.config.status[index]?.text</pre></div></div>
+    ext.config.apple.status[index]?.text</pre></div></div>
             
         </li>
         

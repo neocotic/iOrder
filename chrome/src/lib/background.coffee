@@ -168,8 +168,8 @@ buildPopup = ->
 # Transform the configuration status into useable localized options.
 buildStatus = ->
   log.trace()
-  for status, i in ext.config.status
-    ext.config.status[i] =
+  for status, i in ext.config.apple.status
+    ext.config.apple.status[i] =
       text:  i18n.get "status_#{i}_text"
       value: /// ^ #{status} $ ///i
 
@@ -203,13 +203,13 @@ getOrderStatusUpdates = (order, lastRead) ->
 # Return the recognized status that matches the specified `text`.
 getStatus = (text) ->
   log.trace()
-  ext.config.status[getStatusIndex text]
+  ext.config.apple.status[getStatusIndex text]
 
 # Return the index of the recognized status that matches the specified `text`.
 getStatusIndex = (text) ->
   log.trace()
   text = text?.trim()
-  return i for status, i in ext.config.status when status.value.test text
+  return i for status, i in ext.config.apple.status when status.value.test text
   -1
 
 # Return the total number of detected status updates for all existing orders since the last time
@@ -609,7 +609,7 @@ ext = window.ext = new class Extension extends utils.Class
   getStatusText: (order) ->
     log.trace()
     index = if order.updates?.length then order.updates[-1..].status else -1
-    ext.config.status[index]?.text
+    ext.config.apple.status[index]?.text
 
   # Retrieve the first order that passes the specified `filter`.
   queryOrder: (filter, singular = yes) ->
