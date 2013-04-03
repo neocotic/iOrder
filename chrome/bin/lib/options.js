@@ -61,7 +61,7 @@
     log.trace();
     frequency = $('#frequency');
     frequency.remove('option');
-    _ref = ext.FREQUENCIES;
+    _ref = ext.config.frequencies;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       freq = _ref[_i];
       option = $('<option/>', {
@@ -171,21 +171,27 @@
       value: order.key
     })));
     row.append($('<td/>').append($('<span/>', {
-      html: order.label,
+      text: order.label,
       title: i18n.get('opt_order_modify_title', order.label)
     })));
-    row.append($('<td/>', {
-      html: order.number
-    }));
-    row.append($('<td/>', {
-      html: order.code
-    }));
-    row.append($('<td/>', {
-      html: '<updates>'
-    }));
-    row.append($('<td/>', {
-      html: '<actions>'
-    }));
+    row.append($('<td/>').append($('<span/>').append($('<a/>', {
+      href: ext.getOrderUrl(order),
+      target: '_blank',
+      text: order.number,
+      title: i18n.get('opt_order_title')
+    }))));
+    row.append($('<td/>').append($('<span/>', {
+      text: order.code
+    })));
+    row.append($('<td/>').append($('<span/>', {
+      text: ext.getStatusText(order)
+    })));
+    row.append($('<td/>').append(order.trackingUrl ? $('<a/>', {
+      href: order.trackingUrl,
+      target: '_blank',
+      text: i18n.get('opt_track_text'),
+      title: i18n.get('opt_track_title')
+    }) : '&nbsp;'));
     row.append($('<td/>').append($('<span/>', {
       "class": 'muted',
       text: '::::',
@@ -947,7 +953,7 @@
     if (activeOrder == null) {
       activeOrder = {};
     }
-    $('#order_wizard .modal-header h3').html(activeOrder.key != null ? i18n.get('opt_order_modify_title', "" + activeOrder.label + " (" + activeOrder.number + ")") : i18n.get('opt_order_new_header'));
+    $('#order_wizard .modal-header h3').html(activeOrder.key != null ? i18n.get('opt_order_modify_title', activeOrder.label) : i18n.get('opt_order_new_header'));
     $('#order_code').val(activeOrder.code || '');
     $('#order_label').val(activeOrder.label || '');
     $('#order_number').val(activeOrder.number || '');

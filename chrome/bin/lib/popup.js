@@ -4,11 +4,11 @@
 // For all details and documentation:
 // <http://neocotic.com/iOrder>
 (function() {
-  var Popup, addEventHandler, ext, popup, sendMessage, store, utils, _ref, _ref1,
+  var Popup, addEventHandler, analytics, ext, log, popup, sendMessage, store, utils, _ref, _ref1,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  _ref = chrome.extension.getBackgroundPage(), ext = _ref.ext, store = _ref.store, utils = _ref.utils;
+  _ref = chrome.extension.getBackgroundPage(), analytics = _ref.analytics, ext = _ref.ext, log = _ref.log, store = _ref.store, utils = _ref.utils;
 
   addEventHandler = function(selector, event, handler, context) {
     var element, elements, _i, _len, _results;
@@ -16,6 +16,7 @@
     if (context == null) {
       context = document;
     }
+    log.trace();
     elements = context.querySelectorAll(selector);
     _results = [];
     for (_i = 0, _len = elements.length; _i < _len; _i++) {
@@ -29,6 +30,7 @@
     if (data == null) {
       data = {};
     }
+    log.trace();
     if (element) {
       data.code = element.getAttribute('data-order-code');
       data.number = element.getAttribute('data-order-number');
@@ -51,12 +53,16 @@
     }
 
     Popup.prototype.clear = function() {
+      log.trace();
       return sendMessage('clear');
     };
 
     Popup.prototype.init = function() {
       var orderRow, _i, _len, _ref2, _results;
 
+      log.trace();
+      log.info('Initializing the popup');
+      analytics.track('Frames', 'Displayed', 'Popup');
       document.body.innerHTML = ext.popupHtml;
       addEventHandler('#optionsLink', 'click', popup.options);
       addEventHandler('#ordersLink', 'click', popup.viewAll);
@@ -76,6 +82,7 @@
     Popup.prototype.options = function() {
       var suffix, tab;
 
+      log.trace();
       suffix = '_nav';
       tab = this.getAttribute('data-options-tab');
       if (tab) {
@@ -88,18 +95,22 @@
     };
 
     Popup.prototype.refresh = function() {
+      log.trace();
       return sendMessage('refresh');
     };
 
     Popup.prototype.track = function() {
+      log.trace();
       return sendMessage('track', true, {}, this);
     };
 
     Popup.prototype.view = function() {
+      log.trace();
       return sendMessage('view', true, {}, this);
     };
 
     Popup.prototype.viewAll = function() {
+      log.trace();
       return sendMessage('viewAll', true);
     };
 

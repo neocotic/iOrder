@@ -7,19 +7,22 @@
 # Private variables
 # -----------------
 
-# Easily accessible reference store, utilities, and to the extension controller.
-{ext, store, utils} = chrome.extension.getBackgroundPage()
+# Easily accessible reference analytics, logging, store, utilities, and to the extension
+# controller.
+{analytics, ext, log, store, utils} = chrome.extension.getBackgroundPage()
 
 # Private functions
 # -----------------
 
 # Add a `handler` to all selected elements for the specified `event`.
 addEventHandler = (selector, event, handler, context = document) ->
+  log.trace()
   elements = context.querySelectorAll selector
   element.addEventListener event, handler for element in elements
 
 # Send a message to the background page using the information provided.
 sendMessage = (type, closeAfter, data = {}, element) ->
+  log.trace()
   # Extract the related order data from the element, where possible.
   if element
     data.code   = element.getAttribute 'data-order-code'
@@ -39,10 +42,14 @@ popup = window.popup = new class Popup extends utils.Class
 
   # Send a message to clear any badge being displayed.
   clear: ->
+    log.trace()
     sendMessage 'clear'
 
   # Initialize the popup page.
   init: ->
+    log.trace()
+    log.info 'Initializing the popup'
+    analytics.track 'Frames', 'Displayed', 'Popup'
     # Insert the prepared HTML in to the popup's body and bind click events.
     document.body.innerHTML = ext.popupHtml
     addEventHandler '#optionsLink',  'click', popup.options
@@ -56,6 +63,7 @@ popup = window.popup = new class Popup extends utils.Class
 
   # Send a message to open the Orders tab on the options page.
   options: ->
+    log.trace()
     suffix = '_nav'
     tab    = @getAttribute 'data-options-tab'
     if tab
@@ -65,19 +73,23 @@ popup = window.popup = new class Popup extends utils.Class
 
   # Send a message to update the orders immediately.
   refresh: ->
+    log.trace()
     sendMessage 'refresh'
 
   # Send a message to open the tracking page for the order relating to the clicked link.
   track: ->
+    log.trace()
     sendMessage 'track', yes, {}, this
 
   # Send a message to open the page on the Apple US store for the order relating to the clicked
   # link.
   view: ->
+    log.trace()
     sendMessage 'view', yes, {}, this
 
   # Send a message to open the order listing page on the Apple US store.
   viewAll: ->
+    log.trace()
     sendMessage 'viewAll', yes
 
 # Initialize `popup` when the DOM is ready.

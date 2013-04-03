@@ -65,7 +65,7 @@ loadFrequencies = ->
   # Start from a clean slate.
   frequency.remove 'option'
   # Create and insert options representing each available update frequency.
-  for freq in ext.FREQUENCIES
+  for freq in ext.config.frequencies
     option = $ '<option/>',
       text:  freq.text
       value: freq.value
@@ -80,7 +80,6 @@ loadFrequenciesSaveEvents = ->
     value = $(this).val()
     log.debug "Changing frequency to '#{value}'"
     store.set 'frequency', parseInt frequency, 10
-    # TODO: Create this method in `ext`
     ext.updateOrders()
     analytics.track 'General', 'Changed', 'Frequency', value
 
@@ -150,14 +149,23 @@ loadOrder = (order) ->
     type:  'checkbox'
     value: order.key
   row.append $('<td/>').append $ '<span/>',
-    html:  order.label
+    text:  order.label
     title: i18n.get 'opt_order_modify_title', order.label
-  row.append $ '<td/>', html: order.number
-  row.append $ '<td/>', html: order.code
-  # TODO: Show updates in table
-  row.append $ '<td/>', html: '<updates>'
-  # TODO: Show actions in table
-  row.append $ '<td/>', html: '<actions>'
+  row.append $('<td/>').append $('<span/>').append $ '<a/>',
+    href:   ext.getOrderUrl order
+    target: '_blank'
+    text:   order.number
+    title:  i18n.get 'opt_order_title'
+  row.append $('<td/>').append $ '<span/>', text: order.code
+  row.append $('<td/>').append $ '<span/>', text: ext.getStatusText order
+  row.append $('<td/>').append if order.trackingUrl
+    $ '<a/>',
+      href:   order.trackingUrl
+      target: '_blank'
+      text:   i18n.get 'opt_track_text'
+      title:  i18n.get 'opt_track_title'
+  else
+    '&nbsp;'
   row.append $('<td/>').append $ '<span/>',
     class: 'muted'
     text:  '::::'
@@ -175,7 +183,6 @@ loadOrderControlEvents = ->
   # Support search functionality for orders.
   filter = $ '#order_filter'
   filter.find('option').remove()
-  # TODO: Support config and limits in background page
   for limit in ext.config.options.limits
     filter.append $ '<option/>', text: limit
   filter.append $ '<option/>',
@@ -311,7 +318,6 @@ deleteOrders = (orders) ->
       orders.index = i
       keep.push order
     store.set 'orders', keep
-    # TODO: Create this method in `ext`
     ext.updateOrders()
     if keys.length > 1
       log.debug "Deleted #{keys.length} orders"
@@ -332,7 +338,6 @@ reorderOrders = (fromIndex, toIndex) ->
     orders[fromIndex].index = toIndex
     orders[toIndex].index   = fromIndex
   store.set 'orders', orders
-  # TODO: Create this method in `ext`
   ext.updateOrders()
 
 # Update and persist the `order` provided.  
@@ -350,7 +355,6 @@ saveOrder = (order) ->
       orders[i] = order
       break
   store.set 'orders', orders
-  # TODO: Create this method in `ext`
   ext.updateOrders()
   do loadOrderRows
   action = if isNew then 'Added' else 'Saved'
@@ -622,7 +626,6 @@ feedback = ->
     window.uvOptions = {}
     uv       = document.createElement 'script'
     uv.async = 'async'
-    # TODO: Support config and userVoice in background page
     uv.src   = "https://widget.uservoice.com/#{ext.config.options.userVoice}.js"
     script = document.getElementsByTagName('script')[0]
     script.parentNode.insertBefore uv, script
@@ -717,14 +720,13 @@ resetWizard = ->
   log.trace()
   activeOrder ?= {}
   $('#order_wizard .modal-header h3').html if activeOrder.key?
-    i18n.get 'opt_order_modify_title', "#{activeOrder.label} (#{activeOrder.number})"
+    i18n.get 'opt_order_modify_title', activeOrder.label
   else
     i18n.get 'opt_order_new_header'
   # Assign values to their respective fields.
   $('#order_code').val activeOrder.code or ''
   $('#order_label').val activeOrder.label or ''
   $('#order_number').val activeOrder.number or ''
-  # TODO: Show actions (e.g. tracking) and updates in read-only
   $('#order_delete_btn').each ->
     $this = $ this
     if activeOrder.key? then $this.show() else $this.hide()
@@ -816,7 +818,6 @@ options = window.options = new class Options extends utils.Class
     $('footer a[href*="neocotic.com"]').on 'click', ->
       analytics.track 'Footer', 'Clicked', 'Homepage'
     # Setup and configure the donation button in the footer.
-    # TODO: Support config and payPal in background page
     $('#donation input[name="hosted_button_id"]').val ext.config.options.payPal
     $('#donation').on 'submit', ->
       analytics.track 'Footer', 'Clicked', 'Donate'

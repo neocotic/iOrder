@@ -1,11 +1,11 @@
 {
-    "apple":   {
+    "apple":       {
         "status": [
-            "We've received your order"
-          , "Processing Items"
-          , "Preparing for Shipment"
-          , "Shipped"
-          , "Complete"
+            "we'?ve\\s+received\\s+your\\s+order"
+          , "processing\\s+items"
+          , "preparing\\s+for\\s+shipment"
+          , "shipped"
+          , "complete"
         ]
       , "url":    {
             "detail": "https://store.apple.com/us/order/guest/"
@@ -13,7 +13,15 @@
           , "track":  "https://applestore.bridge-point.com/"
         }
     }
-  , "options": {
+  , "frequencies": [
+        -1
+      , 15
+      , 30
+      , 45
+      , 60
+      , 120
+    ]
+  , "options":     {
         "limits":    [
             25
           , 50
