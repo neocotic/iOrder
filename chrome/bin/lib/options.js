@@ -297,7 +297,7 @@
       }
     });
     $('#add_btn').on('click', function() {
-      return openWizard();
+      return openWizard(null);
     });
     selectedOrders = [];
     $('#delete_wizard').on('hide', function() {
@@ -757,7 +757,7 @@
       $this = $(this);
       placement = $this.attr('data-placement');
       placement = placement != null ? trimToLower(placement) : 'top';
-      return $this.tooltips({
+      return $this.tooltip({
         container: (_ref = $this.attr('data-container')) != null ? _ref : 'body',
         placement: placement
       });
@@ -765,7 +765,7 @@
   };
 
   clearContext = function() {
-    return setContext(null);
+    return setContext();
   };
 
   closeWizard = function() {
@@ -781,7 +781,7 @@
       code: $('#order_code').val().trim(),
       label: $('#order_label').val().trim(),
       number: $('#order_number').val().trim(),
-      error: (_ref = activeOrder.updates) != null ? _ref : '',
+      error: (_ref = activeOrder.error) != null ? _ref : '',
       index: (_ref1 = activeOrder.index) != null ? _ref1 : ext.orders.length,
       key: activeOrder.key,
       trackingUrl: (_ref2 = activeOrder.trackingUrl) != null ? _ref2 : '',
@@ -792,23 +792,22 @@
   };
 
   feedback = function() {
-    var script, uv, uvTabLabel, uvwDialogClose;
+    var $document, script, uv;
 
     log.trace();
     if (!feedbackAdded) {
-      uvwDialogClose = $('#uvw-dialog-close[onclick]');
-      uvwDialogClose.live('hover', function() {
+      $document = $(document);
+      $document.on('hover', '#uvw-dialog-close[onclick]', function() {
         $(this).removeAttr('onclick');
-        return uvwDialogClose.die('hover');
+        return $document.off('hover', '#uvw-dialog-close[onclick]');
       });
-      $(uvwDialogClose.selector.replace('[onclick]', '')).live('click', function(e) {
+      $document.on('click', '#uvw-dialog-close', function(e) {
         UserVoice.hidePopupWidget();
         return e.preventDefault();
       });
-      uvTabLabel = $('#uvTabLabel[href^="javascript:"]');
-      uvTabLabel.live('hover', function() {
+      $document.on('hover', '#uvTabLabel[href^="javascript:"]', function() {
         $(this).removeAttr('href');
-        return uvTabLabel.die('hover');
+        return $document.off('hover', '#uvTabLabel[href^="javascript:"]');
       });
       window.uvOptions = {};
       uv = document.createElement('script');

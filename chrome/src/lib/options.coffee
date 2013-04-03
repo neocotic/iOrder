@@ -235,7 +235,7 @@ loadOrderControlEvents = ->
       do closeWizard
   # Open the order wizard without any context.
   $('#add_btn').on 'click', ->
-    do openWizard
+    openWizard null
   selectedOrders = []
   $('#delete_wizard').on 'hide', ->
       selectedOrders = []
@@ -576,13 +576,13 @@ activateTooltips = (selector) ->
     $this     = $ this
     placement = $this.attr 'data-placement'
     placement = if placement? then trimToLower placement else 'top'
-    # TODO: Confirm container hack still required for latest version of Bootstrap
-    $this.tooltips
+    $this.tooltip
       container: $this.attr('data-container') ? 'body'
       placement: placement
 
 # Convenient shorthand for setting the current context to `null`.
-clearContext = -> setContext null
+clearContext = ->
+  do setContext
 
 # Clear the current context and close the order wizard.
 closeWizard = ->
@@ -596,7 +596,7 @@ deriveOrder = ->
     code:        $('#order_code').val().trim()
     label:       $('#order_label').val().trim()
     number:      $('#order_number').val().trim()
-    error:       activeOrder.updates ? ''
+    error:       activeOrder.error ? ''
     index:       activeOrder.index ? ext.orders.length
     key:         activeOrder.key
     trackingUrl: activeOrder.trackingUrl ? ''
@@ -611,17 +611,16 @@ feedback = ->
     # Temporary workaround for Content Security Policy issues with UserVoice's use of inline
     # JavaScript.  
     # This should be removed if/when it's no longer required.
-    uvwDialogClose = $ '#uvw-dialog-close[onclick]'
-    uvwDialogClose.live 'hover', ->
+    $document = $ document
+    $document.on 'hover', '#uvw-dialog-close[onclick]', ->
       $(this).removeAttr 'onclick'
-      uvwDialogClose.die 'hover'
-    $(uvwDialogClose.selector.replace('[onclick]', '')).live 'click', (e) ->
+      $document.off 'hover', '#uvw-dialog-close[onclick]'
+    $document.on 'click', '#uvw-dialog-close', (e) ->
       UserVoice.hidePopupWidget()
       e.preventDefault()
-    uvTabLabel = $ '#uvTabLabel[href^="javascript:"]'
-    uvTabLabel.live 'hover', ->
+    $document.on 'hover', '#uvTabLabel[href^="javascript:"]', ->
       $(this).removeAttr 'href'
-      uvTabLabel.die 'hover'
+      $document.off 'hover', '#uvTabLabel[href^="javascript:"]'
     # Continue with normal process of loading Widget.
     window.uvOptions = {}
     uv       = document.createElement 'script'

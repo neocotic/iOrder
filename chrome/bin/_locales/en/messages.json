@@ -8,7 +8,8 @@
     "description": "Popup text where no orders exist.",
     "placeholders": {
       "c_link": {
-        "content": "</a>"
+        "content": "</a>",
+        "example": "</a>"
       },
       "o_link_add_orders": {
         "content": "<a href=\"#\" id=\"noOrdersLink\" data-options-tab=\"orders\">",
