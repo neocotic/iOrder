@@ -311,13 +311,14 @@
       }
     });
     return updater.update('1.2.0', function() {
-      var _ref, _ref1, _ref2;
+      var notifications, _ref, _ref1;
 
       log.info('Updating general settings for 1.2.0');
+      notifications = store.get('notifications');
       store.set('notifications', {
         badges: (_ref = store.get('badges')) != null ? _ref : true,
         duration: (_ref1 = store.get('notificationDuration')) != null ? _ref1 : 3000,
-        enabled: (_ref2 = store.get('notifications')) != null ? _ref2 : true
+        enabled: $.type(notifications) === 'boolean' ? notifications : true
       });
       return store.remove('badges', 'notificationDuration');
     });

@@ -795,10 +795,11 @@ by <code>ext.init</code>.</p>
     store.set <span class="string">'frequency'</span>, freq <span class="keyword">if</span> frequency &gt; -<span class="number">1</span> <span class="keyword">and</span> frequency &lt; freq
   updater.update <span class="string">'1.2.0'</span>, -&gt;
     log.info <span class="string">'Updating general settings for 1.2.0'</span>
+    notifications = store.get <span class="string">'notifications'</span>
     store.set <span class="string">'notifications'</span>,
       badges:   store.get(<span class="string">'badges'</span>)               ? <span class="literal">on</span>
       duration: store.get(<span class="string">'notificationDuration'</span>) ? <span class="number">3000</span>
-      enabled:  store.get(<span class="string">'notifications'</span>)        ? <span class="literal">yes</span>
+      enabled:  <span class="keyword">if</span> $.type(notifications) <span class="keyword">is</span> <span class="string">'boolean'</span> <span class="keyword">then</span> notifications <span class="keyword">else</span> <span class="literal">yes</span>
     store.remove <span class="string">'badges'</span>, <span class="string">'notificationDuration'</span></pre></div></div>
             
         </li>

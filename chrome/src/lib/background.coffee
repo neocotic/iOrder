@@ -249,10 +249,11 @@ init_update = ->
     store.set 'frequency', freq if frequency > -1 and frequency < freq
   updater.update '1.2.0', ->
     log.info 'Updating general settings for 1.2.0'
+    notifications = store.get 'notifications'
     store.set 'notifications',
       badges:   store.get('badges')               ? on
       duration: store.get('notificationDuration') ? 3000
-      enabled:  store.get('notifications')        ? yes
+      enabled:  if $.type(notifications) is 'boolean' then notifications else yes
     store.remove 'badges', 'notificationDuration'
 
 # Initialize `order` and its properties.
