@@ -4,7 +4,7 @@
 // For all details and documentation:
 // <http://neocotic.com/iOrder>
 (function() {
-  var EXTENSION_ID, Extension, HOMEPAGE_DOMAIN, REAL_EXTENSION_ID, buildConfig, buildFrequencies, buildPopup, buildStatus, executeScriptsInExistingTabs, executeScriptsInExistingWindows, ext, getFrequency, getOrderStatusUpdates, getStatus, getStatusIndex, getStatusUpdates, getWindows, initOrder, initOrders, initOrders_update, init_update, isNewInstall, isOrderStatusNew, isProductionBuild, markRead, notify, onMessage, selectOrCreateTab, setBadge, updateManager, updateOrder, updatePopup, updates, _ref,
+  var EXTENSION_ID, Extension, HOMEPAGE_DOMAIN, REAL_EXTENSION_ID, buildConfig, buildFrequencies, buildPopup, buildStatus, executeScriptsInExistingTabs, executeScriptsInExistingWindows, ext, getFrequency, getOrderStatusUpdates, getStatus, getStatusIndex, getStatusUpdates, getWindows, initOrder, initOrders, initOrders_update, init_update, isNewInstall, isOrderStatusNew, isProductionBuild, markRead, notify, onMessage, selectOrCreateTab, setBadge, showNotification, updateManager, updateOrder, updatePopup, updates, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -446,8 +446,12 @@
     oldUpdates = updates;
     updates = getStatusUpdates();
     setBadge(notifications.badges ? updates || '' : void 0);
-    if (updates > oldUpdates && notifications.enabled) {
-      return webkitNotifications.createHTMLNotification(utils.url('pages/notification.html')).show();
+    if (updates > oldUpdates) {
+      ext.notification.description = i18n.get('notification');
+      ext.notification.title = i18n.get('name');
+      return showNotification();
+    } else {
+      return ext.reset();
     }
   };
 
@@ -516,7 +520,7 @@
           });
         }
     }
-    return log.debug("Finished handling " + type + " message");
+    return log.debug("Finished handling " + message.type + " message");
   };
 
   selectOrCreateTab = function(url, callback) {
@@ -559,6 +563,15 @@
     return chrome.browserAction.setBadgeText({
       text: String(str)
     });
+  };
+
+  showNotification = function() {
+    log.trace();
+    if (store.get('notifications.enabled')) {
+      return webkitNotifications.createHTMLNotification(utils.url('pages/notification.html')).show();
+    } else {
+      return ext.reset();
+    }
   };
 
   updateOrder = function(order, callback) {
@@ -713,6 +726,16 @@
 
     Extension.prototype.config = {};
 
+    Extension.prototype.notification = {
+      description: '',
+      descriptionStyle: '',
+      html: '',
+      icon: utils.url('../images/icon_48.png'),
+      iconStyle: '',
+      title: '',
+      titleStyle: ''
+    };
+
     Extension.prototype.orders = [];
 
     Extension.prototype.popupHtml = '';
@@ -786,6 +809,19 @@
 
     Extension.prototype.queryOrders = function(filter) {
       return this.queryOrder(filter, false);
+    };
+
+    Extension.prototype.reset = function() {
+      log.trace();
+      return this.notification = {
+        description: '',
+        descriptionStyle: '',
+        html: '',
+        icon: utils.url('../images/icon_48.png'),
+        iconStyle: '',
+        title: '',
+        titleStyle: ''
+      };
     };
 
     Extension.prototype.updateOrders = function() {

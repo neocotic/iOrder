@@ -102,11 +102,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Easily accessible reference to analytics, internationalization, logging, storage, and utilities.</p>
+              <p>Easily accessible reference to analytics, logging, storage, utilities, and the extension
+controller.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>{analytics, i18n, log, store, utils} = chrome.extension.getBackgroundPage()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>{analytics, ext, log, store, utils} = chrome.extension.getBackgroundPage()</pre></div></div>
             
         </li>
         
@@ -117,7 +118,7 @@
               <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h2>Notification page setup</h2>
+              <h2>Private functions</h2>
 
             </div>
             
@@ -130,10 +131,39 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              
+              <p>Build the HTML or create the elements to be displayed within the notification.</p>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>notification = window.notification = <span class="keyword">new</span> <span class="class"><span class="keyword">class</span> <span class="title">Notification</span> <span class="keyword">extends</span> <span class="title">utils</span>.<span class="title">Class</span></span></pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">buildContents</span></span> = -&gt;
+  log.trace()
+  data = ext.notification ? {}
+  log.debug <span class="string">'Building a desktop notfication for the following data...'</span>, data
+  <span class="keyword">if</span> data.html
+    document.body.innerHTML = data.html
+  <span class="keyword">else</span>
+    <span class="keyword">if</span> data.icon
+      icon = document.createElement <span class="string">'div'</span>
+      icon.id = <span class="string">'icon'</span>
+      icon.style.cssText = data.iconStyle <span class="keyword">if</span> data.iconStyle
+      image = document.createElement <span class="string">'img'</span>
+      image.src    = data.icon
+      image.width  = <span class="number">32</span>
+      image.height = <span class="number">32</span>
+      icon.appendChild image
+      document.body.appendChild icon
+    <span class="keyword">if</span> data.title
+      title = document.createElement <span class="string">'div'</span>
+      title.id        = <span class="string">'title'</span>
+      title.innerHTML = data.title
+      title.style.cssText = data.titleStyle <span class="keyword">if</span> data.titleStyle
+      document.body.appendChild title
+    <span class="keyword">if</span> data.description
+      description = document.createElement <span class="string">'div'</span>
+      description.id        = <span class="string">'description'</span>
+      description.innerHTML = data.description
+      description.style.cssText = data.descriptionStyle <span class="keyword">if</span> data.descriptionStyle
+      document.body.appendChild description</pre></div></div>
             
         </li>
         
@@ -144,7 +174,7 @@
               <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <h2>Public functions</h2>
+              <h2>Notification page setup</h2>
 
             </div>
             
@@ -157,15 +187,10 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Initialize the notification page.</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>  init: -&gt;
-    log.trace()
-    log.info <span class="string">'Initializing a notification'</span>
-    analytics.track <span class="string">'Frames'</span>, <span class="string">'Displayed'</span>, <span class="string">'Notification'</span>
-    i18n.init()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>notification = window.notification = <span class="keyword">new</span> <span class="class"><span class="keyword">class</span> <span class="title">Notification</span> <span class="keyword">extends</span> <span class="title">utils</span>.<span class="title">Class</span></span></pre></div></div>
             
         </li>
         
@@ -173,8 +198,56 @@
         <li id="section-7">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <h2>Public functions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Initialize the notification page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  init: -&gt;
+    log.trace()
+    log.info <span class="string">'Initializing a notification'</span>
+    analytics.track <span class="string">'Frames'</span>, <span class="string">'Displayed'</span>, <span class="string">'Notification'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Populate the desktop notification.<br>Afterwards, reset <code>ext</code> to avoid affecting other update processes. If the user has disabled
+the notifications option this should still be called for safety.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">do</span> buildContents
+    ext.reset()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
               <p>Set a timer to close the notification after a specified period of time, if the user enabled
 the corresponding option; otherwise it should stay open until it is closed manually by the
@@ -188,11 +261,11 @@ user.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-11">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Initialize <code>notification</code> when the DOM is ready.</p>
 
