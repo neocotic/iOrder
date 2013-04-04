@@ -1012,14 +1012,16 @@ by <code>initOrders</code>.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
-              <p>Show the notification if setting enabled and has new updates.</p>
+              <p>Show the notification when new updates are found.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> updates &gt; oldUpdates <span class="keyword">and</span> notifications.enabled
-    webkitNotifications.createHTMLNotification(
-      utils.url <span class="string">'pages/notification.html'</span>
-    ).show()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> updates &gt; oldUpdates
+    ext.notification.description = i18n.get <span class="string">'notification'</span>
+    ext.notification.title       = i18n.get <span class="string">'name'</span>
+    <span class="keyword">do</span> showNotification
+  <span class="keyword">else</span>
+    ext.reset()</pre></div></div>
             
         </li>
         
@@ -1098,7 +1100,7 @@ by <code>initOrders</code>.</p>
     <span class="keyword">when</span> <span class="string">'view'</span>
       order = getOrder message.data
       chrome.tabs.create url: ext.getOrderUrl order <span class="keyword">if</span> order
-  log.debug <span class="string">"Finished handling <span class="subst">#{type}</span> message"</span></pre></div></div>
+  log.debug <span class="string">"Finished handling <span class="subst">#{message.type}</span> message"</span></pre></div></div>
             
         </li>
         
@@ -1199,6 +1201,27 @@ specified URL.<br>If no existing tab exists a new one is simply created.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
+              <p>Display a desktop notification informing the user on new order updates.<br>Also, ensure that <code>ext</code> is <em>reset</em> and that notifications are only displayed if the user has
+enabled the corresponding option (which is enabled by default).</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">showNotification</span></span> = -&gt;
+  log.trace()
+  <span class="keyword">if</span> store.get <span class="string">'notifications.enabled'</span>
+    webkitNotifications.createHTMLNotification(utils.url <span class="string">'pages/notification.html'</span>).show()
+  <span class="keyword">else</span>
+    ext.reset()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
               <p>Send an AJAX request to the specified order&#39;s page on the Apple US store and parses the response
 to update the order&#39;s properties.<br>If an <em>error</em> occurs during the update process assign a short description to <code>order.error</code>.</p>
 
@@ -1212,11 +1235,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-61">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>Probably won&#39;t happen; more of a sanity check.</p>
 
@@ -1227,11 +1250,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-62">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <p>Extract the relevant elements wrapped in jQuery goodness.</p>
 
@@ -1246,11 +1269,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-63">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>Dig deeper and try and get the actual values.</p>
 
@@ -1263,11 +1286,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-64">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>OK, it was valid; but is it new???</p>
 
@@ -1278,11 +1301,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-65">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>Right! It was valid and new! Just add it already.</p>
 
@@ -1296,11 +1319,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-66">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>Bad user data or extension could need updated.</p>
 
@@ -1311,11 +1334,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-67">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>Only update the Track link if it was found.</p>
 
@@ -1326,11 +1349,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-68">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>Clear any pre-existing errors.</p>
 
@@ -1342,11 +1365,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-69">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>Something went wrong.</p>
 
@@ -1358,11 +1381,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-70">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>Done! Now let&#39;s tell the boss.</p>
 
@@ -1373,11 +1396,11 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
         </li>
         
         
-        <li id="section-71">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>Build the HTML to populate the popup with to optimize popup loading times and updates any popup
 currently being displayed.</p>
@@ -1392,11 +1415,11 @@ currently being displayed.</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <h2>Update Manager setup</h2>
 
@@ -1405,11 +1428,11 @@ currently being displayed.</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>Central manager for updating the orders.<br>This manager can handle concurrent start, stop and restart requests while also supporting repeat
 (looping) functionality.</p>
@@ -1421,11 +1444,11 @@ currently being displayed.</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>Unique interval identifier used to managed repeating updates.</p>
 
@@ -1436,11 +1459,11 @@ currently being displayed.</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>Message stack used by the current update process.<br>Any start/stop/restart requests made while the manager is updating is added to this stack and
 actioned upon completion of the process. Afterwards, the stack is cleared for the next process.</p>
@@ -1452,11 +1475,11 @@ actioned upon completion of the process. Afterwards, the stack is cleared for th
         </li>
         
         
-        <li id="section-76">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>Indicate whether or not the update manager is currently running through an update process.</p>
 
@@ -1467,11 +1490,11 @@ actioned upon completion of the process. Afterwards, the stack is cleared for th
         </li>
         
         
-        <li id="section-77">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <p>Restart the update manager, which may run once or start a repeating cycle based on the current
 update frequency.<br>If this is called during an active update process the manager will restart upon completion.</p>
@@ -1486,11 +1509,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-78">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>I&#39;m busy; I&#39;ll do it later.</p>
 
@@ -1501,11 +1524,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-79">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>Clear the current cycle, where applicable.</p>
 
@@ -1517,11 +1540,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-80">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>Ensure that it is disabled, where applicable.</p>
 
@@ -1532,11 +1555,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-81">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <p>Start a new cycle if required.</p>
 
@@ -1547,11 +1570,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-82">
+        <li id="section-83">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
               <p>Run the initial process.</p>
 
@@ -1562,11 +1585,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-83">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <p>Core of the update manager which actually performs the update process.<br>This process updates all orders and ensures the results are reflected in the popup.</p>
 
@@ -1581,11 +1604,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-84">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
               <p>Update the UI to show that I&#39;m busy.</p>
 
@@ -1597,11 +1620,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-85">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
               <p>Called when the AJAX request has been parsed and read for each order.<br>This should be called regardless of errors being encountered.</p>
 
@@ -1615,11 +1638,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-86">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
               <p>Check if all orders have been updated; supports no orders.</p>
 
@@ -1631,11 +1654,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-87">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
               <p>Persist orders and update time stamp.</p>
 
@@ -1647,11 +1670,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-88">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-89">&#182;</a>
               </div>
               <p>Update the UI again to reflect the changes.</p>
 
@@ -1663,11 +1686,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-89">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <p>Now read the message stack.</p>
 
@@ -1679,11 +1702,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-90">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
               <p>Finish this now since no orders exist.</p>
 
@@ -1694,11 +1717,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-91">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
+                <a class="pilcrow" href="#section-92">&#182;</a>
               </div>
               <p>Update each order by parsing its page on the Apple US store.</p>
 
@@ -1709,11 +1732,11 @@ update frequency.<br>If this is called during an active update process the manag
         </li>
         
         
-        <li id="section-92">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
               <p>Start the update manager, which may run once or start a repeating cycle based on the current
 update frequency.</p>
@@ -1728,11 +1751,11 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-93">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+                <a class="pilcrow" href="#section-94">&#182;</a>
               </div>
               <p>Clear the current cycle, where applicable.</p>
 
@@ -1747,11 +1770,11 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-94">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-94">&#182;</a>
+                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
               <p>I start twice for no one... see RESTART for that.</p>
 
@@ -1762,11 +1785,11 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-95">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-95">&#182;</a>
+                <a class="pilcrow" href="#section-96">&#182;</a>
               </div>
               <p>Start a new cycle.</p>
 
@@ -1777,11 +1800,11 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-96">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-96">&#182;</a>
+                <a class="pilcrow" href="#section-97">&#182;</a>
               </div>
               <p>Run the initial process.</p>
 
@@ -1792,11 +1815,11 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-97">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-97">&#182;</a>
+                <a class="pilcrow" href="#section-98">&#182;</a>
               </div>
               <p>Stop the update manager.<br>If this is called during an active update process the manager will stop upon completion.</p>
 
@@ -1809,11 +1832,11 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-98">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-98">&#182;</a>
+                <a class="pilcrow" href="#section-99">&#182;</a>
               </div>
               <p>I&#39;m busy; I&#39;ll do it later.</p>
 
@@ -1824,11 +1847,11 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-99">
+        <li id="section-100">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-99">&#182;</a>
+                <a class="pilcrow" href="#section-100">&#182;</a>
               </div>
               <p>Clear the current cycle, where possible.</p>
 
@@ -1841,11 +1864,11 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-100">
+        <li id="section-101">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-100">&#182;</a>
+                <a class="pilcrow" href="#section-101">&#182;</a>
               </div>
               <h2>Background page setup</h2>
 
@@ -1854,11 +1877,11 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-101">
+        <li id="section-102">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-101">&#182;</a>
+                <a class="pilcrow" href="#section-102">&#182;</a>
               </div>
               
             </div>
@@ -1868,30 +1891,15 @@ update frequency.</p>
         </li>
         
         
-        <li id="section-102">
+        <li id="section-103">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-102">&#182;</a>
+                <a class="pilcrow" href="#section-103">&#182;</a>
               </div>
               <h2>Public variables</h2>
 
             </div>
-            
-        </li>
-        
-        
-        <li id="section-103">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-103">&#182;</a>
-              </div>
-              <p>Configuration data loaded at runtime.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  config: {}</pre></div></div>
             
         </li>
         
@@ -1902,11 +1910,11 @@ update frequency.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
-              <p>List of orders currently being maintained.<br>This should always be an exact reflection of the orders persisted in <code>localStorage</code>.</p>
+              <p>Configuration data loaded at runtime.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  orders: []</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  config: {}</pre></div></div>
             
         </li>
         
@@ -1916,6 +1924,43 @@ update frequency.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-105">&#182;</a>
+              </div>
+              <p>Information specifying what should be displaying in the notification.<br>This should be reset after every update.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  notification:
+    description:      <span class="string">''</span>
+    descriptionStyle: <span class="string">''</span>
+    html:             <span class="string">''</span>
+    icon:             utils.url <span class="string">'../images/icon_48.png'</span>
+    iconStyle:        <span class="string">''</span>
+    title:            <span class="string">''</span>
+    titleStyle:       <span class="string">''</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-106">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-106">&#182;</a>
+              </div>
+              <p>List of orders currently being maintained.<br>This should always be an exact reflection of the orders persisted in <code>localStorage</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  orders: []</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-107">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-107">&#182;</a>
               </div>
               <p>Pre-prepared HTML for the popup to be populated using.<br>This should be updated whenever orders are changed/updated in any way as this is generated to
 improve performance and load times of the popup frame.</p>
@@ -1927,11 +1972,11 @@ improve performance and load times of the popup frame.</p>
         </li>
         
         
-        <li id="section-106">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-106">&#182;</a>
+                <a class="pilcrow" href="#section-108">&#182;</a>
               </div>
               <p>Current version of iOrder.</p>
 
@@ -1942,11 +1987,11 @@ improve performance and load times of the popup frame.</p>
         </li>
         
         
-        <li id="section-107">
+        <li id="section-109">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-107">&#182;</a>
+                <a class="pilcrow" href="#section-109">&#182;</a>
               </div>
               <h2>Public functions</h2>
 
@@ -1955,11 +2000,11 @@ improve performance and load times of the popup frame.</p>
         </li>
         
         
-        <li id="section-108">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-108">&#182;</a>
+                <a class="pilcrow" href="#section-110">&#182;</a>
               </div>
               <p>Initialize the background page.<br>This will involve initializing the settings, adding the message listeners and starting the
 update manager.</p>
@@ -1973,11 +2018,11 @@ update manager.</p>
         </li>
         
         
-        <li id="section-109">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-109">&#182;</a>
+                <a class="pilcrow" href="#section-111">&#182;</a>
               </div>
               <p>Add support for analytics if the user hasn&#39;t opted out.</p>
 
@@ -1990,11 +2035,11 @@ update manager.</p>
         </li>
         
         
-        <li id="section-110">
+        <li id="section-112">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-110">&#182;</a>
+                <a class="pilcrow" href="#section-112">&#182;</a>
               </div>
               <p>It&#39;s nice knowing what version is running.</p>
 
@@ -2007,11 +2052,11 @@ update manager.</p>
         </li>
         
         
-        <li id="section-111">
+        <li id="section-113">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-111">&#182;</a>
+                <a class="pilcrow" href="#section-113">&#182;</a>
               </div>
               <p>Load and store the configuration data.</p>
 
@@ -2023,11 +2068,11 @@ update manager.</p>
         </li>
         
         
-        <li id="section-112">
+        <li id="section-114">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-112">&#182;</a>
+                <a class="pilcrow" href="#section-114">&#182;</a>
               </div>
               <p>Begin initialization.</p>
 
@@ -2051,11 +2096,11 @@ update manager.</p>
         </li>
         
         
-        <li id="section-113">
+        <li id="section-115">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-113">&#182;</a>
+                <a class="pilcrow" href="#section-115">&#182;</a>
               </div>
               <p>Execute content scripts now that we know the version.</p>
 
@@ -2066,11 +2111,11 @@ update manager.</p>
         </li>
         
         
-        <li id="section-114">
+        <li id="section-116">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-114">&#182;</a>
+                <a class="pilcrow" href="#section-116">&#182;</a>
               </div>
               <p>Return the URL of the page on the Apple store for the specified <code>order</code>.</p>
 
@@ -2084,11 +2129,11 @@ update manager.</p>
         </li>
         
         
-        <li id="section-115">
+        <li id="section-117">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-115">&#182;</a>
+                <a class="pilcrow" href="#section-117">&#182;</a>
               </div>
               <p>Attempt to derive the status text to be displayed for the order.<br>The status text will either be that of the latest update or a single whitespace character if no
 status updates have been detected yet for that order.</p>
@@ -2103,11 +2148,11 @@ status updates have been detected yet for that order.</p>
         </li>
         
         
-        <li id="section-116">
+        <li id="section-118">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-116">&#182;</a>
+                <a class="pilcrow" href="#section-118">&#182;</a>
               </div>
               <p>Retrieve the first order that passes the specified <code>filter</code>.</p>
 
@@ -2120,11 +2165,11 @@ status updates have been detected yet for that order.</p>
         </li>
         
         
-        <li id="section-117">
+        <li id="section-119">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-117">&#182;</a>
+                <a class="pilcrow" href="#section-119">&#182;</a>
               </div>
               <p>Retrieve all orders that pass the specified <code>filter</code>.</p>
 
@@ -2135,11 +2180,35 @@ status updates have been detected yet for that order.</p>
         </li>
         
         
-        <li id="section-118">
+        <li id="section-120">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-118">&#182;</a>
+                <a class="pilcrow" href="#section-120">&#182;</a>
+              </div>
+              <p>Reset the notification information associated with the current update process.<br>This should be called once updating has completed, regardless of it&#39;s outcome.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  reset: -&gt;
+    log.trace()
+    <span class="property">@notification</span> =
+      description:      <span class="string">''</span>
+      descriptionStyle: <span class="string">''</span>
+      html:             <span class="string">''</span>
+      icon:             utils.url <span class="string">'../images/icon_48.png'</span>
+      iconStyle:        <span class="string">''</span>
+      title:            <span class="string">''</span>
+      titleStyle:       <span class="string">''</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-121">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-121">&#182;</a>
               </div>
               <p>Update the local list of orders to reflect those persisted.<br>It is very important that this is called whenever orders may have been changed in order to
 prepare the popup HTML and optimize performance, while also ensuring orders are correctly
@@ -2157,11 +2226,11 @@ managed during by the next update.</p>
         </li>
         
         
-        <li id="section-119">
+        <li id="section-122">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-119">&#182;</a>
+                <a class="pilcrow" href="#section-122">&#182;</a>
               </div>
               <p>Initialize <code>ext</code> when the DOM is ready.</p>
 

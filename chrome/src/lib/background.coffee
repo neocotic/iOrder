@@ -320,11 +320,13 @@ notify = ->
   updates       = getStatusUpdates()
   # Update/clear badge depending on setting and updates available.
   setBadge if notifications.badges then updates or ''
-  # Show the notification if setting enabled and has new updates.
-  if updates > oldUpdates and notifications.enabled
-    webkitNotifications.createHTMLNotification(
-      utils.url 'pages/notification.html'
-    ).show()
+  # Show the notification when new updates are found.
+  if updates > oldUpdates
+    ext.notification.description = i18n.get 'notification'
+    ext.notification.title       = i18n.get 'name'
+    do showNotification
+  else
+    ext.reset()
 
 # Listener for internal messages.  
 # This function will handle the message based on its type and the data provided.
@@ -353,7 +355,7 @@ onMessage = (message, sender, sendResponse) ->
     when 'view'
       order = getOrder message.data
       chrome.tabs.create url: ext.getOrderUrl order if order
-  log.debug "Finished handling #{type} message"
+  log.debug "Finished handling #{message.type} message"
 
 # Attempt to select a tab in the current window displaying a page whose location begins with the
 # specified URL.  
@@ -383,6 +385,16 @@ selectOrCreateTab = (url, callback) ->
 setBadge = (str = '') ->
   log.trace()
   chrome.browserAction.setBadgeText text: String str
+
+# Display a desktop notification informing the user on new order updates.  
+# Also, ensure that `ext` is *reset* and that notifications are only displayed if the user has
+# enabled the corresponding option (which is enabled by default).
+showNotification = ->
+  log.trace()
+  if store.get 'notifications.enabled'
+    webkitNotifications.createHTMLNotification(utils.url 'pages/notification.html').show()
+  else
+    ext.reset()
 
 # Send an AJAX request to the specified order's page on the Apple US store and parses the response
 # to update the order's properties.  
@@ -545,6 +557,17 @@ ext = window.ext = new class Extension extends utils.Class
   # Configuration data loaded at runtime.
   config: {}
 
+  # Information specifying what should be displaying in the notification.  
+  # This should be reset after every update.
+  notification:
+    description:      ''
+    descriptionStyle: ''
+    html:             ''
+    icon:             utils.url '../images/icon_48.png'
+    iconStyle:        ''
+    title:            ''
+    titleStyle:       ''
+
   # List of orders currently being maintained.  
   # This should always be an exact reflection of the orders persisted in `localStorage`.
   orders: []
@@ -616,6 +639,19 @@ ext = window.ext = new class Extension extends utils.Class
 
   # Retrieve all orders that pass the specified `filter`.
   queryOrders: (filter) -> @queryOrder filter, no
+
+  # Reset the notification information associated with the current update process.  
+  # This should be called once updating has completed, regardless of it's outcome.
+  reset: ->
+    log.trace()
+    @notification =
+      description:      ''
+      descriptionStyle: ''
+      html:             ''
+      icon:             utils.url '../images/icon_48.png'
+      iconStyle:        ''
+      title:            ''
+      titleStyle:       ''
 
   # Update the local list of orders to reflect those persisted.  
   # It is very important that this is called whenever orders may have been changed in order to
