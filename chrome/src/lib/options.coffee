@@ -61,16 +61,17 @@ loadDeveloperTools = ->
 # Update the frequency section of the options page with the current settings.
 loadFrequencies = ->
   log.trace()
-  frequency = $ '#frequency'
+  frequency  = store.get 'frequency'
+  $frequency = $ '#frequency'
   # Start from a clean slate.
-  frequency.remove 'option'
+  $frequency.remove 'option'
   # Create and insert options representing each available update frequency.
   for freq in ext.config.frequencies
     option = $ '<option/>',
       text:  freq.text
       value: freq.value
     option.prop 'selected', freq.value is frequency
-    frequency.append option
+    $frequency.append option
   do loadFrequenciesSaveEvents
 
 # Bind the event handlers required for persisting frequency changes.

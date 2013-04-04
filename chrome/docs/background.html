@@ -251,11 +251,11 @@ useable and localized.</p>
     <span class="keyword">else</span>
       text:  (
         <span class="keyword">if</span> hours &lt; <span class="number">1</span>
-          i18n.get <span class="string">'freq_minutes'</span>, mins
+          i18n.get <span class="string">'freq_minutes'</span>, [mins]
         <span class="keyword">else</span> <span class="keyword">if</span> hours <span class="keyword">is</span> <span class="number">1</span>
           i18n.get <span class="string">'freq_hour'</span>
         <span class="keyword">else</span>
-          i18n.get <span class="string">'freq_hours'</span>, hours
+          i18n.get <span class="string">'freq_hours'</span>, [hours]
       )
       value: mins * <span class="number">60</span> * <span class="number">1000</span></pre></div></div>
             

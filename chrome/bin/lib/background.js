@@ -39,7 +39,7 @@
         text: i18n.get('freq_disabled'),
         value: mins
       } : {
-        text: (hours < 1 ? i18n.get('freq_minutes', mins) : hours === 1 ? i18n.get('freq_hour') : i18n.get('freq_hours', hours)),
+        text: (hours < 1 ? i18n.get('freq_minutes', [mins]) : hours === 1 ? i18n.get('freq_hour') : i18n.get('freq_hours', [hours])),
         value: mins * 60 * 1000
       });
     }

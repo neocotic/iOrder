@@ -304,7 +304,8 @@ triggered, modifies the underlying <code>option</code> with the value returned b
             
             <div class="content"><div class='highlight'><pre><span class="function"><span class="title">loadFrequencies</span></span> = -&gt;
   log.trace()
-  frequency = $ <span class="string">'#frequency'</span></pre></div></div>
+  frequency  = store.get <span class="string">'frequency'</span>
+  $frequency = $ <span class="string">'#frequency'</span></pre></div></div>
             
         </li>
         
@@ -319,7 +320,7 @@ triggered, modifies the underlying <code>option</code> with the value returned b
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  frequency.remove <span class="string">'option'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  $frequency.remove <span class="string">'option'</span></pre></div></div>
             
         </li>
         
@@ -339,7 +340,7 @@ triggered, modifies the underlying <code>option</code> with the value returned b
       text:  freq.text
       value: freq.value
     option.prop <span class="string">'selected'</span>, freq.value <span class="keyword">is</span> frequency
-    frequency.append option
+    $frequency.append option
   <span class="keyword">do</span> loadFrequenciesSaveEvents</pre></div></div>
             
         </li>

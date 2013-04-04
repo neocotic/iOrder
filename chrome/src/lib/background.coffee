@@ -45,11 +45,11 @@ buildFrequencies = ->
     else
       text:  (
         if hours < 1
-          i18n.get 'freq_minutes', mins
+          i18n.get 'freq_minutes', [mins]
         else if hours is 1
           i18n.get 'freq_hour'
         else
-          i18n.get 'freq_hours', hours
+          i18n.get 'freq_hours', [hours]
       )
       value: mins * 60 * 1000
 

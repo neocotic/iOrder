@@ -56,11 +56,12 @@
   };
 
   loadFrequencies = function() {
-    var freq, frequency, option, _i, _len, _ref;
+    var $frequency, freq, frequency, option, _i, _len, _ref;
 
     log.trace();
-    frequency = $('#frequency');
-    frequency.remove('option');
+    frequency = store.get('frequency');
+    $frequency = $('#frequency');
+    $frequency.remove('option');
     _ref = ext.config.frequencies;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       freq = _ref[_i];
@@ -69,7 +70,7 @@
         value: freq.value
       });
       option.prop('selected', freq.value === frequency);
-      frequency.append(option);
+      $frequency.append(option);
     }
     return loadFrequenciesSaveEvents();
   };
