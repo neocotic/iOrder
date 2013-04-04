@@ -2094,7 +2094,7 @@ status updates have been detected yet for that order.</p>
             
             <div class="content"><div class='highlight'><pre>  getStatusText: (order) -&gt;
     log.trace()
-    index = <span class="keyword">if</span> order.updates?.length <span class="keyword">then</span> order.updates[-<span class="number">1.</span>.].status <span class="keyword">else</span> -<span class="number">1</span>
+    index = <span class="keyword">if</span> order.updates?.length <span class="keyword">then</span> order.updates[-<span class="number">1.</span>.][<span class="number">0</span>].status <span class="keyword">else</span> -<span class="number">1</span>
     ext.config.apple.status[index]?.text</pre></div></div>
             
         </li>

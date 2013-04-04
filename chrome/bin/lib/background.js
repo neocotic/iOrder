@@ -762,7 +762,7 @@
       var index, _ref1, _ref2;
 
       log.trace();
-      index = ((_ref1 = order.updates) != null ? _ref1.length : void 0) ? order.updates.slice(-1).status : -1;
+      index = ((_ref1 = order.updates) != null ? _ref1.length : void 0) ? order.updates.slice(-1)[0].status : -1;
       return (_ref2 = ext.config.apple.status[index]) != null ? _ref2.text : void 0;
     };
 

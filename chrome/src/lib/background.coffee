@@ -603,7 +603,7 @@ ext = window.ext = new class Extension extends utils.Class
   # status updates have been detected yet for that order.
   getStatusText: (order) ->
     log.trace()
-    index = if order.updates?.length then order.updates[-1..].status else -1
+    index = if order.updates?.length then order.updates[-1..][0].status else -1
     ext.config.apple.status[index]?.text
 
   # Retrieve the first order that passes the specified `filter`.
