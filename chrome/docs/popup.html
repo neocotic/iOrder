@@ -184,7 +184,9 @@ controller.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  utils.sendMessage <span class="string">'extension'</span>, data: data, type: type</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  message = {data, type}
+  log.debug <span class="string">'Sending the following message to the extension controller'</span>, message
+  utils.sendMessage <span class="string">'extension'</span>, message</pre></div></div>
             
         </li>
         
