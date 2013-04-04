@@ -521,11 +521,13 @@
     return R_VALID_KEY.test(key);
   };
 
-  isNumberAvailable = function(number) {
+  isNumberAvailable = function(order) {
+    var key, number;
+
     log.trace();
-    log.debug("Validating order number '" + number + "'");
+    key = order.key, number = order.number;
     return !ext.queryOrder(function(order) {
-      return order.number === number;
+      return order.number === number && order.key !== key;
     });
   };
 
@@ -542,7 +544,7 @@
     if (!order.number) {
       errors.push(new ValidationError('order_number', 'opt_field_required_error'));
     }
-    if (!isNumberAvailable(order.number)) {
+    if (!isNumberAvailable(order)) {
       errors.push(new ValidationError('order_number', 'opt_field_unavailable_error'));
     }
     if (!(order.code || order.email)) {

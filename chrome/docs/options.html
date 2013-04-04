@@ -1157,14 +1157,14 @@ associated with specific fields.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
-              <p>Determine whether or not an order already exists with the specified <code>number</code>.</p>
+              <p>Determine whether an order number already exists.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">isNumberAvailable</span></span> = (number) -&gt;
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">isNumberAvailable</span></span> = (order) -&gt;
   log.trace()
-  log.debug <span class="string">"Validating order number '<span class="subst">#{number}</span>'"</span>
-  <span class="keyword">not</span> ext.queryOrder (order) -&gt; order.number <span class="keyword">is</span> number</pre></div></div>
+  {key, number} = order
+  <span class="keyword">not</span> ext.queryOrder (order) -&gt; order.number <span class="keyword">is</span> number <span class="keyword">and</span> order.key <span class="keyword">isnt</span> key</pre></div></div>
             
         </li>
         
@@ -1230,7 +1230,7 @@ associated with specific fields.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">unless</span> isNumberAvailable order.number
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">unless</span> isNumberAvailable order
     errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_number'</span>, <span class="string">'opt_field_unavailable_error'</span></pre></div></div>
             
         </li>

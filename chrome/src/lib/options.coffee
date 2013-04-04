@@ -405,11 +405,11 @@ isKeyValid = (key) ->
   log.debug "Validating order key '#{key}'"
   R_VALID_KEY.test key
 
-# Determine whether or not an order already exists with the specified `number`.
-isNumberAvailable = (number) ->
+# Determine whether an order number already exists.
+isNumberAvailable = (order) ->
   log.trace()
-  log.debug "Validating order number '#{number}'"
-  not ext.queryOrder (order) -> order.number is number
+  {key, number} = order
+  not ext.queryOrder (order) -> order.number is number and order.key isnt key
 
 # Validate the `order` and return any validation errors/warnings that were encountered.
 validateOrder = (order) ->
@@ -424,7 +424,7 @@ validateOrder = (order) ->
   unless order.number
     errors.push new ValidationError 'order_number', 'opt_field_required_error'
   # Number already exists.
-  unless isNumberAvailable order.number
+  unless isNumberAvailable order
     errors.push new ValidationError 'order_number', 'opt_field_unavailable_error'
   # Post/zip code and email are missing but at least one is required.
   unless order.code or order.email
