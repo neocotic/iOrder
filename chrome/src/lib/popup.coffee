@@ -26,7 +26,9 @@ sendMessage = (type, closeAfter, data = {}, element) ->
   # Extract the related order data from the element, where possible.
   data.number = element.getAttribute 'data-order-number' if element
   # Send the message to the background page.
-  utils.sendMessage 'extension', data: data, type: type
+  message = {data, type}
+  log.debug 'Sending the following message to the extension controller', message
+  utils.sendMessage 'extension', message
   # Close this pesky popup.
   window.close() if closeAfter
 

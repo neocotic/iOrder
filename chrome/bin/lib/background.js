@@ -178,6 +178,7 @@
     var tab, _i, _len, _results;
 
     log.trace();
+    log.info('Retrieved the following tabs...', tabs);
     _results = [];
     for (_i = 0, _len = tabs.length; _i < _len; _i++) {
       tab = tabs[_i];
@@ -195,6 +196,7 @@
     return chrome.windows.getAll(null, function(windows) {
       var win, _i, _len, _results;
 
+      log.info('Retrieved the following windows...', windows);
       _results = [];
       for (_i = 0, _len = windows.length; _i < _len; _i++) {
         win = windows[_i];
@@ -462,10 +464,11 @@
     };
     switch (message.type) {
       case 'clear':
-        return markRead();
+        markRead();
+        break;
       case 'options':
         url = utils.url('pages/options.html');
-        return selectOrCreateTab(url, function(isNew) {
+        selectOrCreateTab(url, function(isNew) {
           var win, _i, _len, _ref, _results;
 
           if (isNew) {
@@ -479,44 +482,53 @@
           }
           return _results;
         });
+        break;
       case 'info':
       case 'version':
-        return typeof sendResponse === "function" ? sendResponse({
-          id: EXTENSION_ID,
-          version: ext.version
-        }) : void 0;
+        if (typeof sendResponse === "function") {
+          sendResponse({
+            id: EXTENSION_ID,
+            version: ext.version
+          });
+        }
+        break;
       case 'refresh':
-        return ext.updateOrders();
+        ext.updateOrders();
+        break;
       case 'track':
         order = getOrder(message.data);
         if (order && order.trackingUrl) {
-          return chrome.tabs.create({
+          chrome.tabs.create({
             url: order.trackingUrl
           });
         }
         break;
       case 'viewAll':
-        return chrome.tabs.create({
+        chrome.tabs.create({
           url: ext.config.apple.url.list
         });
+        break;
       case 'view':
         order = getOrder(message.data);
         if (order) {
-          return chrome.tabs.create({
+          chrome.tabs.create({
             url: ext.getOrderUrl(order)
           });
         }
     }
+    return log.debug("Finished handling " + type + " message");
   };
 
   selectOrCreateTab = function(url, callback) {
     log.trace();
     return chrome.windows.getCurrent(function(win) {
+      log.debug('Retrieved the following window...', win);
       return chrome.tabs.query({
         windowId: win.id
       }, function(tabs) {
         var existingTab, tab, _i, _len;
 
+        log.debug('Retrieved the following tabs...', tabs);
         for (_i = 0, _len = tabs.length; _i < _len; _i++) {
           tab = tabs[_i];
           if (tab.url.indexOf(url) === 0) {

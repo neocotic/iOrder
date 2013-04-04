@@ -585,6 +585,7 @@ useable and localized.</p>
             
             <div class="content"><div class='highlight'><pre><span class="function"><span class="title">executeScriptsInExistingTabs</span></span> = (tabs) -&gt;
   log.trace()
+  log.info <span class="string">'Retrieved the following tabs...'</span>, tabs
   <span class="keyword">for</span> tab <span class="keyword">in</span> tabs <span class="keyword">when</span> tab.url.indexOf(HOMEPAGE_DOMAIN) <span class="keyword">isnt</span> -<span class="number">1</span>
     chrome.tabs.executeScript tab.id, file: <span class="string">'lib/install.js'</span></pre></div></div>
             
@@ -604,6 +605,7 @@ useable and localized.</p>
             <div class="content"><div class='highlight'><pre><span class="function"><span class="title">executeScriptsInExistingWindows</span></span> = -&gt;
   log.trace()
   chrome.windows.getAll <span class="literal">null</span>, (windows) -&gt;
+    log.info <span class="string">'Retrieved the following windows...'</span>, windows
     <span class="keyword">for</span> win <span class="keyword">in</span> windows
       chrome.tabs.query windowId: win.id, executeScriptsInExistingTabs</pre></div></div>
             
@@ -1095,7 +1097,8 @@ by <code>initOrders</code>.</p>
     <span class="keyword">when</span> <span class="string">'viewAll'</span> <span class="keyword">then</span> chrome.tabs.create url: ext.config.apple.url.list
     <span class="keyword">when</span> <span class="string">'view'</span>
       order = getOrder message.data
-      chrome.tabs.create url: ext.getOrderUrl order <span class="keyword">if</span> order</pre></div></div>
+      chrome.tabs.create url: ext.getOrderUrl order <span class="keyword">if</span> order
+  log.debug <span class="string">"Finished handling <span class="subst">#{type}</span> message"</span></pre></div></div>
             
         </li>
         
@@ -1114,7 +1117,9 @@ specified URL.<br>If no existing tab exists a new one is simply created.</p>
             <div class="content"><div class='highlight'><pre><span class="function"><span class="title">selectOrCreateTab</span></span> = (url, callback) -&gt;
   log.trace()
   chrome.windows.getCurrent (win) -&gt;
-    chrome.tabs.query windowId: win.id, (tabs) -&gt;</pre></div></div>
+    log.debug <span class="string">'Retrieved the following window...'</span>, win
+    chrome.tabs.query windowId: win.id, (tabs) -&gt;
+      log.debug <span class="string">'Retrieved the following tabs...'</span>, tabs</pre></div></div>
             
         </li>
         

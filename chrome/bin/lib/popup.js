@@ -27,6 +27,8 @@
   };
 
   sendMessage = function(type, closeAfter, data, element) {
+    var message;
+
     if (data == null) {
       data = {};
     }
@@ -34,10 +36,12 @@
     if (element) {
       data.number = element.getAttribute('data-order-number');
     }
-    utils.sendMessage('extension', {
+    message = {
       data: data,
       type: type
-    });
+    };
+    log.debug('Sending the following message to the extension controller', message);
+    utils.sendMessage('extension', message);
     if (closeAfter) {
       return window.close();
     }
