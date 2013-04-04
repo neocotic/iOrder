@@ -119,7 +119,6 @@
           $('<strong/>', {
             text: order.label
           }), '<br />', $('<a/>', {
-            'data-order-code': order.code,
             'data-order-number': order.number,
             href: '#',
             text: order.number,
@@ -138,7 +137,6 @@
       }
       if (order.trackingUrl) {
         tbody.find('tr:last-child').append($('<td/>').append($('<a/>', {
-          'data-order-code': order.code,
           'data-order-number': order.number,
           href: '#',
           text: i18n.get('pop_track_text'),
@@ -325,7 +323,7 @@
   };
 
   initOrder = function(order) {
-    var update, _i, _len, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+    var update, _i, _len, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
 
     log.trace();
     if ((_ref = order.error) == null) {
@@ -334,25 +332,28 @@
     if ((_ref1 = order.code) == null) {
       order.code = '';
     }
-    if ((_ref2 = order.label) == null) {
+    if ((_ref2 = order.email) == null) {
+      order.email = '';
+    }
+    if ((_ref3 = order.label) == null) {
       order.label = '';
     }
-    if ((_ref3 = order.number) == null) {
+    if ((_ref4 = order.number) == null) {
       order.number = '';
     }
-    if ((_ref4 = order.trackingUrl) == null) {
+    if ((_ref5 = order.trackingUrl) == null) {
       order.trackingUrl = '';
     }
-    if ((_ref5 = order.updates) == null) {
+    if ((_ref6 = order.updates) == null) {
       order.updates = [];
     }
-    _ref6 = order.updates;
-    for (_i = 0, _len = _ref6.length; _i < _len; _i++) {
-      update = _ref6[_i];
-      if ((_ref7 = update.status) == null) {
+    _ref7 = order.updates;
+    for (_i = 0, _len = _ref7.length; _i < _len; _i++) {
+      update = _ref7[_i];
+      if ((_ref8 = update.status) == null) {
         update.status = -1;
       }
-      if ((_ref8 = update.timeStamp) == null) {
+      if ((_ref9 = update.timeStamp) == null) {
         update.timeStamp = $.now();
       }
     }
@@ -455,11 +456,8 @@
     order = {};
     url = '';
     getOrder = function(data) {
-      var code, number;
-
-      code = data.code, number = data.number;
       return ext.queryOrder(function(order) {
-        return order.number === number && order.code === code;
+        return order.number === data.number;
       });
     };
     switch (message.type) {
@@ -755,7 +753,7 @@
 
       log.trace();
       encode = encodeURIComponent;
-      return "" + ext.config.apple.url.detail + (encode(order.number)) + "/" + (encode(order.code));
+      return "" + ext.config.apple.url.detail + (encode(order.number)) + "/" + (encode(order.email || order.code));
     };
 
     Extension.prototype.getStatusText = function(order) {

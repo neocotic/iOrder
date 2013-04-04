@@ -24,9 +24,7 @@ addEventHandler = (selector, event, handler, context = document) ->
 sendMessage = (type, closeAfter, data = {}, element) ->
   log.trace()
   # Extract the related order data from the element, where possible.
-  if element
-    data.code   = element.getAttribute 'data-order-code'
-    data.number = element.getAttribute 'data-order-number'
+  data.number = element.getAttribute 'data-order-number' if element
   # Send the message to the background page.
   utils.sendMessage 'extension', data: data, type: type
   # Close this pesky popup.

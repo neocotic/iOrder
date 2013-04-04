@@ -477,7 +477,6 @@ useable and localized.</p>
           $ <span class="string">'&lt;strong/&gt;'</span>, text: order.label
           <span class="string">'&lt;br /&gt;'</span>
           $ <span class="string">'&lt;a/&gt;'</span>,
-            <span class="string">'data-order-code'</span>:   order.code
             <span class="string">'data-order-number'</span>: order.number
             href:                <span class="string">'#'</span>
             text:                order.number
@@ -521,7 +520,6 @@ useable and localized.</p>
             
             <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> order.trackingUrl
       tbody.find(<span class="string">'tr:last-child'</span>).append $(<span class="string">'&lt;td/&gt;'</span>).append $ <span class="string">'&lt;a/&gt;'</span>,
-          <span class="string">'data-order-code'</span>:   order.code
           <span class="string">'data-order-number'</span>: order.number
           href:                <span class="string">'#'</span>
           text:                i18n.get <span class="string">'pop_track_text'</span>
@@ -819,6 +817,7 @@ by <code>ext.init</code>.</p>
   log.trace()
   order.error       ?= <span class="string">''</span>
   order.code        ?= <span class="string">''</span>
+  order.email       ?= <span class="string">''</span>
   order.label       ?= <span class="string">''</span>
   order.number      ?= <span class="string">''</span>
   order.trackingUrl ?= <span class="string">''</span>
@@ -1052,8 +1051,7 @@ by <code>initOrders</code>.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="function"><span class="title">getOrder</span></span> = (data) -&gt;
-    {code, number} = data
-    ext.queryOrder (order) -&gt; order.number <span class="keyword">is</span> number <span class="keyword">and</span> order.code <span class="keyword">is</span> code</pre></div></div>
+    ext.queryOrder (order) -&gt; order.number <span class="keyword">is</span> data.number</pre></div></div>
             
         </li>
         
@@ -2069,14 +2067,14 @@ update manager.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-114">&#182;</a>
               </div>
-              <p>Return the URL of the page on the Apple store for the specified order.</p>
+              <p>Return the URL of the page on the Apple store for the specified <code>order</code>.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  getOrderUrl: (order) -&gt;
     log.trace()
     encode = encodeURIComponent
-    <span class="string">"<span class="subst">#{ext.config.apple.url.detail}</span><span class="subst">#{encode order.number}</span>/<span class="subst">#{encode order.code}</span>"</span></pre></div></div>
+    <span class="string">"<span class="subst">#{ext.config.apple.url.detail}</span><span class="subst">#{encode order.number}</span>/<span class="subst">#{encode order.email <span class="keyword">or</span> order.code}</span>"</span></pre></div></div>
             
         </li>
         

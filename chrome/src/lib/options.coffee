@@ -157,6 +157,7 @@ loadOrder = (order) ->
     target: '_blank'
     text:   order.number
     title:  i18n.get 'opt_order_title'
+  row.append $('<td/>').append $ '<span/>', text: order.email
   row.append $('<td/>').append $ '<span/>', text: order.code
   row.append $('<td/>').append $ '<span/>', text: ext.getStatusText order
   row.append $('<td/>').append if order.trackingUrl
@@ -404,11 +405,11 @@ isKeyValid = (key) ->
   log.debug "Validating order key '#{key}'"
   R_VALID_KEY.test key
 
-# Determine whether or not an order already exists with the specified `number`.
-isNumberAvailable = (number) ->
+# Determine whether an order number already exists.
+isNumberAvailable = (order) ->
   log.trace()
-  log.debug "Validating order number '#{number}'"
-  not ext.queryOrder (order) -> order.number is number
+  {key, number} = order
+  not ext.queryOrder (order) -> order.number is number and order.key isnt key
 
 # Validate the `order` and return any validation errors/warnings that were encountered.
 validateOrder = (order) ->
@@ -418,16 +419,17 @@ validateOrder = (order) ->
   log.debug 'Validating the following order...', order
   # Label is missing but is required.
   unless order.label
-    errors.push new ValidationError 'order_label', 'opt_order_label_invalid'
+    errors.push new ValidationError 'order_label', 'opt_field_required_error'
   # Number is missing but is required.
   unless order.number
-    errors.push new ValidationError 'order_number', 'opt_order_number_invalid'
+    errors.push new ValidationError 'order_number', 'opt_field_required_error'
   # Number already exists.
-  unless isNumberAvailable order.number
-    errors.push new ValidationError 'order_number', 'opt_order_number_unavailable'
-  # Zip/post code is missing but is required.
-  unless order.code
-    errors.push new ValidationError 'order_code', 'opt_order_code_invalid'
+  unless isNumberAvailable order
+    errors.push new ValidationError 'order_number', 'opt_field_unavailable_error'
+  # Post/zip code and email are missing but at least one is required.
+  unless order.code or order.email
+    errors.push new ValidationError 'order_code',  'opt_field_required_error'
+    errors.push new ValidationError 'order_email', 'opt_field_required_error'
   # Indicate whether or not any validation errors were encountered.
   log.debug 'Following validation errors were found...', errors
   errors
@@ -595,6 +597,7 @@ deriveOrder = ->
   log.trace()
   order =
     code:        $('#order_code').val().trim()
+    email:       $('#order_email').val().trim()
     label:       $('#order_label').val().trim()
     number:      $('#order_number').val().trim()
     error:       activeOrder.error ? ''
@@ -728,6 +731,7 @@ resetWizard = ->
     i18n.get 'opt_order_new_header'
   # Assign values to their respective fields.
   $('#order_code').val activeOrder.code or ''
+  $('#order_email').val activeOrder.email or ''
   $('#order_label').val activeOrder.label or ''
   $('#order_number').val activeOrder.number or ''
   $('#order_delete_btn').each ->
@@ -743,7 +747,7 @@ searchOrders = (query = '') ->
       #{(keyword for keyword in keywords when keyword).join '|'}
     ///i
     searchResults = ext.queryOrders (order) ->
-      expression.test "#{order.code} #{order.label} #{order.number}"
+      expression.test "#{order.code} #{order.email} #{order.label} #{order.number}"
   else
     searchResults = null
   loadOrderRows searchResults ? ext.orders
