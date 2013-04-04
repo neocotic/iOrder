@@ -174,6 +174,7 @@ buildStatus = ->
 # Inject and execute `install.coffee` within each of the tabs provided (where valid).
 executeScriptsInExistingTabs = (tabs) ->
   log.trace()
+  log.info 'Retrieved the following tabs...', tabs
   for tab in tabs when tab.url.indexOf(HOMEPAGE_DOMAIN) isnt -1
     chrome.tabs.executeScript tab.id, file: 'lib/install.js'
 
@@ -181,6 +182,7 @@ executeScriptsInExistingTabs = (tabs) ->
 executeScriptsInExistingWindows = ->
   log.trace()
   chrome.windows.getAll null, (windows) ->
+    log.info 'Retrieved the following windows...', windows
     for win in windows
       chrome.tabs.query windowId: win.id, executeScriptsInExistingTabs
 
@@ -351,6 +353,7 @@ onMessage = (message, sender, sendResponse) ->
     when 'view'
       order = getOrder message.data
       chrome.tabs.create url: ext.getOrderUrl order if order
+  log.debug "Finished handling #{type} message"
 
 # Attempt to select a tab in the current window displaying a page whose location begins with the
 # specified URL.  
@@ -358,7 +361,9 @@ onMessage = (message, sender, sendResponse) ->
 selectOrCreateTab = (url, callback) ->
   log.trace()
   chrome.windows.getCurrent (win) ->
+    log.debug 'Retrieved the following window...', win
     chrome.tabs.query windowId: win.id, (tabs) ->
+      log.debug 'Retrieved the following tabs...', tabs
       # Try to find an existing tab.
       for tab in tabs
         if tab.url.indexOf(url) is 0
