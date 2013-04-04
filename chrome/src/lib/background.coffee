@@ -563,20 +563,16 @@ ext = window.ext = new class Extension extends utils.Class
     log.info 'Initializing extension controller'
     # Add support for analytics if the user hasn't opted out.
     analytics.add() if store.get 'analytics'
-    tasks = []
-    # It's nice knowing what version is running.
-    tasks.push (callback) =>
-      $.getJSON utils.url('manifest.json'), (data) =>
-        @version = data.version
-        do callback
-    # Load and store the configuration data.
-    tasks.push (callback) =>
-      $.getJSON utils.url('configuration.json'), (data) =>
-        @config = data
-        do buildConfig
-        do callback
-    # Begin initialization.
-    tasks.push (callback) =>
+    $.getJSON(utils.url 'manifest.json')
+    .then (data) =>
+      # It's nice knowing what version is running.
+      @version = data.version
+    .then $.getJSON(utils.url 'configuration.json')
+    .done (data) =>
+      # Load and store the configuration data.
+      @config = data
+      do buildConfig
+      # Begin initialization.
       store.init
         frequency:     @config.frequencies[1].value
         lastRead:      $.now()
@@ -590,9 +586,6 @@ ext = window.ext = new class Extension extends utils.Class
         notifications.enabled  ?= yes
       utils.onMessage 'extension', no, onMessage
       do initOrders
-      do callback
-    async.series tasks, (err) ->
-      throw err if err
       analytics.track 'Installs', 'New', @version, Number isProductionBuild if isNewInstall
       # Execute content scripts now that we know the version.
       do executeScriptsInExistingWindows

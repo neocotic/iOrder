@@ -709,29 +709,18 @@
     Extension.prototype.version = '';
 
     Extension.prototype.init = function() {
-      var tasks,
-        _this = this;
+      var _this = this;
 
       log.trace();
       log.info('Initializing extension controller');
       if (store.get('analytics')) {
         analytics.add();
       }
-      tasks = [];
-      tasks.push(function(callback) {
-        return $.getJSON(utils.url('manifest.json'), function(data) {
-          _this.version = data.version;
-          return callback();
-        });
-      });
-      tasks.push(function(callback) {
-        return $.getJSON(utils.url('configuration.json'), function(data) {
-          _this.config = data;
-          buildConfig();
-          return callback();
-        });
-      });
-      tasks.push(function(callback) {
+      return $.getJSON(utils.url('manifest.json')).then(function(data) {
+        return _this.version = data.version;
+      }).then($.getJSON(utils.url('configuration.json')).done(function(data) {
+        _this.config = data;
+        buildConfig();
         store.init({
           frequency: _this.config.frequencies[1].value,
           lastRead: $.now(),
@@ -753,17 +742,11 @@
         });
         utils.onMessage('extension', false, onMessage);
         initOrders();
-        return callback();
-      });
-      return async.series(tasks, function(err) {
-        if (err) {
-          throw err;
-        }
         if (isNewInstall) {
-          analytics.track('Installs', 'New', this.version, Number(isProductionBuild));
+          analytics.track('Installs', 'New', _this.version, Number(isProductionBuild));
         }
         return executeScriptsInExistingWindows();
-      });
+      }));
     };
 
     Extension.prototype.getOrderUrl = function(order) {

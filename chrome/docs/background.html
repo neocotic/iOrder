@@ -1979,7 +1979,8 @@ update manager.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    analytics.add() <span class="keyword">if</span> store.get <span class="string">'analytics'</span>
-    tasks = []</pre></div></div>
+    $.getJSON(utils.url <span class="string">'manifest.json'</span>)
+    .<span class="keyword">then</span> (data) =&gt;</pre></div></div>
             
         </li>
         
@@ -1994,10 +1995,9 @@ update manager.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    tasks.push (callback) =&gt;
-      $.getJSON utils.url(<span class="string">'manifest.json'</span>), (data) =&gt;
-        <span class="property">@version</span> = data.version
-        <span class="keyword">do</span> callback</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="property">@version</span> = data.version
+    .<span class="keyword">then</span> $.getJSON(utils.url <span class="string">'configuration.json'</span>)
+    .done (data) =&gt;</pre></div></div>
             
         </li>
         
@@ -2012,11 +2012,8 @@ update manager.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    tasks.push (callback) =&gt;
-      $.getJSON utils.url(<span class="string">'configuration.json'</span>), (data) =&gt;
-        <span class="property">@config</span> = data
-        <span class="keyword">do</span> buildConfig
-        <span class="keyword">do</span> callback</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      <span class="property">@config</span> = data
+      <span class="keyword">do</span> buildConfig</pre></div></div>
             
         </li>
         
@@ -2031,8 +2028,7 @@ update manager.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    tasks.push (callback) =&gt;
-      store.init
+            <div class="content"><div class='highlight'><pre>      store.init
         frequency:     <span class="property">@config</span>.frequencies[<span class="number">1</span>].value
         lastRead:      $.now()
         lastUpdated:   $.now()
@@ -2045,9 +2041,6 @@ update manager.</p>
         notifications.enabled  ?= <span class="literal">yes</span>
       utils.onMessage <span class="string">'extension'</span>, <span class="literal">no</span>, onMessage
       <span class="keyword">do</span> initOrders
-      <span class="keyword">do</span> callback
-    async.series tasks, (err) -&gt;
-      <span class="keyword">throw</span> err <span class="keyword">if</span> err
       analytics.track <span class="string">'Installs'</span>, <span class="string">'New'</span>, <span class="property">@version</span>, Number isProductionBuild <span class="keyword">if</span> isNewInstall</pre></div></div>
             
         </li>
