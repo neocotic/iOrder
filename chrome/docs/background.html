@@ -1203,7 +1203,8 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
             
             <div class="content"><div class='highlight'><pre><span class="function"><span class="title">updateOrder</span></span> = (order, callback) -&gt;
   log.trace()
-  $.get(ext.getOrderUrl(order), (data) -&gt;</pre></div></div>
+  $.get(ext.getOrderUrl order)
+  .done (data) -&gt;</pre></div></div>
             
         </li>
         
@@ -1333,7 +1334,7 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
             </div>
             
             <div class="content"><div class='highlight'><pre>    order.error = <span class="string">''</span>
-  ).error( -&gt;</pre></div></div>
+  .fail -&gt;</pre></div></div>
             
         </li>
         
@@ -1349,7 +1350,7 @@ to update the order&#39;s properties.<br>If an <em>error</em> occurs during the 
             </div>
             
             <div class="content"><div class='highlight'><pre>    order.error = <span class="string">'update_page_not_found_error'</span>
-  ).complete -&gt;</pre></div></div>
+  .always -&gt;</pre></div></div>
             
         </li>
         

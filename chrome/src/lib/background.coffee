@@ -386,7 +386,8 @@ setBadge = (str = '') ->
 # If an *error* occurs during the update process assign a short description to `order.error`.
 updateOrder = (order, callback) ->
   log.trace()
-  $.get(ext.getOrderUrl(order), (data) ->
+  $.get(ext.getOrderUrl order)
+  .done (data) ->
     # Probably won't happen; more of a sanity check.
     return order.error = 'update_invalid_page_error' unless data
     # Extract the relevant elements wrapped in jQuery goodness.
@@ -412,10 +413,10 @@ updateOrder = (order, callback) ->
     order.trackingUrl = trackingUrl if trackingUrl
     # Clear any pre-existing errors.
     order.error = ''
-  ).error( ->
+  .fail ->
     # Something went wrong.
     order.error = 'update_page_not_found_error'
-  ).complete ->
+  .always ->
     # Done! Now let's tell the boss.
     callback?.apply updateManager, [order]
 

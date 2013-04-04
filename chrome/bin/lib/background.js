@@ -553,7 +553,7 @@
 
   updateOrder = function(order, callback) {
     log.trace();
-    return $.get(ext.getOrderUrl(order), function(data) {
+    return $.get(ext.getOrderUrl(order)).done(function(data) {
       var heading, status, trackingUrl;
 
       if (!data) {
@@ -578,9 +578,9 @@
         order.trackingUrl = trackingUrl;
       }
       return order.error = '';
-    }).error(function() {
+    }).fail(function() {
       return order.error = 'update_page_not_found_error';
-    }).complete(function() {
+    }).always(function() {
       return callback != null ? callback.apply(updateManager, [order]) : void 0;
     });
   };
