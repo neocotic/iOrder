@@ -182,6 +182,9 @@
       title: i18n.get('opt_order_title')
     }))));
     row.append($('<td/>').append($('<span/>', {
+      text: order.email
+    })));
+    row.append($('<td/>').append($('<span/>', {
       text: order.code
     })));
     row.append($('<td/>').append($('<span/>', {
@@ -518,11 +521,13 @@
     return R_VALID_KEY.test(key);
   };
 
-  isNumberAvailable = function(number) {
+  isNumberAvailable = function(order) {
+    var key, number;
+
     log.trace();
-    log.debug("Validating order number '" + number + "'");
+    key = order.key, number = order.number;
     return !ext.queryOrder(function(order) {
-      return order.number === number;
+      return order.number === number && order.key !== key;
     });
   };
 
@@ -534,16 +539,17 @@
     errors = [];
     log.debug('Validating the following order...', order);
     if (!order.label) {
-      errors.push(new ValidationError('order_label', 'opt_order_label_invalid'));
+      errors.push(new ValidationError('order_label', 'opt_field_required_error'));
     }
     if (!order.number) {
-      errors.push(new ValidationError('order_number', 'opt_order_number_invalid'));
+      errors.push(new ValidationError('order_number', 'opt_field_required_error'));
     }
-    if (!isNumberAvailable(order.number)) {
-      errors.push(new ValidationError('order_number', 'opt_order_number_unavailable'));
+    if (!isNumberAvailable(order)) {
+      errors.push(new ValidationError('order_number', 'opt_field_unavailable_error'));
     }
-    if (!order.code) {
-      errors.push(new ValidationError('order_code', 'opt_order_code_invalid'));
+    if (!(order.code || order.email)) {
+      errors.push(new ValidationError('order_code', 'opt_field_required_error'));
+      errors.push(new ValidationError('order_email', 'opt_field_required_error'));
     }
     log.debug('Following validation errors were found...', errors);
     return errors;
@@ -780,6 +786,7 @@
     log.trace();
     order = {
       code: $('#order_code').val().trim(),
+      email: $('#order_email').val().trim(),
       label: $('#order_label').val().trim(),
       number: $('#order_number').val().trim(),
       error: (_ref = activeOrder.error) != null ? _ref : '',
@@ -955,6 +962,7 @@
     }
     $('#order_wizard .modal-header h3').html(activeOrder.key != null ? i18n.get('opt_order_modify_title', activeOrder.label) : i18n.get('opt_order_new_header'));
     $('#order_code').val(activeOrder.code || '');
+    $('#order_email').val(activeOrder.email || '');
     $('#order_label').val(activeOrder.label || '');
     $('#order_number').val(activeOrder.number || '');
     return $('#order_delete_btn').each(function() {
@@ -991,7 +999,7 @@
         return _results;
       })()).join('|')), "i");
       searchResults = ext.queryOrders(function(order) {
-        return expression.test("" + order.code + " " + order.label + " " + order.number);
+        return expression.test("" + order.code + " " + order.email + " " + order.label + " " + order.number);
       });
     } else {
       searchResults = null;

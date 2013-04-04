@@ -132,6 +132,7 @@
                         <th><input type="checkbox" i18n-values="title:opt_select_all_box"></th>
                         <th i18n-content="opt_order_label_label"></th>
                         <th i18n-content="opt_order_number_label"></th>
+                        <th i18n-content="opt_order_email_label"></th>
                         <th i18n-content="opt_order_code_label"></th>
                         <th i18n-content="opt_order_status_label"></th>
                         <th i18n-content="opt_order_actions_label"></th>
@@ -172,9 +173,17 @@
                     </div>
                   </div>
                   <div class="row control-group">
+                    <label class="span1 control-label" for="order_email" i18n-content="opt_order_email_label"></label>
+                    <div class="span3 controls">
+                      <input id="order_email" class="span3" type="email" maxlength="64">
+                      <p class="help-block" i18n-content="opt_order_email_sub_text"></p>
+                    </div>
+                  </div>
+                  <div class="row control-group">
                     <label class="span1 control-label" for="order_code" i18n-content="opt_order_code_label"></label>
                     <div class="span3 controls">
                       <input id="order_code" class="span3" type="text" maxlength="32">
+                      <p class="help-block" i18n-content="opt_order_code_sub_text"></p>
                     </div>
                   </div>
                 </div>

@@ -129,7 +129,6 @@ buildPopup = ->
           $ '<strong/>', text: order.label
           '<br />'
           $ '<a/>',
-            'data-order-code':   order.code
             'data-order-number': order.number
             href:                '#'
             text:                order.number
@@ -147,7 +146,6 @@ buildPopup = ->
     # Found the track link so I'll share it with the user. I'm good like that.
     if order.trackingUrl
       tbody.find('tr:last-child').append $('<td/>').append $ '<a/>',
-          'data-order-code':   order.code
           'data-order-number': order.number
           href:                '#'
           text:                i18n.get 'pop_track_text'
@@ -261,6 +259,7 @@ initOrder = (order) ->
   log.trace()
   order.error       ?= ''
   order.code        ?= ''
+  order.email       ?= ''
   order.label       ?= ''
   order.number      ?= ''
   order.trackingUrl ?= ''
@@ -333,8 +332,7 @@ onMessage = (message, sender, sendResponse) ->
   url   = ''
   # Attempt to return the order whose details match the specified criteria.
   getOrder = (data) ->
-    {code, number} = data
-    ext.queryOrder (order) -> order.number is number and order.code is code
+    ext.queryOrder (order) -> order.number is data.number
   # Check what needs to be done... and then do it.
   switch message.type
     when 'clear' then do markRead
@@ -592,11 +590,11 @@ ext = window.ext = new class Extension extends utils.Class
       # Execute content scripts now that we know the version.
       do executeScriptsInExistingWindows
 
-  # Return the URL of the page on the Apple store for the specified order.
+  # Return the URL of the page on the Apple store for the specified `order`.
   getOrderUrl: (order) ->
     log.trace()
     encode = encodeURIComponent
-    "#{ext.config.apple.url.detail}#{encode order.number}/#{encode order.code}"
+    "#{ext.config.apple.url.detail}#{encode order.number}/#{encode order.email or order.code}"
 
   # Attempt to derive the status text to be displayed for the order.  
   # The status text will either be that of the latest update or a single whitespace character if no

@@ -32,7 +32,6 @@
     }
     log.trace();
     if (element) {
-      data.code = element.getAttribute('data-order-code');
       data.number = element.getAttribute('data-order-number');
     }
     utils.sendMessage('extension', {

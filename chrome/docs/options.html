@@ -510,6 +510,7 @@ triggered, modifies the underlying <code>option</code> with the value returned b
     target: <span class="string">'_blank'</span>
     text:   order.number
     title:  i18n.get <span class="string">'opt_order_title'</span>
+  row.append $(<span class="string">'&lt;td/&gt;'</span>).append $ <span class="string">'&lt;span/&gt;'</span>, text: order.email
   row.append $(<span class="string">'&lt;td/&gt;'</span>).append $ <span class="string">'&lt;span/&gt;'</span>, text: order.code
   row.append $(<span class="string">'&lt;td/&gt;'</span>).append $ <span class="string">'&lt;span/&gt;'</span>, text: ext.getStatusText order
   row.append $(<span class="string">'&lt;td/&gt;'</span>).append <span class="keyword">if</span> order.trackingUrl
@@ -1156,14 +1157,14 @@ associated with specific fields.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
-              <p>Determine whether or not an order already exists with the specified <code>number</code>.</p>
+              <p>Determine whether an order number already exists.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">isNumberAvailable</span></span> = (number) -&gt;
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">isNumberAvailable</span></span> = (order) -&gt;
   log.trace()
-  log.debug <span class="string">"Validating order number '<span class="subst">#{number}</span>'"</span>
-  <span class="keyword">not</span> ext.queryOrder (order) -&gt; order.number <span class="keyword">is</span> number</pre></div></div>
+  {key, number} = order
+  <span class="keyword">not</span> ext.queryOrder (order) -&gt; order.number <span class="keyword">is</span> number <span class="keyword">and</span> order.key <span class="keyword">isnt</span> key</pre></div></div>
             
         </li>
         
@@ -1198,7 +1199,7 @@ associated with specific fields.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="keyword">unless</span> order.label
-    errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_label'</span>, <span class="string">'opt_order_label_invalid'</span></pre></div></div>
+    errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_label'</span>, <span class="string">'opt_field_required_error'</span></pre></div></div>
             
         </li>
         
@@ -1214,7 +1215,7 @@ associated with specific fields.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="keyword">unless</span> order.number
-    errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_number'</span>, <span class="string">'opt_order_number_invalid'</span></pre></div></div>
+    errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_number'</span>, <span class="string">'opt_field_required_error'</span></pre></div></div>
             
         </li>
         
@@ -1229,8 +1230,8 @@ associated with specific fields.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">unless</span> isNumberAvailable order.number
-    errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_number'</span>, <span class="string">'opt_order_number_unavailable'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">unless</span> isNumberAvailable order
+    errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_number'</span>, <span class="string">'opt_field_unavailable_error'</span></pre></div></div>
             
         </li>
         
@@ -1241,12 +1242,13 @@ associated with specific fields.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
-              <p>Zip/post code is missing but is required.</p>
+              <p>Post/zip code and email are missing but at least one is required.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="keyword">unless</span> order.code
-    errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_code'</span>, <span class="string">'opt_order_code_invalid'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">unless</span> order.code <span class="keyword">or</span> order.email
+    errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_code'</span>,  <span class="string">'opt_field_required_error'</span>
+    errors.push <span class="keyword">new</span> ValidationError <span class="string">'order_email'</span>, <span class="string">'opt_field_required_error'</span></pre></div></div>
             
         </li>
         
@@ -1647,6 +1649,7 @@ associated with specific fields.</p>
   log.trace()
   order =
     code:        $(<span class="string">'#order_code'</span>).val().trim()
+    email:       $(<span class="string">'#order_email'</span>).val().trim()
     label:       $(<span class="string">'#order_label'</span>).val().trim()
     number:      $(<span class="string">'#order_number'</span>).val().trim()
     error:       activeOrder.error ? <span class="string">''</span>
@@ -2007,6 +2010,7 @@ associated with specific fields.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>  $(<span class="string">'#order_code'</span>).val activeOrder.code <span class="keyword">or</span> <span class="string">''</span>
+  $(<span class="string">'#order_email'</span>).val activeOrder.email <span class="keyword">or</span> <span class="string">''</span>
   $(<span class="string">'#order_label'</span>).val activeOrder.label <span class="keyword">or</span> <span class="string">''</span>
   $(<span class="string">'#order_number'</span>).val activeOrder.number <span class="keyword">or</span> <span class="string">''</span>
   $(<span class="string">'#order_delete_btn'</span>).each -&gt;
@@ -2034,7 +2038,7 @@ associated with specific fields.</p>
       <span class="comment">#{(keyword for keyword in keywords when keyword).join '|'}</span>
     ///</span>i
     searchResults = ext.queryOrders (order) -&gt;
-      expression.test <span class="string">"<span class="subst">#{order.code}</span> <span class="subst">#{order.label}</span> <span class="subst">#{order.number}</span>"</span>
+      expression.test <span class="string">"<span class="subst">#{order.code}</span> <span class="subst">#{order.email}</span> <span class="subst">#{order.label}</span> <span class="subst">#{order.number}</span>"</span>
   <span class="keyword">else</span>
     searchResults = <span class="literal">null</span>
   loadOrderRows searchResults ? ext.orders
