@@ -129,6 +129,14 @@
     "message": "feedback",
     "description": "Text of Feedback button on the Options page."
   },
+  "opt_field_required_error": {
+    "message": "Required",
+    "description": "Validation error message displayed when a required field is missing."
+  },
+  "opt_field_unavailable_error": {
+    "message": "Unavailable",
+    "description": "Validation error message displayed when a unique field is already taken."
+  },
   "opt_frequency_label": {
     "message": "Frequency",
     "description": "Label for the Frequency field on the General tab of the Options page under the Updates section."
@@ -253,6 +261,22 @@
     "message": "Warning",
     "description": "Text for the Warning option for the Level field in the Developer Tools dialog on the Options page under the Logging section."
   },
+  "opt_message_error_header": {
+    "message": "Oh snap!",
+    "description": "Header for standard error alert message."
+  },
+  "opt_message_header": {
+    "message": "Heads up!",
+    "description": "Header for standard informative alert message."
+  },
+  "opt_message_success_header": {
+    "message": "Well done!",
+    "description": "Header for standard success alert message."
+  },
+  "opt_message_warning_header": {
+    "message": "Warning!",
+    "description": "Header for standard warning alert message."
+  },
   "opt_misc_header": {
     "message": "Miscellaneous",
     "description": "Header for the Miscellaneous section on the General tab of the Options page."
@@ -330,8 +354,40 @@
     "description": "Label for the Actions field on the Orders tab of the Options page."
   },
   "opt_order_code_label": {
-    "message": "Postal/Zip Code",
-    "description": "Label for the Postal/Zip Code field on the Orders tab of the Options page."
+    "message": "Post/Zip Code",
+    "description": "Label for the Post/Zip Code field on the Orders tab of the Options page."
+  },
+  "opt_order_code_sub_text": {
+    "message": "Leave blank if you've provided an $O_EMPH$Email$C_EMPH$",
+    "description": "Help text for the Post/Zip Code field on the Orders tab of the Options page.",
+    "placeholders": {
+      "c_emph": {
+        "content": "</em>",
+        "example": "</em>"
+      },
+      "o_emph": {
+        "content": "<em>",
+        "example": "<em>"
+      }
+    }
+  },
+  "opt_order_email_label": {
+    "message": "Email",
+    "description": "Label for the Email field on the Orders tab of the Options page."
+  },
+  "opt_order_email_sub_text": {
+    "message": "Leave blank if you've provided an $O_EMPH$Post/Zip Code$C_EMPH$",
+    "description": "Help text for the Email field on the Orders tab of the Options page.",
+    "placeholders": {
+      "c_emph": {
+        "content": "</em>",
+        "example": "</em>"
+      },
+      "o_emph": {
+        "content": "<em>",
+        "example": "<em>"
+      }
+    }
   },
   "opt_order_header": {
     "message": "Orders",
