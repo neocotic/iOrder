@@ -649,6 +649,7 @@
       log.info('Running update manager');
       this.progress = 0;
       this.updating = true;
+      notify();
       updatePopup();
       updated = function(order) {
         var message, _i, _len, _ref;

@@ -488,6 +488,7 @@ updateManager =
     @progress = 0
     @updating = yes
     # Update the UI to show that I'm busy.
+    do notify
     do updatePopup
 
     # Called when the AJAX request has been parsed and read for each order.  
