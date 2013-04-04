@@ -125,6 +125,10 @@
     "message": "Share the love!",
     "description": "Hover text for the Donate button."
   },
+  "opt_feedback_button": {
+    "message": "Feedback",
+    "description": "Text of Feedback button on the Options page."
+  },
   "opt_frequency_label": {
     "message": "Frequency",
     "description": "Label for the Frequency field on the General tab of the Options page under the Updates section."

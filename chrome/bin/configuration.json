@@ -29,6 +29,9 @@
           , 100
         ]
       , "payPal":    "2KJMS2YHQVMWU"
-      , "userVoice": "GzzuEbfY3eITOLikw7YvTQ"
+      , "userVoice": {
+            "forum": 163706
+          , "id":    "GzzuEbfY3eITOLikw7YvTQ"
+        }
     }
 }

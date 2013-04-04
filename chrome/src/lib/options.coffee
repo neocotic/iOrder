@@ -611,6 +611,8 @@ feedback = ->
     # Temporary workaround for Content Security Policy issues with UserVoice's use of inline
     # JavaScript.  
     # This should be removed if/when it's no longer required.
+    # TODO: Remove completely if no longer required
+    ###
     $document = $ document
     $document.on 'hover', '#uvw-dialog-close[onclick]', ->
       $(this).removeAttr 'onclick'
@@ -621,13 +623,30 @@ feedback = ->
     $document.on 'hover', '#uvTabLabel[href^="javascript:"]', ->
       $(this).removeAttr 'href'
       $document.off 'hover', '#uvTabLabel[href^="javascript:"]'
+    ###
     # Continue with normal process of loading Widget.
-    window.uvOptions = {}
     uv       = document.createElement 'script'
     uv.async = 'async'
-    uv.src   = "https://widget.uservoice.com/#{ext.config.options.userVoice}.js"
+    uv.src   = "https://widget.uservoice.com/#{ext.config.options.userVoice.id}.js"
     script = document.getElementsByTagName('script')[0]
     script.parentNode.insertBefore uv, script
+    # Configure the widget as it's loading.
+    UserVoice = window.UserVoice or= []
+    UserVoice.push [
+      'showTab'
+      'classic_widget'
+      {
+        mode:          'full'
+        primary_color: '#333'
+        link_color:    '#08c'
+        default_mode:  'feedback'
+        forum_id:      ext.config.options.userVoice.forum
+        tab_label:     i18n.get 'opt_feedback_button'
+        tab_color:     '#333'
+        tab_position:  'middle-left'
+        tab_inverted:  yes
+      }
+    ]
     feedbackAdded = yes
 
 # Retrieve all currently selected orders.
