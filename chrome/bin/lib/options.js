@@ -796,19 +796,6 @@
 
     log.trace();
     if (!feedbackAdded) {
-      /*
-      $document = $ document
-      $document.on 'hover', '#uvw-dialog-close[onclick]', ->
-        $(this).removeAttr 'onclick'
-        $document.off 'hover', '#uvw-dialog-close[onclick]'
-      $document.on 'click', '#uvw-dialog-close', (e) ->
-        UserVoice.hidePopupWidget()
-        e.preventDefault()
-      $document.on 'hover', '#uvTabLabel[href^="javascript:"]', ->
-        $(this).removeAttr 'href'
-        $document.off 'hover', '#uvTabLabel[href^="javascript:"]'
-      */
-
       uv = document.createElement('script');
       uv.async = 'async';
       uv.src = "https://widget.uservoice.com/" + ext.config.options.userVoice.id + ".js";

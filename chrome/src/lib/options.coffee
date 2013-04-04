@@ -608,22 +608,6 @@ deriveOrder = ->
 feedback = ->
   log.trace()
   unless feedbackAdded
-    # Temporary workaround for Content Security Policy issues with UserVoice's use of inline
-    # JavaScript.  
-    # This should be removed if/when it's no longer required.
-    # TODO: Remove completely if no longer required
-    ###
-    $document = $ document
-    $document.on 'hover', '#uvw-dialog-close[onclick]', ->
-      $(this).removeAttr 'onclick'
-      $document.off 'hover', '#uvw-dialog-close[onclick]'
-    $document.on 'click', '#uvw-dialog-close', (e) ->
-      UserVoice.hidePopupWidget()
-      e.preventDefault()
-    $document.on 'hover', '#uvTabLabel[href^="javascript:"]', ->
-      $(this).removeAttr 'href'
-      $document.off 'hover', '#uvTabLabel[href^="javascript:"]'
-    ###
     # Continue with normal process of loading Widget.
     uv       = document.createElement 'script'
     uv.async = 'async'

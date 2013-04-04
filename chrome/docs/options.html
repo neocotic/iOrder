@@ -1682,35 +1682,7 @@ associated with specific fields.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-83">&#182;</a>
               </div>
-              <p>Temporary workaround for Content Security Policy issues with UserVoice&#39;s use of inline
-JavaScript.<br>This should be removed if/when it&#39;s no longer required.
-TODO: Remove completely if no longer required</p>
-<h1>#</h1>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    $document = $ document
-    $document.<span class="literal">on</span> <span class="string">'hover'</span>, <span class="string">'#uvw-dialog-close[onclick]'</span>, -&gt;
-      $(<span class="keyword">this</span>).removeAttr <span class="string">'onclick'</span>
-      $document.<span class="literal">off</span> <span class="string">'hover'</span>, <span class="string">'#uvw-dialog-close[onclick]'</span>
-    $document.<span class="literal">on</span> <span class="string">'click'</span>, <span class="string">'#uvw-dialog-close'</span>, (e) -&gt;
-      UserVoice.hidePopupWidget()
-      e.preventDefault()
-    $document.<span class="literal">on</span> <span class="string">'hover'</span>, <span class="string">'#uvTabLabel[href^="javascript:"]'</span>, -&gt;
-      $(<span class="keyword">this</span>).removeAttr <span class="string">'href'</span>
-      $document.<span class="literal">off</span> <span class="string">'hover'</span>, <span class="string">'#uvTabLabel[href^="javascript:"]'</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-84">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h1">
-                <a class="pilcrow" href="#section-84">&#182;</a>
-              </div>
-              <h1>#</h1>
-<p>Continue with normal process of loading Widget.</p>
+              <p>Continue with normal process of loading Widget.</p>
 
             </div>
             
@@ -1723,11 +1695,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-85">
+        <li id="section-84">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
+                <a class="pilcrow" href="#section-84">&#182;</a>
               </div>
               <p>Configure the widget as it&#39;s loading.</p>
 
@@ -1754,11 +1726,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-86">
+        <li id="section-85">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-85">&#182;</a>
               </div>
               <p>Retrieve all currently selected orders.</p>
 
@@ -1773,11 +1745,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-87">
+        <li id="section-86">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-87">&#182;</a>
+                <a class="pilcrow" href="#section-86">&#182;</a>
               </div>
               <p>Open the order wizard after optionally setting the current context.</p>
 
@@ -1790,11 +1762,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-88">
+        <li id="section-87">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-88">&#182;</a>
+                <a class="pilcrow" href="#section-87">&#182;</a>
               </div>
               <p>Update the pagination UI for the specified <code>orders</code>.</p>
 
@@ -1811,11 +1783,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-89">
+        <li id="section-88">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-89">&#182;</a>
+                <a class="pilcrow" href="#section-88">&#182;</a>
               </div>
               <p>Refresh the pagination link states based on the new <code>page</code>.</p>
 
@@ -1826,11 +1798,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-90">
+        <li id="section-89">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-90">&#182;</a>
+                <a class="pilcrow" href="#section-89">&#182;</a>
               </div>
               <p>Select and display the desired orders subset.</p>
 
@@ -1843,11 +1815,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-91">
+        <li id="section-90">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-91">&#182;</a>
+                <a class="pilcrow" href="#section-90">&#182;</a>
               </div>
               <p>Ensure the <em>previous</em> link is only enabled when a previous page exists.</p>
 
@@ -1861,11 +1833,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-92">
+        <li id="section-91">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-92">&#182;</a>
+                <a class="pilcrow" href="#section-91">&#182;</a>
               </div>
               <p>Ensure only the active page is highlighted.</p>
 
@@ -1879,11 +1851,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-93">
+        <li id="section-92">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-93">&#182;</a>
+                <a class="pilcrow" href="#section-92">&#182;</a>
               </div>
               <p>Ensure the <em>next</em> link is only enabled when a next page exists.</p>
 
@@ -1897,11 +1869,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-94">
+        <li id="section-93">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-94">&#182;</a>
+                <a class="pilcrow" href="#section-93">&#182;</a>
               </div>
               <p>Create and insert pagination links.</p>
 
@@ -1918,11 +1890,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-95">
+        <li id="section-94">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-95">&#182;</a>
+                <a class="pilcrow" href="#section-94">&#182;</a>
               </div>
               <p>Bind event handlers to manage navigating pages.</p>
 
@@ -1945,11 +1917,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-96">
+        <li id="section-95">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-96">&#182;</a>
+                <a class="pilcrow" href="#section-95">&#182;</a>
               </div>
               <p>Hide the pagination and remove all links as the results fit on a single page.</p>
 
@@ -1960,11 +1932,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-97">
+        <li id="section-96">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-97">&#182;</a>
+                <a class="pilcrow" href="#section-96">&#182;</a>
               </div>
               <p>Update the state of the reset button depending on the current search input.</p>
 
@@ -1984,11 +1956,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-98">
+        <li id="section-97">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-98">&#182;</a>
+                <a class="pilcrow" href="#section-97">&#182;</a>
               </div>
               <p>Update the state of certain buttons depending on whether any select boxes have been checked.</p>
 
@@ -2002,11 +1974,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-99">
+        <li id="section-98">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-99">&#182;</a>
+                <a class="pilcrow" href="#section-98">&#182;</a>
               </div>
               <p>Reset the wizard field values based on the current context.</p>
 
@@ -2023,11 +1995,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-100">
+        <li id="section-99">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-100">&#182;</a>
+                <a class="pilcrow" href="#section-99">&#182;</a>
               </div>
               <p>Assign values to their respective fields.</p>
 
@@ -2043,11 +2015,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-101">
+        <li id="section-100">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-101">&#182;</a>
+                <a class="pilcrow" href="#section-100">&#182;</a>
               </div>
               <p>Search the orders for the specified <code>query</code> and filter those displayed.</p>
 
@@ -2071,11 +2043,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-102">
+        <li id="section-101">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-102">&#182;</a>
+                <a class="pilcrow" href="#section-101">&#182;</a>
               </div>
               <p>Set the current context of the order wizard.</p>
 
@@ -2090,11 +2062,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-103">
+        <li id="section-102">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-103">&#182;</a>
+                <a class="pilcrow" href="#section-102">&#182;</a>
               </div>
               <p>Convenient shorthand for safely trimming a string to lower case.</p>
 
@@ -2106,11 +2078,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-104">
+        <li id="section-103">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-104">&#182;</a>
+                <a class="pilcrow" href="#section-103">&#182;</a>
               </div>
               <p>Convenient shorthand for safely trimming a string to upper case.</p>
 
@@ -2122,11 +2094,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-105">
+        <li id="section-104">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-105">&#182;</a>
+                <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
               <h2>Options page setup</h2>
 
@@ -2135,11 +2107,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-106">
+        <li id="section-105">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-106">&#182;</a>
+                <a class="pilcrow" href="#section-105">&#182;</a>
               </div>
               
             </div>
@@ -2149,11 +2121,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-107">
+        <li id="section-106">
             <div class="annotation">
               
               <div class="pilwrap for-h2">
-                <a class="pilcrow" href="#section-107">&#182;</a>
+                <a class="pilcrow" href="#section-106">&#182;</a>
               </div>
               <h2>Public functions</h2>
 
@@ -2162,11 +2134,11 @@ TODO: Remove completely if no longer required</p>
         </li>
         
         
-        <li id="section-108">
+        <li id="section-107">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-108">&#182;</a>
+                <a class="pilcrow" href="#section-107">&#182;</a>
               </div>
               <p>Initialize the options page.<br>This will involve inserting and configuring the UI elements as well as loading the current
 settings.</p>
@@ -2180,11 +2152,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-109">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-109">&#182;</a>
+                <a class="pilcrow" href="#section-108">&#182;</a>
               </div>
               <p>Add support for analytics if the user hasn&#39;t opted out.</p>
 
@@ -2195,11 +2167,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-110">
+        <li id="section-109">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-110">&#182;</a>
+                <a class="pilcrow" href="#section-109">&#182;</a>
               </div>
               <p>Add the user feedback feature to the page.</p>
 
@@ -2210,11 +2182,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-111">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-111">&#182;</a>
+                <a class="pilcrow" href="#section-110">&#182;</a>
               </div>
               <p>Begin initialization.</p>
 
@@ -2226,11 +2198,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-112">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-112">&#182;</a>
+                <a class="pilcrow" href="#section-111">&#182;</a>
               </div>
               <p>Bind tab selection event to all tabs.</p>
 
@@ -2258,11 +2230,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-113">
+        <li id="section-112">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-113">&#182;</a>
+                <a class="pilcrow" href="#section-112">&#182;</a>
               </div>
               <p>Reflect the persisted tab.</p>
 
@@ -2276,11 +2248,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-114">
+        <li id="section-113">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-114">&#182;</a>
+                <a class="pilcrow" href="#section-113">&#182;</a>
               </div>
               <p>Bind Developer Tools wizard events to their corresponding elements.</p>
 
@@ -2294,11 +2266,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-115">
+        <li id="section-114">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-115">&#182;</a>
+                <a class="pilcrow" href="#section-114">&#182;</a>
               </div>
               <p>Ensure that form submissions don&#39;t reload the page.</p>
 
@@ -2309,11 +2281,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-116">
+        <li id="section-115">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-116">&#182;</a>
+                <a class="pilcrow" href="#section-115">&#182;</a>
               </div>
               <p>Bind analytical tracking events to key footer buttons and links.</p>
 
@@ -2325,11 +2297,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-117">
+        <li id="section-116">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-117">&#182;</a>
+                <a class="pilcrow" href="#section-116">&#182;</a>
               </div>
               <p>Setup and configure the donation button in the footer.</p>
 
@@ -2342,11 +2314,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-118">
+        <li id="section-117">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-118">&#182;</a>
+                <a class="pilcrow" href="#section-117">&#182;</a>
               </div>
               <p>Load the current option values.</p>
 
@@ -2357,11 +2329,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-119">
+        <li id="section-118">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-119">&#182;</a>
+                <a class="pilcrow" href="#section-118">&#182;</a>
               </div>
               <p>Initialize all popovers, tooltips and <em>go-to</em> links.</p>
 
@@ -2393,11 +2365,11 @@ settings.</p>
         </li>
         
         
-        <li id="section-120">
+        <li id="section-119">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-120">&#182;</a>
+                <a class="pilcrow" href="#section-119">&#182;</a>
               </div>
               <p>Ensure that the persisted tab is currently visible.<br>This should be called if the user clicks the Options link in the popup while and options page
 is already open.</p>
@@ -2410,11 +2382,11 @@ is already open.</p>
         </li>
         
         
-        <li id="section-121">
+        <li id="section-120">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-121">&#182;</a>
+                <a class="pilcrow" href="#section-120">&#182;</a>
               </div>
               <p>Initialize <code>options</code> when the DOM is ready.</p>
 
