@@ -4,113 +4,101 @@
 // For all details and documentation:
 // <http://neocotic.com/iOrder>
 (function() {
-  var i18nAttributes, i18nHandlers, i18nProcess, i18nSelector, i18nSubs, key, utils,
+  var Class, Utils, timings, typeMap, utils, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice;
 
-  i18nHandlers = {
-    'i18n-content': function(element, value, subMap) {
-      var subs;
+  Class = (function() {
+    function Class() {}
 
-      subs = i18nSubs(element, value, subMap);
-      return element.innerHTML = utils.i18n(value, subs);
-    },
-    'i18n-values': function(element, value, subMap) {
-      var obj, part, parts, path, prop, propExpr, propName, subs, _i, _len, _results;
+    Class.prototype.toString = function() {
+      return this.constructor.name;
+    };
 
-      subs = i18nSubs(element, value, subMap);
-      parts = value.replace(/\s/g, '').split(';');
-      _results = [];
-      for (_i = 0, _len = parts.length; _i < _len; _i++) {
-        part = parts[_i];
-        prop = part.match(/^([^:]+):(.+)$/);
-        if (prop) {
-          propName = prop[1];
-          propExpr = prop[2];
-          if (propName.indexOf('.') === 0) {
-            path = propName.slice(1).split('.');
-            obj = element;
-            while (obj && path.length > 1) {
-              obj = obj[path.shift()];
-            }
-            if (obj) {
-              obj[path] = utils.i18n(value, subs);
-              if (path === 'innerHTML') {
-                _results.push(i18nProcess(element, subMap));
-              } else {
-                _results.push(void 0);
-              }
-            } else {
-              _results.push(void 0);
-            }
-          } else {
-            _results.push(element.setAttribute(propName, utils.i18n(propExpr, subs)));
-          }
-        } else {
-          _results.push(void 0);
-        }
+    return Class;
+
+  })();
+
+  timings = {};
+
+  typeMap = {};
+
+  ['Boolean', 'Number', 'String', 'Function', 'Array', 'Date', 'RegExp', 'Object'].forEach(function(name) {
+    return typeMap["[object " + name + "]"] = name.toLowerCase();
+  });
+
+  utils = window.utils = new (Utils = (function(_super) {
+    __extends(Utils, _super);
+
+    function Utils() {
+      _ref = Utils.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Utils.prototype.clone = function(obj, deep) {
+      var copy, key, value;
+
+      if (!this.isObject(obj)) {
+        return obj;
       }
-      return _results;
-    }
-  };
-
-  i18nAttributes = [];
-
-  for (key in i18nHandlers) {
-    i18nAttributes.push(key);
-  }
-
-  i18nSelector = "[" + (i18nAttributes.join('],[')) + "]";
-
-  i18nProcess = function(node, subMap) {
-    var attribute, element, name, _i, _len, _ref, _results;
-
-    _ref = node.querySelectorAll(i18nSelector);
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      element = _ref[_i];
-      _results.push((function() {
-        var _j, _len1, _results1;
-
-        _results1 = [];
-        for (_j = 0, _len1 = i18nAttributes.length; _j < _len1; _j++) {
-          name = i18nAttributes[_j];
-          attribute = element.getAttribute(name);
-          if (attribute != null) {
-            _results1.push(i18nHandlers[name](element, attribute, subMap));
-          } else {
-            _results1.push(void 0);
-          }
-        }
-        return _results1;
-      })());
-    }
-    return _results;
-  };
-
-  i18nSubs = function(element, value, subMap) {
-    var prop, subProp, subs;
-
-    if (subMap) {
-      for (prop in subMap) {
-        if (!(subMap.hasOwnProperty(prop) && prop === element.id)) {
-          continue;
-        }
-        for (subProp in subMap[prop]) {
-          if (subMap[prop].hasOwnProperty(subProp)) {
-            if (subProp === value) {
-              subs = subMap[prop][subProp];
-              break;
-            }
-          }
-        }
-        break;
+      if (this.isArray(obj)) {
+        return obj.slice();
       }
-    }
-    return subs;
-  };
+      copy = {};
+      for (key in obj) {
+        if (!__hasProp.call(obj, key)) continue;
+        value = obj[key];
+        copy[key] = deep ? this.clone(value, true) : value;
+      }
+      return copy;
+    };
 
-  utils = window.utils = {
-    onMessage: function() {
+    Utils.prototype.isArray = Array.isArray || function(obj) {
+      return 'array' === this.type(obj);
+    };
+
+    Utils.prototype.isObject = function(obj) {
+      return obj === Object(obj);
+    };
+
+    Utils.prototype.keyGen = function(separator, length, prefix, upperCase) {
+      var i, key, max, min, part, parts, _i, _len;
+
+      if (separator == null) {
+        separator = '.';
+      }
+      if (length == null) {
+        length = 5;
+      }
+      if (prefix == null) {
+        prefix = '';
+      }
+      if (upperCase == null) {
+        upperCase = true;
+      }
+      parts = [];
+      parts.push(new Date().getTime());
+      if (length > 0) {
+        min = this.repeat('1', '0', length === 1 ? 1 : length - 1);
+        max = this.repeat('f', 'f', length === 1 ? 1 : length - 1);
+        min = parseInt(min, 16);
+        max = parseInt(max, 16);
+        parts.push(this.random(min, max));
+      }
+      for (i = _i = 0, _len = parts.length; _i < _len; i = ++_i) {
+        part = parts[i];
+        parts[i] = part.toString(16);
+      }
+      key = prefix + parts.join(separator);
+      if (upperCase) {
+        return key.toUpperCase();
+      } else {
+        return key.toLowerCase();
+      }
+    };
+
+    Utils.prototype.onMessage = function() {
       var args, base, external, type;
 
       type = arguments[0], external = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
@@ -121,14 +109,37 @@
       if (!base && type === 'runtime') {
         base = chrome.extension;
       }
-      if (external) {
-        base = base.onMessageExternal || base.onRequestExternal;
-      } else {
-        base = base.onMessage || base.onRequest;
-      }
+      base = external ? base.onMessageExternal || base.onRequestExternal : base.onMessage || base.onRequest;
       return base.addListener.apply(base, args);
-    },
-    ready: function(context, handler) {
+    };
+
+    Utils.prototype.query = function(entities, singular, filter) {
+      var entity, _i, _j, _len, _len1, _results;
+
+      if (singular) {
+        for (_i = 0, _len = entities.length; _i < _len; _i++) {
+          entity = entities[_i];
+          if (filter(entity)) {
+            return entity;
+          }
+        }
+      } else {
+        _results = [];
+        for (_j = 0, _len1 = entities.length; _j < _len1; _j++) {
+          entity = entities[_j];
+          if (filter(entity)) {
+            _results.push(entity);
+          }
+        }
+        return _results;
+      }
+    };
+
+    Utils.prototype.random = function(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
+    Utils.prototype.ready = function(context, handler) {
       if (handler == null) {
         handler = context;
         context = window;
@@ -138,8 +149,36 @@
       } else {
         return context.document.addEventListener('DOMContentLoaded', handler);
       }
-    },
-    sendMessage: function() {
+    };
+
+    Utils.prototype.repeat = function(str, repeatStr, count) {
+      var i, _i, _j, _ref1;
+
+      if (str == null) {
+        str = '';
+      }
+      if (repeatStr == null) {
+        repeatStr = str;
+      }
+      if (count == null) {
+        count = 1;
+      }
+      if (count !== 0) {
+        if (count > 0) {
+          for (i = _i = 1; 1 <= count ? _i <= count : _i >= count; i = 1 <= count ? ++_i : --_i) {
+            str += repeatStr;
+          }
+        }
+        if (count < 0) {
+          for (i = _j = 1, _ref1 = count * -1; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 1 <= _ref1 ? ++_j : --_j) {
+            str = repeatStr + str;
+          }
+        }
+      }
+      return str;
+    };
+
+    Utils.prototype.sendMessage = function() {
       var args, base, type;
 
       type = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
@@ -151,87 +190,46 @@
         base = chrome.extension;
       }
       return (base.sendMessage || base.sendRequest).apply(base, args);
-    },
-    url: function() {
-      var _ref;
+    };
 
-      return (_ref = chrome.extension).getURL.apply(_ref, arguments);
-    },
-    exists: function(key) {
-      return localStorage.hasOwnProperty(key);
-    },
-    get: function(key) {
-      var value;
-
-      value = localStorage[key];
-      if (value != null) {
-        return JSON.parse(value);
+    Utils.prototype.time = function(key) {
+      if (timings.hasOwnProperty(key)) {
+        return new Date().getTime() - timings[key];
       } else {
-        return value;
+        return timings[key] = new Date().getTime();
       }
-    },
-    init: function(key, defaultValue) {
-      var value;
+    };
 
-      value = utils.get(key);
-      return utils.set(key, value != null ? value : defaultValue);
-    },
-    remove: function(key) {
-      var exists;
+    Utils.prototype.timeEnd = function(key) {
+      var start;
 
-      exists = utils.exists(key);
-      delete localStorage[key];
-      return exists;
-    },
-    rename: function(oldKey, newKey, defaultValue) {
-      if (utils.exists(oldKey)) {
-        utils.init(newKey, utils.get(oldKey));
-        return utils.remove(oldKey);
+      if (timings.hasOwnProperty(key)) {
+        start = timings[key];
+        delete timings[key];
+        return new Date().getTime() - start;
       } else {
-        return utils.init(newKey, defaultValue);
+        return 0;
       }
-    },
-    set: function(key, value) {
-      var oldValue;
+    };
 
-      oldValue = utils.get(key);
-      localStorage[key] = value != null ? JSON.stringify(value) : value;
-      return oldValue;
-    },
-    i18n: function() {
-      return chrome.i18n.getMessage.apply(chrome.i18n, arguments);
-    },
-    i18nAttribute: function(selector, attribute, value, subs) {
-      var element, elements, _i, _len, _results;
+    Utils.prototype.type = function(obj) {
+      if (obj != null) {
+        return typeMap[Object.prototype.toString.call(obj)] || 'object';
+      } else {
+        return String(obj);
+      }
+    };
 
-      elements = document.querySelectorAll(selector);
-      if (typeof subs === 'string') {
-        subs = [subs];
-      }
-      _results = [];
-      for (_i = 0, _len = elements.length; _i < _len; _i++) {
-        element = elements[_i];
-        _results.push(element.setAttribute(attribute, utils.i18n(value, subs)));
-      }
-      return _results;
-    },
-    i18nContent: function(selector, value, subs) {
-      var element, elements, _i, _len, _results;
+    Utils.prototype.url = function() {
+      var _ref1;
 
-      elements = document.querySelectorAll(selector);
-      if (typeof subs === 'string') {
-        subs = [subs];
-      }
-      _results = [];
-      for (_i = 0, _len = elements.length; _i < _len; _i++) {
-        element = elements[_i];
-        _results.push(element.innerHTML = utils.i18n(value, subs));
-      }
-      return _results;
-    },
-    i18nSetup: function(subMap) {
-      return i18nProcess(document, subMap);
-    }
-  };
+      return (_ref1 = chrome.extension).getURL.apply(_ref1, arguments);
+    };
+
+    return Utils;
+
+  })(Class));
+
+  utils.Class = Class;
 
 }).call(this);
