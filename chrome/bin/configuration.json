@@ -6,6 +6,9 @@
           , "preparing\\s+for\\s+shipment"
           , "shipped"
           , "complete"
+          , "shipping\\s+to\\s+store"
+          , "ready\\s+for\\s+pickup"
+          , "picked\\s+up"
         ]
       , "url":    {
             "detail": "https://store.apple.com/us/order/guest/"

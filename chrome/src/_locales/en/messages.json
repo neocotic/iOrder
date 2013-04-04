@@ -573,6 +573,18 @@
     "message": "Complete",
     "description": "Text for representing the \"Complete\" status."
   },
+  "status_5_text": {
+    "message": "Dispatched",
+    "description": "Text for representing the \"Shipping to Store\" status."
+  },
+  "status_6_text": {
+    "message": "In Store",
+    "description": "Text for representing the \"Ready for pickup\" status."
+  },
+  "status_7_text": {
+    "message": "Collected",
+    "description": "Text for representing the \"Picked Up\" status."
+  },
   "update_invalid_page_error": {
     "message": "Order page contained no data",
     "description": "Error message for when order's page is corrupt or malformed."
