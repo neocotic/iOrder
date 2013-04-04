@@ -4,23 +4,31 @@
 # For all details and documentation:  
 # <http://neocotic.com/iOrder>
 
-#### Notification page setup
+# Private variables
+# -----------------
 
-notification = window.notification =
+# Easily accessible reference to analytics, internationalization, logging, storage, and utilities.
+{analytics, i18n, log, store, utils} = chrome.extension.getBackgroundPage()
 
-  #### Public functions
+# Notification page setup
+# -----------------------
+
+notification = window.notification = new class Notification extends utils.Class
+
+  # Public functions
+  # ----------------
 
   # Initialize the notification page.
   init: ->
-    utils.i18nSetup()
-    duration = utils.get 'notificationDuration'
-    # Set a timer to close the notification after a specified period of time, if
-    # user enabled the corresponding option; otherwise it should stay open until
-    # it is closed manually by user.
-    if duration > 0
-      window.setTimeout ->
-        window.close()
-      , duration
+    log.trace()
+    log.info 'Initializing a notification'
+    analytics.track 'Frames', 'Displayed', 'Notification'
+    i18n.init()
+    # Set a timer to close the notification after a specified period of time, if the user enabled
+    # the corresponding option; otherwise it should stay open until it is closed manually by the
+    # user.
+    duration = store.get 'notifications.duration'
+    setTimeout (-> do close), duration if duration > 0
 
 # Initialize `notification` when the DOM is ready.
-utils.ready -> notification.init()
+utils.ready this, -> notification.init()

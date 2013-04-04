@@ -19,13 +19,28 @@
           <div id="jump_page">
             
               
+              <a class="source" href="analytics.html">
+                analytics.coffee
+              </a>
+            
+              
               <a class="source" href="background.html">
                 background.coffee
               </a>
             
               
+              <a class="source" href="i18n.html">
+                i18n.coffee
+              </a>
+            
+              
               <a class="source" href="install.html">
                 install.coffee
+              </a>
+            
+              
+              <a class="source" href="log.html">
+                log.coffee
               </a>
             
               
@@ -41,6 +56,11 @@
               
               <a class="source" href="popup.html">
                 popup.coffee
+              </a>
+            
+              
+              <a class="source" href="store.html">
+                store.coffee
               </a>
             
               
@@ -69,11 +89,9 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2013 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
-<h3>Notification page setup</h3>
+<h2>Private variables</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>notification = window.notification =</pre></div></div>
             
         </li>
         
@@ -81,17 +99,14 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h3>Public functions</h3>
-<p>Initialize the notification page.</p>
+              <p>Easily accessible reference to analytics, internationalization, logging, storage, and utilities.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  init: -&gt;
-    utils.i18nSetup()
-    duration = utils.get <span class="string">'notificationDuration'</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>{analytics, i18n, log, store, utils} = chrome.extension.getBackgroundPage()</pre></div></div>
             
         </li>
         
@@ -99,19 +114,12 @@
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Set a timer to close the notification after a specified period of time, if
-user enabled the corresponding option; otherwise it should stay open until
-it is closed manually by user.</p>
+              <h2>Notification page setup</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> duration &gt; <span class="number">0</span>
-      window.setTimeout -&gt;
-        window.close()
-      , duration</pre></div></div>
             
         </li>
         
@@ -122,11 +130,75 @@ it is closed manually by user.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>notification = window.notification = <span class="keyword">new</span> <span class="class"><span class="keyword">class</span> <span class="title">Notification</span> <span class="keyword">extends</span> <span class="title">utils</span>.<span class="title">Class</span></span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2>Public functions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Initialize the notification page.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  init: -&gt;
+    log.trace()
+    log.info <span class="string">'Initializing a notification'</span>
+    analytics.track <span class="string">'Frames'</span>, <span class="string">'Displayed'</span>, <span class="string">'Notification'</span>
+    i18n.init()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Set a timer to close the notification after a specified period of time, if the user enabled
+the corresponding option; otherwise it should stay open until it is closed manually by the
+user.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    duration = store.get <span class="string">'notifications.duration'</span>
+    setTimeout (-&gt; <span class="keyword">do</span> close), duration <span class="keyword">if</span> duration &gt; <span class="number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
               <p>Initialize <code>notification</code> when the DOM is ready.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>utils.ready -&gt; notification.init()</pre></div></div>
+            <div class="content"><div class='highlight'><pre>utils.ready <span class="keyword">this</span>, -&gt; notification.init()</pre></div></div>
             
         </li>
         

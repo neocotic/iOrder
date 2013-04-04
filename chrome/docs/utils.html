@@ -19,13 +19,28 @@
           <div id="jump_page">
             
               
+              <a class="source" href="analytics.html">
+                analytics.coffee
+              </a>
+            
+              
               <a class="source" href="background.html">
                 background.coffee
               </a>
             
               
+              <a class="source" href="i18n.html">
+                i18n.coffee
+              </a>
+            
+              
               <a class="source" href="install.html">
                 install.coffee
+              </a>
+            
+              
+              <a class="source" href="log.html">
+                log.coffee
               </a>
             
               
@@ -41,6 +56,11 @@
               
               <a class="source" href="popup.html">
                 popup.coffee
+              </a>
+            
+              
+              <a class="source" href="store.html">
+                store.coffee
               </a>
             
               
@@ -69,13 +89,9 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <p><a href="http://neocotic.com/iOrder">iOrder</a><br>(c) 2013 Alasdair Mercer<br>Freely distributable under the MIT license.<br>For all details and documentation:<br><a href="http://neocotic.com/iOrder">http://neocotic.com/iOrder</a></p>
-<h3>Private variables</h3>
-<p>Mapping for internationalization handlers.<br>Each handler represents an attribute (based on the property name) and is
-called for each attribute found in the current <code>document</code>.</p>
+<h2>Private classes</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>i18nHandlers   =</pre></div></div>
             
         </li>
         
@@ -86,14 +102,12 @@ called for each attribute found in the current <code>document</code>.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Replace the HTML content of <code>element</code> with the message looked up for
-<code>value</code>.</p>
+              <p><code>Class</code> makes for more readable logs etc. as it overrides <code>toString</code> to output the name of the
+implementing class.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="string">'i18n-content'</span>: (element, value, subMap) -&gt;
-    subs = i18nSubs element, value, subMap
-    element.innerHTML = utils.i18n value, subs</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="class"><span class="keyword">class</span> <span class="title">Class</span></span></pre></div></div>
             
         </li>
         
@@ -104,28 +118,11 @@ called for each attribute found in the current <code>document</code>.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Replace the value of the properties and/or attributes of <code>element</code> with the
-messages looked up for their corresponding values.</p>
+              <p>Override the default <code>toString</code> implementation to provide a cleaner output.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="string">'i18n-values'</span>:  (element, value, subMap) -&gt;
-    subs  = i18nSubs element, value, subMap
-    parts = value.replace(<span class="regexp">/\s/g</span>, <span class="string">''</span>).split <span class="string">';'</span>
-    <span class="keyword">for</span> part <span class="keyword">in</span> parts
-      prop = part.match <span class="regexp">/^([^:]+):(.+)$/</span>
-      <span class="keyword">if</span> prop
-        propName = prop[<span class="number">1</span>]
-        propExpr = prop[<span class="number">2</span>]
-        <span class="keyword">if</span> propName.indexOf(<span class="string">'.'</span>) <span class="keyword">is</span> <span class="number">0</span>
-          path = propName.slice(<span class="number">1</span>).split <span class="string">'.'</span>
-          obj = element
-          obj = obj[path.shift()] <span class="keyword">while</span> obj <span class="keyword">and</span> path.length &gt; <span class="number">1</span>
-          <span class="keyword">if</span> obj
-            obj[path] = utils.i18n value, subs
-            i18nProcess element, subMap <span class="keyword">if</span> path <span class="keyword">is</span> <span class="string">'innerHTML'</span>
-        <span class="keyword">else</span>
-          element.setAttribute propName, utils.i18n propExpr, subs</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  toString: -&gt; <span class="property">@constructor</span>.name</pre></div></div>
             
         </li>
         
@@ -133,15 +130,12 @@ messages looked up for their corresponding values.</p>
         <li id="section-4">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>List of internationalization attributes/handlers available.</p>
+              <h2>Private variables</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>i18nAttributes = []
-i18nAttributes.push key <span class="keyword">for</span> key <span class="keyword">of</span> i18nHandlers</pre></div></div>
             
         </li>
         
@@ -152,12 +146,11 @@ i18nAttributes.push key <span class="keyword">for</span> key <span class="keywor
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Selector containing the available internationalization attributes/handlers
-which is used by <code>i18nProcess</code> to query all elements.</p>
+              <p>Mapping of all timers currently being managed.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>i18nSelector   = <span class="string">"[<span class="subst">#{i18nAttributes.join '],['}</span>]"</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>timings = {}</pre></div></div>
             
         </li>
         
@@ -165,20 +158,14 @@ which is used by <code>i18nProcess</code> to query all elements.</p>
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h3>Private functions</h3>
-<p>Find all elements to be internationalized and call their corresponding
-handler(s).</p>
+              <p>Map of class names to understable types.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">i18nProcess</span></span> = (node, subMap) -&gt;
-  <span class="keyword">for</span> element <span class="keyword">in</span> node.querySelectorAll i18nSelector
-    <span class="keyword">for</span> name <span class="keyword">in</span> i18nAttributes
-      attribute = element.getAttribute name
-      i18nHandlers[name] element, attribute, subMap <span class="keyword">if</span> attribute?</pre></div></div>
+            <div class="content"><div class='highlight'><pre>typeMap = {}</pre></div></div>
             
         </li>
         
@@ -189,20 +176,21 @@ handler(s).</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Find an array of substitution strings using the element&#39;s ID and the message
-key as the mapping.</p>
+              <p>Populate the type map for all classes.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">i18nSubs</span></span> = (element, value, subMap) -&gt;
-  <span class="keyword">if</span> subMap
-    <span class="keyword">for</span> prop <span class="keyword">of</span> subMap <span class="keyword">when</span> subMap.hasOwnProperty(prop) <span class="keyword">and</span> prop <span class="keyword">is</span> element.id
-      <span class="keyword">for</span> subProp <span class="keyword">of</span> subMap[prop] <span class="keyword">when</span> subMap[prop].hasOwnProperty subProp
-        <span class="keyword">if</span> subProp <span class="keyword">is</span> value
-          subs = subMap[prop][subProp]
-          <span class="keyword">break</span>
-      <span class="keyword">break</span>
-  <span class="keyword">return</span> subs</pre></div></div>
+            <div class="content"><div class='highlight'><pre>[
+  <span class="string">'Boolean'</span>
+  <span class="string">'Number'</span>
+  <span class="string">'String'</span>
+  <span class="string">'Function'</span>
+  <span class="string">'Array'</span>
+  <span class="string">'Date'</span>
+  <span class="string">'RegExp'</span>
+  <span class="string">'Object'</span>
+].forEach (name) -&gt;
+  typeMap[<span class="string">"[object <span class="subst">#{name}</span>]"</span>] = name.toLowerCase()</pre></div></div>
             
         </li>
         
@@ -210,14 +198,12 @@ key as the mapping.</p>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h3>Utilities setup</h3>
+              <h2>Utilities setup</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>utils = window.utils =</pre></div></div>
             
         </li>
         
@@ -225,24 +211,13 @@ key as the mapping.</p>
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h3>General functions</h3>
-<p>Convenient shorthand for the different types of <code>onMessage</code> methods
-available in the chrome API.<br>This also supports the old <code>onRequest</code> variations for backwards
-compatibility.</p>
-
+              
             </div>
             
-            <div class="content"><div class='highlight'><pre>  onMessage: (type = <span class="string">'extension'</span>, external, args...) -&gt;
-    base = chrome[type]
-    base = chrome.extension <span class="keyword">if</span> <span class="keyword">not</span> base <span class="keyword">and</span> type <span class="keyword">is</span> <span class="string">'runtime'</span>
-    <span class="keyword">if</span> external
-      base = base.onMessageExternal <span class="keyword">or</span> base.onRequestExternal
-    <span class="keyword">else</span>
-      base = base.onMessage <span class="keyword">or</span> base.onRequest
-    base.addListener args...</pre></div></div>
+            <div class="content"><div class='highlight'><pre>utils = window.utils = <span class="keyword">new</span> <span class="class"><span class="keyword">class</span> <span class="title">Utils</span> <span class="keyword">extends</span> <span class="title">Class</span></span></pre></div></div>
             
         </li>
         
@@ -250,21 +225,12 @@ compatibility.</p>
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h2">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Bind <code>handler</code> to event indicating that the DOM is ready.</p>
+              <h2>Public functions</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  ready: (context, handler) -&gt;
-    <span class="keyword">unless</span> handler?
-      handler = context
-      context = window
-    <span class="keyword">if</span> context.jQuery?
-      context.jQuery handler
-    <span class="keyword">else</span>
-      context.document.addEventListener <span class="string">'DOMContentLoaded'</span>, handler</pre></div></div>
             
         </li>
         
@@ -275,9 +241,254 @@ compatibility.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Convenient shorthand for the different types of <code>sendMessage</code> methods
-available in the chrome API.<br>This also supports the old <code>sendRequest</code> variations for backwards
-compatibility.</p>
+              <p>Create a clone of an object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  clone: (obj, deep) -&gt;
+    <span class="keyword">return</span> obj <span class="keyword">unless</span> <span class="property">@isObject</span> obj
+    <span class="keyword">return</span> obj.slice() <span class="keyword">if</span> <span class="property">@isArray</span> obj
+    copy = {}
+    <span class="keyword">for</span> own key, value <span class="keyword">of</span> obj
+      copy[key] = <span class="keyword">if</span> deep <span class="keyword">then</span> <span class="property">@clone</span> value, <span class="literal">yes</span> <span class="keyword">else</span> value
+    copy</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Indicate whether an object is an array.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  isArray: Array.isArray <span class="keyword">or</span> (obj) -&gt; <span class="string">'array'</span> <span class="keyword">is</span> <span class="property">@type</span> obj</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Indicate whether an object is an object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  isObject: (obj) -&gt; obj <span class="keyword">is</span> Object obj</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Generate a unique key based on the current time and using a randomly generated hexadecimal
+number of the specified length.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  keyGen: (separator = <span class="string">'.'</span>, length = <span class="number">5</span>, prefix = <span class="string">''</span>, upperCase = <span class="literal">yes</span>) -&gt;
+    parts = []</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Populate the segment(s) to attempt uniquity.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    parts.push <span class="keyword">new</span> Date().getTime()
+    <span class="keyword">if</span> length &gt; <span class="number">0</span>
+      min = <span class="property">@repeat</span> <span class="string">'1'</span>, <span class="string">'0'</span>, <span class="keyword">if</span> length <span class="keyword">is</span> <span class="number">1</span> <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> length - <span class="number">1</span>
+      max = <span class="property">@repeat</span> <span class="string">'f'</span>, <span class="string">'f'</span>, <span class="keyword">if</span> length <span class="keyword">is</span> <span class="number">1</span> <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> length - <span class="number">1</span>
+      min = parseInt min, <span class="number">16</span>
+      max = parseInt max, <span class="number">16</span>
+      parts.push <span class="property">@random</span> min, max</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Convert segments to their hexadecimal (base 16) forms.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    parts[i] = part.toString <span class="number">16</span> <span class="keyword">for</span> part, i <span class="keyword">in</span> parts</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Join all segments using <code>separator</code> and append to the <code>prefix</code> before potentially
+transforming it to upper case.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    key = prefix + parts.join separator
+    <span class="keyword">if</span> upperCase <span class="keyword">then</span> key.toUpperCase() <span class="keyword">else</span> key.toLowerCase()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Convenient shorthand for the different types of <code>onMessage</code> methods available in the chrome
+API.<br>This also supports the old <code>onRequest</code> variations for backwards compatibility.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  onMessage: (type = <span class="string">'extension'</span>, external, args...) -&gt;
+    base = chrome[type]
+    base = chrome.extension <span class="keyword">if</span> <span class="keyword">not</span> base <span class="keyword">and</span> type <span class="keyword">is</span> <span class="string">'runtime'</span>
+    base = <span class="keyword">if</span> external
+      base.onMessageExternal <span class="keyword">or</span> base.onRequestExternal
+    <span class="keyword">else</span>
+      base.onMessage <span class="keyword">or</span> base.onRequest
+    base.addListener args...</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Retrieve the first entity/all entities that pass the specified <code>filter</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  query: (entities, singular, filter) -&gt;
+    <span class="keyword">if</span> singular
+      <span class="keyword">return</span> entity <span class="keyword">for</span> entity <span class="keyword">in</span> entities <span class="keyword">when</span> filter entity
+    <span class="keyword">else</span>
+      entity <span class="keyword">for</span> entity <span class="keyword">in</span> entities <span class="keyword">when</span> filter entity</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Generate a random number between the <code>min</code> and <code>max</code> values provided.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  random: (min, max) -&gt;
+    Math.floor(Math.random() * (max - min + <span class="number">1</span>)) + min</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Bind <code>handler</code> to event indicating that the DOM is ready.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  ready: (context, handler) -&gt;
+    <span class="keyword">unless</span> handler?
+      handler = context
+      context = window
+    <span class="keyword">if</span> context.jQuery? <span class="keyword">then</span> context.jQuery handler
+    <span class="keyword">else</span> context.document.addEventListener <span class="string">'DOMContentLoaded'</span>, handler</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Repeat the string provided the specified number of times.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  repeat: (str = <span class="string">''</span>, repeatStr = str, count = <span class="number">1</span>) -&gt;
+    <span class="keyword">if</span> count <span class="keyword">isnt</span> <span class="number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Repeat to the right if <code>count</code> is positive.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      str += repeatStr <span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">1.</span>.count] <span class="keyword">if</span> count &gt; <span class="number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Repeat to the left if <code>count</code> is negative.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      str  = repeatStr + str <span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">1.</span>.count*-<span class="number">1</span>] <span class="keyword">if</span> count &lt; <span class="number">0</span>
+    str</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Convenient shorthand for the different types of <code>sendMessage</code> methods available in the chrome
+API.<br>This also supports the old <code>sendRequest</code> variations for backwards compatibility.</p>
 
             </div>
             
@@ -289,11 +500,68 @@ compatibility.</p>
         </li>
         
         
-        <li id="section-12">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-12">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Start a new timer for the specified <code>key</code>.<br>If a timer already exists for <code>key</code>, return the time difference in milliseconds.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  time: (key) -&gt;
+    <span class="keyword">if</span> timings.hasOwnProperty key
+      <span class="keyword">new</span> Date().getTime() - timings[key]
+    <span class="keyword">else</span>
+      timings[key] = <span class="keyword">new</span> Date().getTime()</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>End the timer for the specified <code>key</code> and return the time difference in milliseconds and remove
+the timer.<br>If no timer exists for <code>key</code>, simply return `0&#39;.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  timeEnd: (key) -&gt;
+    <span class="keyword">if</span> timings.hasOwnProperty key
+      start = timings[key]
+      <span class="keyword">delete</span> timings[key]
+      <span class="keyword">new</span> Date().getTime() - start
+    <span class="keyword">else</span>
+      <span class="number">0</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Retrieve the understable type name for an object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  type: (obj) -&gt;
+    <span class="keyword">if</span> obj? <span class="keyword">then</span> typeMap[Object::toString.call obj] <span class="keyword">or</span> <span class="string">'object'</span> <span class="keyword">else</span> String obj</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Convenient shorthand for <code>chrome.extension.getURL</code>.</p>
 
@@ -304,212 +572,30 @@ compatibility.</p>
         </li>
         
         
-        <li id="section-13">
+        <li id="section-30">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-13">&#182;</a>
+              <div class="pilwrap for-h2">
+                <a class="pilcrow" href="#section-30">&#182;</a>
               </div>
-              <h3>Data functions</h3>
-<p>Determine whether or not the specified key exists in <code>localStorage</code>.</p>
+              <h2>Public classes</h2>
 
             </div>
-            
-            <div class="content"><div class='highlight'><pre>  exists: (key) -&gt;
-    <span class="keyword">return</span> localStorage.hasOwnProperty key</pre></div></div>
             
         </li>
         
         
-        <li id="section-14">
+        <li id="section-31">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-31">&#182;</a>
               </div>
-              <p>Retrieve the value associated with the specified key from <code>localStorage</code>.<br>If the value is found, parse it as JSON before being returning it; otherwise
-return <code>undefined</code>.</p>
+              <p>Objects within the extension should extend this class wherever possible.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  get: (key) -&gt;
-    value = localStorage[key]
-    <span class="keyword">return</span> <span class="keyword">if</span> value? <span class="keyword">then</span> JSON.parse value <span class="keyword">else</span> value</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-15">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>Initialize the value of the specified key in <code>localStorage</code>.<br>If the value is currently <code>undefined</code>, assign the specified default value;
-otherwise reassign itself.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  init: (key, defaultValue) -&gt;
-    value = utils.get key
-    <span class="keyword">return</span> utils.set key, value ? defaultValue</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
-              </div>
-              <p>Remove the specified key from <code>localStorage</code>.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  remove: (key) -&gt;
-    exists = utils.exists key
-    <span class="keyword">delete</span> localStorage[key]
-    <span class="keyword">return</span> exists</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-17">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
-              </div>
-              <p>Copy the value of the existing key to that of the new key then remove the
-old key from <code>localStorage</code>.<br>If the old key doesn&#39;t exist in <code>localStorage</code>, assign the specified default
-value to it instead.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  rename: (oldKey, newKey, defaultValue) -&gt;
-    <span class="keyword">if</span> utils.exists oldKey
-      utils.init newKey, utils.get oldKey
-      utils.remove oldKey
-    <span class="keyword">else</span>
-      utils.init newKey, defaultValue</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-18">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
-              </div>
-              <p>Set the value of the specified key in <code>localStorage</code>.<br>If the specified value is <code>undefined</code>, assign that value directly to the
-key; otherwise transform it to a JSON string beforehand.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  set: (key, value) -&gt;
-    oldValue = utils.get key
-    localStorage[key] = <span class="keyword">if</span> value? <span class="keyword">then</span> JSON.stringify value <span class="keyword">else</span> value
-    <span class="keyword">return</span> oldValue</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-19">
-            <div class="annotation">
-              
-              <div class="pilwrap for-h3">
-                <a class="pilcrow" href="#section-19">&#182;</a>
-              </div>
-              <h3>Internationalization functions</h3>
-<p>Convenient shorthand for <code>chrome.i18n.getMessage</code>.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  i18n: -&gt;
-    chrome.i18n.getMessage.apply chrome.i18n, arguments</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-20">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
-              </div>
-              <p>Internationalize the specified attribute of all the selected elements.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  i18nAttribute: (selector, attribute, value, subs) -&gt;
-    elements = document.querySelectorAll selector</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-21">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
-              </div>
-              <p>Ensure the substitution string(s) are in an array.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    subs = [subs] <span class="keyword">if</span> <span class="keyword">typeof</span> subs <span class="keyword">is</span> <span class="string">'string'</span>
-    <span class="keyword">for</span> element <span class="keyword">in</span> elements
-      element.setAttribute attribute, utils.i18n value, subs</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-22">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
-              </div>
-              <p>Internationalize the contents of all the selected elements.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  i18nContent: (selector, value, subs) -&gt;
-    elements = document.querySelectorAll selector</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-23">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
-              </div>
-              <p>Ensure the substitution string(s) are in an array.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    subs = [subs] <span class="keyword">if</span> <span class="keyword">typeof</span> subs <span class="keyword">is</span> <span class="string">'string'</span>
-    element.innerHTML = utils.i18n value, subs <span class="keyword">for</span> element <span class="keyword">in</span> elements</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-24">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
-              </div>
-              <p>Perform all internationalization setup required for the current page.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  i18nSetup: (subMap) -&gt;
-    i18nProcess document, subMap</pre></div></div>
+            <div class="content"><div class='highlight'><pre>utils.Class = Class</pre></div></div>
             
         </li>
         
