@@ -4,26 +4,38 @@
 // For all details and documentation:
 // <http://neocotic.com/iOrder>
 (function() {
-  var Popup, addEventHandler, analytics, ext, log, popup, sendMessage, store, utils, _ref, _ref1,
+  var Popup, addEventHandlers, analytics, ext, i18n, log, openOptions, popup, sendMessage, store, updateStates, utils, _ref, _ref1,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  _ref = chrome.extension.getBackgroundPage(), analytics = _ref.analytics, ext = _ref.ext, log = _ref.log, store = _ref.store, utils = _ref.utils;
+  _ref = chrome.extension.getBackgroundPage(), analytics = _ref.analytics, ext = _ref.ext, i18n = _ref.i18n, log = _ref.log, store = _ref.store, utils = _ref.utils;
 
-  addEventHandler = function(selector, event, handler, context) {
+  addEventHandlers = function(selector, event, handler) {
     var element, elements, _i, _len, _results;
 
-    if (context == null) {
-      context = document;
-    }
     log.trace();
-    elements = context.querySelectorAll(selector);
+    elements = document.querySelectorAll(selector);
     _results = [];
     for (_i = 0, _len = elements.length; _i < _len; _i++) {
       element = elements[_i];
       _results.push(element.addEventListener(event, handler));
     }
     return _results;
+  };
+
+  openOptions = function() {
+    var suffix, tab;
+
+    log.trace();
+    suffix = '_nav';
+    tab = this.getAttribute('data-options-tab');
+    if (tab) {
+      if (tab.indexOf(suffix) !== tab.length - suffix.length) {
+        tab += suffix;
+      }
+      store.set('options_active_tab', tab);
+    }
+    return sendMessage('options', true);
   };
 
   sendMessage = function(type, closeAfter, data, element) {
@@ -34,7 +46,7 @@
     }
     log.trace();
     if (element) {
-      data.number = element.getAttribute('data-order-number');
+      data.key = element.getAttribute('data-order-key');
     }
     message = {
       data: data,
@@ -43,7 +55,48 @@
     log.debug('Sending the following message to the extension controller', message);
     utils.sendMessage('extension', message);
     if (closeAfter) {
-      return window.close();
+      return close();
+    }
+  };
+
+  updateStates = function() {
+    var clearButton, errorIndicator, frequency, leftButtonGroup, refreshButton;
+
+    log.trace();
+    leftButtonGroup = document.querySelector('.btn-toolbar .btn-group:last-child');
+    leftButtonGroup.innerHTML = '';
+    if (ext.orders.length) {
+      refreshButton = document.createElement('button');
+      refreshButton.className = 'btn btn-mini';
+      refreshButton.id = 'refreshButton';
+      refreshButton.innerHTML = '<i class="icon-refresh"></i>';
+      if (ext.isUpdating()) {
+        refreshButton.disabled = true;
+        refreshButton.setAttribute('title', i18n.get('pop_refresh_button_title_alt'));
+      } else {
+        refreshButton.setAttribute('title', i18n.get('pop_refresh_button_title'));
+      }
+      leftButtonGroup.appendChild(refreshButton);
+    }
+    if (ext.hasUpdates() && store.get('notifications.badges')) {
+      clearButton = document.createElement('button');
+      clearButton.className = 'btn btn-mini';
+      clearButton.id = 'clearButton';
+      clearButton.innerHTML = '<i class="icon-trash"></i>';
+      clearButton.setAttribute('title', i18n.get('pop_clear_button_title'));
+      leftButtonGroup.appendChild(clearButton);
+    }
+    errorIndicator = document.getElementById('errorIndicator');
+    if (ext.hasErrors()) {
+      errorIndicator.classList.remove('hide');
+    } else {
+      errorIndicator.classList.add('hide');
+    }
+    frequency = document.getElementById('frequency');
+    if (store.get('frequency') > 0) {
+      return frequency.classList.remove('hide');
+    } else {
+      return frequency.classList.add('hide');
     }
   };
 
@@ -55,66 +108,50 @@
       return _ref1;
     }
 
-    Popup.prototype.clear = function() {
-      log.trace();
-      return sendMessage('clear');
-    };
-
     Popup.prototype.init = function() {
-      var orderRow, _i, _len, _ref2, _results;
+      var oldNode, _ref2;
 
       log.trace();
-      log.info('Initializing the popup');
-      analytics.track('Frames', 'Displayed', 'Popup');
-      document.body.innerHTML = ext.popupHtml;
-      addEventHandler('#optionsLink', 'click', popup.options);
-      addEventHandler('#ordersLink', 'click', popup.viewAll);
-      addEventHandler('#clearLink', 'click', popup.clear);
-      addEventHandler('#noOrdersLink', 'click', popup.options);
-      addEventHandler('#refreshLink', 'click', popup.refresh);
-      _ref2 = document.querySelectorAll('#orders tbody tr');
-      _results = [];
-      for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-        orderRow = _ref2[_i];
-        addEventHandler('td:first-child a', 'click', popup.view, orderRow);
-        _results.push(addEventHandler('td:last-child a', 'click', popup.track, orderRow));
+      if (this.initialized) {
+        log.info('Re-initializing the popup');
+      } else {
+        log.info('Initializing the popup');
+        analytics.track('Frames', 'Displayed', 'Popup');
       }
-      return _results;
-    };
-
-    Popup.prototype.options = function() {
-      var suffix, tab;
-
-      log.trace();
-      suffix = '_nav';
-      tab = this.getAttribute('data-options-tab');
-      if (tab) {
-        if (tab.indexOf(suffix) !== tab.length - suffix.length) {
-          tab += suffix;
-        }
-        store.set('options_active_tab', tab);
+      oldNode = i18n.manager.node;
+      i18n.manager.node = document;
+      try {
+        i18n.init({
+          frequency: {
+            pop_footer_frequency_text: (_ref2 = ext.getFrequency()) != null ? _ref2.text : void 0
+          },
+          lastUpdated: {
+            pop_footer_last_updated_text: ext.getTimeAgoHtml(store.get('lastUpdated'))
+          }
+        });
+      } finally {
+        i18n.manager.node = oldNode;
       }
-      return sendMessage('options', true);
-    };
-
-    Popup.prototype.refresh = function() {
-      log.trace();
-      return sendMessage('refresh');
-    };
-
-    Popup.prototype.track = function() {
-      log.trace();
-      return sendMessage('track', true, {}, this);
-    };
-
-    Popup.prototype.view = function() {
-      log.trace();
-      return sendMessage('view', true, {}, this);
-    };
-
-    Popup.prototype.viewAll = function() {
-      log.trace();
-      return sendMessage('viewAll', true);
+      updateStates();
+      addEventHandlers('#refreshButton', 'click', function() {
+        return sendMessage('refresh');
+      });
+      addEventHandlers('#clearButton', 'click', function() {
+        return sendMessage('clear');
+      });
+      if (!this.initialized) {
+        addEventHandlers('#optionsButton', 'click', openOptions);
+        addEventHandlers('#ordersButton', 'click', function() {
+          return sendMessage('viewAll', true);
+        });
+      }
+      document.querySelector('#orders tbody').innerHTML = ext.ordersHtml;
+      addEventHandlers('#noOrdersLink', 'click', openOptions);
+      addEventHandlers('#orders a[data-order-action]', 'click', function() {
+        return sendMessage(this.getAttribute('data-order-action'), true, null, this);
+      });
+      this.initialized = true;
+      return document.body.classList.remove('hide');
     };
 
     return Popup;

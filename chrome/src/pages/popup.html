@@ -2,8 +2,30 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/popup.css">
     <script src="../lib/popup.js"></script>
   </head>
-  <body></body>
+  <body class="hide">
+    <div class="btn-toolbar">
+      <div class="btn-group pull-right">
+        <button id="ordersButton" class="btn btn-mini" i18n-values="title:pop_orders_button_title"><i class="icon-shopping-cart"></i></button>
+        <button id="optionsButton" class="btn btn-mini" i18n-values="title:pop_options_button_title"><i class="icon-cog"></i></button>
+      </div>
+      <div class="btn-group"></div>
+    </div>
+    <table id="orders" class="table table-condensed table-hover">
+      <thead>
+        <th i18n-content="pop_order_header"></th>
+        <th i18n-content="pop_status_header"></th>
+        <th i18n-content="pop_actions_header"></th>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="muted pull-right">
+      <i id="errorIndicator" class="icon-exclamation-sign hide" i18n-values="title:pop_errors_title"></i>
+      <small id="lastUpdated" i18n-content="pop_footer_last_updated_text"></small>
+      <small id="frequency" class="hide" i18n-content="pop_footer_frequency_text"></small>
+    </div>
+  </body>
 </html>

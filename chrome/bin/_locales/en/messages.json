@@ -531,10 +531,6 @@
     "message": "Actions",
     "description": "Header for the Actions column in the popup."
   },
-  "pop_clear_button": {
-    "message": "Clear",
-    "description": "Text of button used to clear badges from the toolbar icon in popup."
-  },
   "pop_clear_button_title": {
     "message": "Resets the badge",
     "description": "Hover text of button used to clear badges from the toolbar icon in popup."
@@ -543,27 +539,29 @@
     "message": "Some orders could not be updated",
     "description": "Hover text for optional error icon in popup."
   },
-  "pop_footer": {
-    "message": "Updated: $TIME$ - Frequency: $FREQUENCY$",
-    "description": "Footer for the popup.",
+  "pop_footer_frequency_text": {
+    "message": "- Every $FREQUENCY$",
+    "description": "Text for update frequency section of footer for the popup.",
     "placeholders": {
       "frequency": {
-        "content": "$2",
-        "example": "2 hours"
-      },
-      "time": {
         "content": "$1",
-        "example": "12:00"
+        "example": "2 hours"
       }
     }
   },
-  "pop_options_text": {
-    "message": "Options",
-    "description": "Text of Options link in popup."
+  "pop_footer_last_updated_text": {
+    "message": "Last updated $TIME_AGO$",
+    "description": "Text for last updated time section of footer for the popup.",
+    "placeholders": {
+      "time_ago": {
+        "content": "$1",
+        "example": "about an hour ago"
+      }
+    }
   },
-  "pop_options_title": {
+  "pop_options_button_title": {
     "message": "Configure iOrder",
-    "description": "Hover text of Options link in popup."
+    "description": "Hover text of Options button in popup."
   },
   "pop_order_header": {
     "message": "Order",
@@ -573,28 +571,16 @@
     "message": "View this order",
     "description": "Hover text of individual order links in popup."
   },
-  "pop_orders_text": {
-    "message": "Orders",
-    "description": "Text of Orders link in popup."
-  },
-  "pop_orders_title": {
-    "message": "View all your orders",
-    "description": "Hover text of Orders link in popup."
-  },
-  "pop_refresh_button": {
-    "message": "Refresh",
-    "description": "Text of optional Refresh button in popup."
-  },
-  "pop_refresh_button_alt": {
-    "message": "Refreshing...",
-    "description": "Text of optional Refresh button in popup when orders are currently being updated."
+  "pop_orders_button_title": {
+    "message": "View all of your orders",
+    "description": "Hover text of Orders button in popup."
   },
   "pop_refresh_button_title": {
     "message": "Updates the progress of all orders",
     "description": "Hover text of optional Refresh button in popup."
   },
   "pop_refresh_button_title_alt": {
-    "message": "Currently updating progress of all orders. Please wait...",
+    "message": "Currently updating the progress of all orders. Please wait...",
     "description": "Hover text of optional Refresh button in popup when orders are currently being updated."
   },
   "pop_status_header": {
@@ -640,6 +626,110 @@
   "status_7_text": {
     "message": "Collected",
     "description": "Text for representing the \"Picked Up\" status."
+  },
+  "ta_day": {
+    "message": "a day",
+    "description": "Text for \"day\" string in the timeago jQuery plugin. Leave EMPTY for default value."
+  },
+  "ta_days": {
+    "message": "$DAYS$ days",
+    "description": "Text for \"days\" string in the timeago jQuery plugin. Leave EMPTY for default value.",
+    "placeholders": {
+      "days": {
+        "content": "%d",
+        "example": "5"
+      }
+    }
+  },
+  "ta_hour": {
+    "message": "about an hour",
+    "description": "Text for \"hour\" string in the timeago jQuery plugin. Leave EMPTY for default value."
+  },
+  "ta_hours": {
+    "message": "about $HOURS$ hours",
+    "description": "Text for \"hours\" string in the timeago jQuery plugin. Leave EMPTY for default value.",
+    "placeholders": {
+      "hours": {
+        "content": "%d",
+        "example": "20"
+      }
+    }
+  },
+  "ta_minute": {
+    "message": "about a minute",
+    "description": "Text for \"minute\" string in the timeago jQuery plugin. Leave EMPTY for default value."
+  },
+  "ta_minutes": {
+    "message": "$MINUTES$ minutes",
+    "description": "Text for \"minutes\" string in the timeago jQuery plugin. Leave EMPTY for default value.",
+    "placeholders": {
+      "minutes": {
+        "content": "%d",
+        "example": "45"
+      }
+    }
+  },
+  "ta_month": {
+    "message": "about a month",
+    "description": "Text for \"month\" string in the timeago jQuery plugin. Leave EMPTY for default value."
+  },
+  "ta_months": {
+    "message": "$MONTHS$ months",
+    "description": "Text for \"months\" string in the timeago jQuery plugin. Leave EMPTY for default value.",
+    "placeholders": {
+      "months": {
+        "content": "%d",
+        "example": "10"
+      }
+    }
+  },
+  "ta_numbers": {
+    "message": "",
+    "description": "Whitespace separated values for \"numbers\" array in the timeago jQuery plugin. Leave EMPTY for default values."
+  },
+  "ta_prefix_ago": {
+    "message": "",
+    "description": "Text for \"prefixAgo\" string in the timeago jQuery plugin. Leave EMPTY for default value."
+  },
+  "ta_prefix_from_now": {
+    "message": "",
+    "description": "Text for \"prefixFromNow\" string in the timeago jQuery plugin. Leave EMPTY for default value."
+  },
+  "ta_seconds": {
+    "message": "less than a minute",
+    "description": "Text for \"seconds\" string in the timeago jQuery plugin. Leave EMPTY for default value.",
+    "placeholders": {
+      "seconds": {
+        "content": "%d",
+        "example": "30"
+      }
+    }
+  },
+  "ta_suffix_ago": {
+    "message": "ago",
+    "description": "Text for \"suffixAgo\" string in the timeago jQuery plugin. Leave EMPTY for default value."
+  },
+  "ta_suffix_from_now": {
+    "message": "from now",
+    "description": "Text for \"suffixFromNow\" string in the timeago jQuery plugin. Leave EMPTY for default value."
+  },
+  "ta_word_separator": {
+    "message": " ",
+    "description": "Text for \"wordSeparator\" string in the timeago jQuery plugin."
+  },
+  "ta_year": {
+    "message": "about a year",
+    "description": "Text for \"year\" string in the timeago jQuery plugin. Leave EMPTY for default value."
+  },
+  "ta_years": {
+    "message": "$YEARS$ years",
+    "description": "Text for \"years\" string in the timeago jQuery plugin. Leave EMPTY for default value.",
+    "placeholders": {
+      "years": {
+        "content": "%d",
+        "example": "2"
+      }
+    }
   },
   "update_invalid_page_error": {
     "message": "Order page contained no data",
