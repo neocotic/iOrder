@@ -1,234 +1,283 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title i18n-content="name"></title>
-    <style type="text/css">
-      body {background-color: #EBEFF9; font-family: Arial, sans-serif; font-size: 13px; margin: 10px;}
-      a, a:active, a:link, a:visited {color: #3D5D6A; cursor: pointer; font-weight: bold; text-decoration: none;}
-      a:hover {text-decoration: underline;}
-      a[facebox] {cursor: pointer; outline: 0;}
-      code, pre {font: 12px 'Bitstream Vera Sans Mono','Courier',monospace;}
-      code {background-color: #F8F8F8; border: 1px solid #DEDEDE; font-size: 13px; padding: 0 2px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
-      pre {background-color: #F8F8F8; border: 1px solid #CCC; font-size: 13px; line-height: 19px; margin: 20px 0; overflow: auto; padding: 6px 10px; order-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
-      table {border: 0; border-collapse; collapse; width: 100%;}
-      #order_code, #order_number {text-transform: uppercase;}
-      .styled thead th {border-bottom: 1px solid #EEE;}
-      .styled thead th:hover {border-bottom-color: #AAA;}
-      .styled tbody tr:hover {background-color: #F3F3F3;}
-      #navigation {background-color: #BEC9CE; border: 3px solid #BEC9CE; border-bottom: 0; border-radius: 20px 20px 0 0; list-style-type: none; margin: 50px auto 0 auto; padding: 0 30px; width: 600px;}
-      #navigation li {background-color: white; border-radius: 8px 8px 0 0; color: #333; cursor: pointer; display: inline-block; font-size: 15px; font-weight: bold; opacity: 0.5; padding: 5px 10px;}
-      #navigation li:hover {opacity: 1.0;}
-      #navigation li.selected {cursor: default; opacity: 1.0;}
-      #navigation-footer {background-color: #BEC9CE; margin: 0 auto 0 auto; padding: 0 3px; width: 660px;}
-      #navigation-footer div {background-color: white; border-radius: 20px 20px 0 0; height: 20px;}
-      .content-box {background-color: white; border: 3px solid #BEC9CE; border-radius: 0 0 20px 20px; border-top: 0; height: auto;  margin: 0 auto 20px auto; padding: 10px 30px 30px; text-align: left; width: 600px;}
-      h4 {border-bottom: 2px dotted #C3C3C3; color: #333; font-size: 15px; line-height: 28px; padding-left: 0.5em;}
-      .tab {display: none;}
-      .controls {margin: 25px 0 0 0;}
-      .section .contents {line-height: 25px; padding-left: 55px;}
-      .sections .section .contents {padding-left: 5px;}
-      .help {display: none;}
-      #add_btn, #delete_btn {margin-left: 10px;}
-      input {cursor: pointer;}
-      button, input[type="button"], input[type="file"]::-webkit-file-upload-button, input[type="reset"], input[type="submit"] {background-image: -webkit-gradient(linear, left top, left bottom, from(whiteSmoke), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, whiteSmoke, #F1F1F1); -webkit-border-radius: 2px; -webkit-user-select: none; background-color: whiteSmoke; background-image: linear-gradient(top, whiteSmoke, #F1F1F1); background-image: -o-linear-gradient(top, whiteSmoke, #F1F1F1); border: 1px solid gainsboro; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 2px; color: #666; cursor: pointer; font-size: 11px; font-weight: bold; height: 22px; line-height: 1em; margin: auto 6px auto auto; padding: 0 8px; text-align: center;}
-      button:disabled, input[type="button"]:disabled, input[type="file"]:disabled::-webkit-file-upload-button, input[type="reset"]:disabled, input[type="submit"]:disabled {background-image: -webkit-gradient(linear,left top,left bottom, from(#EBEBE4), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, #EBEBE4, #F1F1F1); background-color: #EBEBE4; background-image: linear-gradient(top, #EBEBE4, #F1F1F1); background-image: -o-linear-gradient(top, #EBEBE4, #F1F1F1); border: 1px solid #C6C6C6; color: #AAA; cursor: default;}
-      button:hover:not(:disabled), input[type="button"]:hover:not(:disabled), input[type="file"]::-webkit-file-upload-button:hover:not(:disabled), input[type="reset"]:hover:not(:disabled), input[type="submit"]:hover:not(:disabled) {background-image: -webkit-gradient(linear,left top,left bottom, from(#F8F8F8), to(#F1F1F1)); background-image: -webkit-linear-gradient(top, #F8F8F8, #F1F1F1); -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1); background-color: #F8F8F8; background-image: linear-gradient(top, #F8F8F8, #F1F1F1); background-image: -o-linear-gradient(top, #F8F8F8, #F1F1F1); border: 1px solid #C6C6C6; box-shadow: 0 1px 1px rgba(0,0,0,0.1); color: #333;}
-      footer {font-size: 13px; text-align: center;}
-      #footer {display: inline;}
-      #donation {display: inline; margin: 0;}
-      #donation [type="image"] {border: 0; margin: 0 0 -4px 12px;}
-      /* Facebox */
-      #facebox {left: 0; position: absolute; text-align: left; top: 0; z-index: 100;}
-      #facebox .popup {border: 3px solid rgba(0,0,0,0); border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; box-shadow:0 0 18px rgba(0,0,0,0.4); -moz-box-shadow: 0 0 18px rgba(0,0,0,0.4); -webkit-box-shadow: 0 0 18px rgba(0,0,0,0.4); position: relative;}
-      #facebox .content {display: table; width: 370px; padding: 10px 18px 10px 10px; background: white; border-radius: 4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; margin-right: 20px;}
-      #facebox .content > p:first-child {margin-top: 0;}
-      #facebox .content > p:last-child {margin-bottom: 0;}
-      #facebox .close {background: white; padding: 2px; position: absolute; right: 5px; top: 5px;}
-      #facebox .close img {opacity: 0.3;}
-      #facebox .close:hover img {opacity: 1.0;}
-      #facebox .loading {text-align: center;}
-      #facebox .image {text-align: center;}
-      #facebox img {border: 0; margin: 0;}
-      #facebox_overlay {height: 100%; left: 0; position: fixed; top: 0; width: 100%;}
-      .facebox_hide {z-index: -100;}
-      .facebox_overlayBG {background-color: black; z-index: 99;}
-    </style>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/options.css">
     <script src="../vendor/jquery.min.js"></script>
-    <script src="../vendor/facebox.min.js"></script>
-    <script src="../vendor/date.min.js"></script>
+    <script src="../vendor/bootstrap.min.js"></script>
     <script src="../lib/utils.js"></script>
+    <script src="../lib/store.js"></script>
+    <script src="../lib/i18n.js"></script>
+    <script src="../lib/log.js"></script>
+    <script src="../lib/analytics.js"></script>
     <script src="../lib/options.js"></script>
   </head>
-  <body>
-    <ul id="navigation">
-      <li id="general_nav" tabify="#general_tab" i18n-content="opt_general_header"></li>
-      <li id="orders_nav" tabify="#orders_tab" i18n-content="opt_order_header"></li>
-    </ul>
-    <div id="navigation-footer"><div></div></div>
-    <div class="content-box">
-      <div id="message" style="display: none">
-        <p id="errors_hdr" i18n-content="opt_errors_header"></p>
-        <ul id="errors"></ul>
-      </div>
-      <div id="general_tab" class="tab">
-        <div id="general_sct" class="section">
-          <h4 id="general_hdr" i18n-content="opt_general_header"></h4>
-          <div class="contents">
-            <div>
-              <label>
-                <span id="frequency_txt" i18n-content="opt_frequency_text"></span>
-                <select id="frequency" size="1"></select>
-              </label>
-              <a facebox="#frequency_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
-              <div id="frequency_help" class="help" i18n-content="help_frequency"></div>
-            </div>
+  <body id="top">
+    <div class="navbar navbar-fixed-top navbar-inverse">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="http://neocotic.com/iOrder" i18n-content="name" target="_blank"></a>
+          <div class="nav-collapse">
+            <ul id="navigation" class="nav">
+              <li><a id="general_nav" tabify="#general_tab" i18n-content="opt_general_header"></a></li>
+              <li><a id="orders_nav" tabify="#orders_tab" i18n-content="opt_order_header"></a></li>
+              <li><a id="tools_nav" data-placement="bottom" i18n-values="title:opt_tools_header"><i class="icon-cog icon-white"></i></a></li>
+            </ul>
           </div>
         </div>
-        <div id="notifications_sct" class="section">
-          <h4 id="notifications_hdr" i18n-content="opt_notification_header"></h4>
-          <div class="contents">
-            <div>
-              <label>
-                <input type="checkbox" id="badges" />
-                <span id="badges_txt" i18n-content="opt_badge_text"></span>
-              </label>
-              <a facebox="#badges_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
-              <div id="badges_help" class="help" i18n-content="help_badges"></div>
-            </div>
-            <div>
-              <label>
-                <input type="checkbox" id="notifications" />
-                <span id="notifications_txt" i18n-content="opt_notification_text"></span>
-              </label>
-              <a facebox="#notifications_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
-              <div id="notifications_help" class="help" i18n-content="help_notifications"></div>
-            </div>
-            <div style="margin: 0 0 0 4px">
-              <label>
-                <span id="notificationDuration_txt1" i18n-content="opt_notification_timer_text1"></span>
-                <input id="notificationDuration" max="60" min="0" size="1" step="1" type="number" />
-                <span id="notificationDuration_txt2" i18n-content="opt_notification_timer_text2"></span>
-              </label>
-              <a facebox="#notificationDuration_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
-              <div id="notificationDuration_help" class="help" i18n-content="help_notificationDuration"></div>
-            </div>
+      </div>
+    </div>
+    <div class="container">
+      <div id="general_tab" class="tab">
+        <div class="row">
+          <div class="span12">
+            <form class="form-horizontal">
+              <fieldset>
+                <legend i18n-content="opt_updates_header"></legend>
+                <div class="control-group">
+                  <label class="control-label" for="frequency" i18n-content="opt_frequency_label"></label>
+                  <div class="controls">
+                    <label class="span5 tight-left">
+                      <select id="frequency" size="1"></select>
+                      <span i18n-content="opt_frequency_text" class="blocky"></span>
+                      <p class="help-block" i18n-content="opt_frequency_sub_text"></p>
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend i18n-content="opt_notifications_header"></legend>
+                <div class="control-group">
+                  <label class="control-label" for="notificationsBadges" i18n-content="opt_notifications_badges_label"></label>
+                  <div class="controls">
+                    <label class="checkbox span5 tight-left">
+                      <input type="checkbox" id="notificationsBadges">
+                      <span i18n-content="opt_notifications_badges_text"></span>
+                      <p class="help-block" i18n-content="opt_notifications_badges_sub_text"></p>
+                    </label>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="notificationsEnabled" i18n-content="opt_notifications_enabled_label"></label>
+                  <div class="controls">
+                    <label class="checkbox span5 tight-left">
+                      <input type="checkbox" id="notificationsEnabled">
+                      <span i18n-content="opt_notifications_enabled_text"></span>
+                      <p class="help-block" i18n-content="opt_notifications_enabled_sub_text"></p>
+                    </label>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label class="control-label" for="notificationsDuration" i18n-content="opt_notifications_duration_label"></label>
+                  <div class="controls">
+                    <div class="span5 tight-left">
+                      <label class="input-append gap-bottom">
+                        <input class="input-mini" id="notificationsDuration" max="60" min="0" size="1" step="1" type="number"><span class="add-on" i18n-content="opt_notifications_duration_add_on_text"></span>
+                      </label>
+                      <label for="notificationsDuration">
+                        <span i18n-content="opt_notifications_duration_text"></span>
+                        <p class="help-block" i18n-content="opt_notifications_duration_sub_text"></p>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend i18n-content="opt_misc_header"></legend>
+                <div class="control-group">
+                  <label class="control-label" for="analytics" i18n-content="opt_analytics_label"></label>
+                  <div class="controls">
+                    <label class="checkbox span5 tight-left">
+                      <input type="checkbox" id="analytics">
+                      <span i18n-content="opt_analytics_text"></span>
+                      <p class="help-block" i18n-content="opt_analytics_sub_text"></p>
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
           </div>
         </div>
       </div>
       <div id="orders_tab" class="tab">
-        <div id="orders_sct" class="section">
-          <h4 id="orders_hdr" i18n-content="opt_order_header"></h4>
-          <div class="contents">
-            <div>
-              <table>
-                <tr>
-                  <td colspan="2" rowspan="2" style="min-width: 354px">
-                    <select id="orders" size="5" style="width: 100%"></select>
-                  </td>
-                  <td style="width: 50%">&nbsp;</td>
-                </tr>
-                <tr>
-                  <td>&nbsp;</td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <table style="border-spacing: 0">
-                      <tr>
-                        <td style="width: 117px">
-                          <label for="order_label">
-                            <span id="order_label_txt" i18n-content="opt_order_label_text"></span>
-                          </label>
-                          <a facebox="#order_label_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
-                          <div id="order_label_help" class="help" i18n-content="help_order_label"></div>
-                        </td>
-                        <td>
-                          <input id="order_label" class="read-only" type="text" maxlength="12" size="25" />
-                        </td>
-                      </tr>
+        <div class="row">
+          <div class="span12">
+            <form id="order_controls" class="form-vertical">
+              <fieldset>
+                <legend i18n-content="opt_order_header"></legend>
+                <div class="form-inline well">
+                  <div class="row">
+                    <div class="span12">
+                      <label for="order_filter" i18n-content="opt_show_label"></label>
+                      <select id="order_filter" class="input-mini"></select>
+                      <div id="order_search" class="pull-right input-append">
+                        <button type="reset" class="btn hide" i18n-content="opt_reset_button"></button>
+                        <input id="order_query" type="text" class="input-medium" i18n-values="placeholder:opt_search_placeholder_text">
+                        <button type="submit" class="btn"><i class="icon-search"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row control-group">
+                  <div class="span12">
+                    <table id="orders" class="table table-hover">
+                      <thead>
+                        <th><input type="checkbox" i18n-values="title:opt_select_all_box"></th>
+                        <th i18n-content="opt_order_label_label"></th>
+                        <th i18n-content="opt_order_number_label"></th>
+                        <th i18n-content="opt_order_email_label"></th>
+                        <th i18n-content="opt_order_code_label"></th>
+                        <th i18n-content="opt_order_status_label"></th>
+                        <th i18n-content="opt_order_actions_label"></th>
+                        <th><i class="icon-resize-vertical"></i></th>
+                      </thead>
+                      <tbody></tbody>
                     </table>
-                  </td>
-                  <td>
-                    <button id="add_btn" i18n-content="opt_add_button"></button>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                    <table style="border-spacing: 0">
-                      <tr>
-                        <td style="width: 117px">
-                          <label for="order_number">
-                            <span id="order_number_txt" i18n-content="opt_order_number_text"></span>
-                          </label>
-                          <a facebox="#order_number_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
-                          <div id="order_number_help" class="help" i18n-content="help_order_number"></div>
-                        </td>
-                        <td>
-                          <input id="order_number" class="read-only-always" type="text" maxlength="12" size="25" />
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td>
-                    <button id="delete_btn" class="read-only" i18n-content="opt_delete_button"></button>
-                    <div id="delete_con" class="help" i18n-content="confirm_delete"></div>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3">
-                    <table style="border-spacing: 0">
-                      <tr>
-                        <td style="width: 117px">
-                          <label for="order_code">
-                            <span id="order_code_txt" i18n-content="opt_order_code_text"></span>
-                          </label>
-                          <a facebox="#order_code_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
-                          <div id="order_code_help" class="help" i18n-content="help_order_code"></div>
-                        </td>
-                        <td>
-                          <input id="order_code" class="read-only" type="text" maxlength="10" size="25" />
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="3">
-                    <label for="updates">
-                      <span id="updates_txt" i18n-content="opt_order_updates_text"></span>
-                    </label>
-                    <a facebox="#updates_help" tabindex="-1" i18n-values="title:opt_help_text"><img alt="?" src="../images/help.png" style="margin-bottom: -3px" /></a>
-                    <div id="updates_help" class="help" i18n-content="help_updates"></div>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2" rowspan="2">
-                    <select id="updates" disabled size="5" style="width: 100%"></select>
-                  </td>
-                  <td>&nbsp;</td>
-                </tr>
-              </table>
-            </div>
+                    <div id="pagination" class="hide pagination pagination-right">
+                      <ul></ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button id="delete_btn" type="button" class="btn btn-danger" disabled i18n-content="opt_delete_button"></button>
+                  <button id="add_btn" type="button" class="btn btn-success" i18n-content="opt_add_button"></button>
+                </div>
+              </fieldset>
+              <div id="order_wizard" class="hide modal">
+                <div class="modal-header">
+                  <a class="close" data-dismiss="modal">&times;</a>
+                  <h3></h3>
+                </div>
+                <div class="modal-body">
+                  <div class="hide alert alert-error">
+                    <a class="close">&times;</a>
+                    <span>&nbsp;</span>
+                  </div>
+                  <div class="row control-group">
+                    <label class="span1 control-label" for="order_label" i18n-content="opt_order_label_label"></label>
+                    <div class="span3 controls">
+                      <input id="order_label" class="span3" type="text" maxlength="32">
+                    </div>
+                  </div>
+                  <div class="row control-group">
+                    <label class="span1 control-label" for="order_number" i18n-content="opt_order_number_label"></label>
+                    <div class="span3 controls">
+                      <input id="order_number" class="span3" type="text" maxlength="32">
+                    </div>
+                  </div>
+                  <div class="row control-group">
+                    <label class="span1 control-label" for="order_email" i18n-content="opt_order_email_label"></label>
+                    <div class="span3 controls">
+                      <input id="order_email" class="span3" type="email" maxlength="64">
+                      <p class="help-block" i18n-content="opt_order_email_sub_text"></p>
+                    </div>
+                  </div>
+                  <div class="row control-group">
+                    <label class="span1 control-label" for="order_code" i18n-content="opt_order_code_label"></label>
+                    <div class="span3 controls">
+                      <input id="order_code" class="span3" type="text" maxlength="32">
+                      <p class="help-block" i18n-content="opt_order_code_sub_text"></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <div class="pull-left">
+                    <button id="order_cancel_btn" class="btn" i18n-content="opt_wizard_cancel_button"></button>
+                    <button id="order_reset_btn" class="btn" i18n-content="opt_wizard_reset_button"></button>
+                  </div>
+                  <div id="order_confirm_delete" class="btn-group hide">
+                    <button id="order_undo_delete_btn" class="btn" i18n-content="opt_undo_button"></button>
+                    <button id="order_confirm_delete_btn" class="btn btn-danger" i18n-content="opt_confirm_button"></button>
+                  </div>
+                  <button id="order_delete_btn" class="btn btn-danger" i18n-content="opt_wizard_delete_button"></button>
+                  <button id="order_save_btn" class="btn btn-primary" i18n-content="opt_wizard_save_button"></button>
+                </div>
+              </div>
+              <div id="delete_wizard" class="hide modal">
+                <div class="modal-header">
+                  <a class="close" data-dismiss="modal">&times;</a>
+                  <h3 i18n-content="opt_delete_wizard_header"></h3>
+                </div>
+                <div class="modal-body">
+                  <p i18n-content="opt_delete_wizard_text_1"></p>
+                  <ul id="delete_items"></ul>
+                  <p i18n-content="opt_delete_wizard_text_2"></p>
+                </div>
+                <div class="modal-footer">
+                  <button id="delete_cancel_btn" class="btn pull-left" i18n-content="opt_wizard_cancel_button"></button>
+                  <button id="delete_no_btn" class="btn btn-primary" i18n-content="opt_wizard_no_button"></button>
+                  <button id="delete_yes_btn" class="btn btn-danger" i18n-content="opt_wizard_yes_button"></button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      <div class="controls">
-        <table>
-          <tr>
-            <td style="width: 50%">
-              <button class="save-btn" i18n-content="opt_save_button"></button>
-            </td>
-            <td style="text-align: right">&nbsp;</td>
-          </tr>
-        </table>
+      <hr>
+      <footer class="footer">
+        <p class="pull-right"><a data-goto="#top" i18n-content="opt_top_button"></a></p>
+        &copy;<span class="year-repl"></span> <a href="http://neocotic.com" target="_blank">Alasdair Mercer</a>
+        <form id="donation" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+          <input type="hidden" name="cmd" value="_s-xclick">
+          <input type="hidden" name="hosted_button_id" value="">
+          <button type="submit" class="btn btn-mini btn-warning" data-placement="top" i18n-values=".innerHTML:opt_donate_button;title:opt_donate_button_title"></button>
+        </form>
+      </footer>
+      <div id="tools_wizard" class="hide modal">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">&times;</a>
+          <h3 i18n-content="opt_tools_header"></h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <p i18n-content="opt_tools_text"></p>
+            <fieldset>
+              <legend>
+                <span i18n-content="opt_logger_header"></span>
+              </legend>
+              <div class="control-group">
+                <label class="control-label" for="loggerEnabled" i18n-content="opt_logger_enabled_label"></label>
+                <div class="controls">
+                  <label class="checkbox span3 tight-left">
+                    <input type="checkbox" id="loggerEnabled">
+                    <span i18n-content="opt_logger_enabled_text"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="loggerLevel" i18n-content="opt_logger_level_label"></label>
+                <div class="controls">
+                  <label class="span3 tight-left">
+                    <select id="loggerLevel" class="input-medium" size="1"></select>
+                    <p class="tight-bottom" i18n-content="opt_logger_level_text"></p>
+                    <p class="help-block" i18n-content="opt_logger_level_sub_text"></p>
+                  </label>
+                </div>
+              </div>
+              <div class="accordion" id="loggerHelp">
+                <div class="accordion-group">
+                  <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#loggerHelp" href="#loggerHelpContent" i18n-content="opt_logger_help_label"></a>
+                  </div>
+                  <div id="loggerHelpContent" class="accordion-body collapse">
+                    <div class="accordion-inner" i18n-content="opt_logger_help"></div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn tools_close_btn" i18n-content="opt_wizard_close_button"></button>
+        </div>
       </div>
     </div>
-    <footer>
-      <div id="footer" i18n-content="opt_footer"></div>
-      <form id="donation" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-        <input type="hidden" name="cmd" value="_s-xclick">
-        <input type="hidden" name="hosted_button_id" value="2KJMS2YHQVMWU">
-        <input type="image" src="https://www.paypalobjects.com/en_GB/i/btn/btn_donate_SM.gif" name="submit" alt="Donate">
-      </form>
-    </footer>
   </body>
 </html>
