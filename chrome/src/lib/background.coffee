@@ -27,150 +27,6 @@ updates           = 0
 # Private functions
 # -----------------
 
-# Transform specific sections of the data loaded from `configuration.json` so that they're more
-# useable and localized.
-buildConfig = ->
-  log.trace()
-  do buildFrequencies
-  do buildStatus
-
-# Transform the configuration frequencies into useable localized options.
-buildFrequencies = ->
-  log.trace()
-  for mins, i in ext.config.frequencies
-    hours = mins / 60
-    ext.config.frequencies[i] = if mins is -1
-      text:  i18n.get 'freq_disabled'
-      value: mins
-    else
-      text:  (
-        if hours < 1
-          i18n.get 'freq_minutes', [mins]
-        else if hours is 1
-          i18n.get 'freq_hour'
-        else
-          i18n.get 'freq_hours', [hours]
-      )
-      value: mins * 60 * 1000
-
-# Build the HTML to populate the popup with to optimize popup loading times.
-buildPopup = ->
-  log.trace()
-  errors  = no
-  footer  = $ '<footer/>'
-  footerF = $ '<div/>'
-  footerL = $ '<div/>'
-  header  = $ '<header/>'
-  headerF = $ '<div/>'
-  headerL = $ '<div/>'
-  table   = $ '<table id="orders"/>'
-  tbody   = $ '<tbody/>'
-  # Add two empty divs to both the header and footer.
-  footer.append footerF, footerL
-  header.append headerF, headerL
-  # Add the header links (Options, Orders).
-  headerL.append $ '<a/>',
-    href:    '#'
-    id:      'optionsLink'
-    text:    i18n.get 'pop_options_text'
-    title:   i18n.get 'pop_options_title'
-  headerL.append $ '<a/>',
-    href:    '#'
-    id:      'ordersLink'
-    text:    i18n.get 'pop_orders_text'
-    title:   i18n.get 'pop_orders_title'
-  # Add the refresh button to the footer (can be removed though).
-  footerF.append $ '<button/>',
-    id:      'refreshLink'
-    text:    i18n.get 'pop_refresh_button'
-    title:   i18n.get 'pop_refresh_button_title'
-  # Change the refresh button to show I'm busy... I am y'know.
-  if updateManager.updating
-    footerF.find('button:first-child').attr(
-      disabled: 'disabled'
-      title:    i18n.get 'pop_refresh_button_title_alt'
-    ).html i18n.get 'pop_refresh_button_alt'
-  # Add the clear button if badges are visibile; they can be distracting.
-  if updates and store.get 'notifications.badges'
-    footerF.append $ '<button/>',
-      id:      'clearLink'
-      text:    i18n.get 'pop_clear_button'
-      title:   i18n.get 'pop_clear_button_title'
-  # Add the update details to the footer.
-  footerL.append $ '<span/>',
-    text: i18n.get('pop_footer', [
-      new Date(store.get 'lastUpdated').format 'H:i'
-      getFrequency().text
-    ])
-  # Add the column headers to the orders table.
-  $('<thead/>').append(
-    $.prototype.append.apply $('<tr/>'), [
-      $ '<th/>', text: i18n.get 'pop_order_header'
-      $ '<th/>', text: i18n.get 'pop_status_header'
-      $ '<th/>', text: i18n.get 'pop_actions_header'
-    ]
-  ).appendTo table
-  # Add the table body which will contain the orders.
-  table.append tbody
-  # No orders exist so fill the blank and hide the refresh link.
-  unless ext.orders.length
-    $('<tr/>').append(
-      $('<td/>',
-        class:   'empty'
-        colspan: 3
-      ).html i18n.get 'empty'
-    ).appendTo tbody
-    footer.find('#refreshLink').remove()
-  # Otherwise; let's create a row for each order.
-  for order in ext.orders
-    tbody.append(
-      $.prototype.append.apply $('<tr/>'), [
-        $.prototype.append.apply $('<td/>'), [
-          $ '<strong/>', text: order.label
-          '<br />'
-          $ '<a/>',
-            'data-order-number': order.number
-            href:                '#'
-            text:                order.number
-            title:               i18n.get 'pop_order_title'
-        ]
-        $('<td/>').append $ '<span/>', text: ext.getStatusText order
-      ]
-    )
-    # Order had an error; I suppose I should tell the user.
-    if order.error
-      errors = yes
-      tbody.find('tr:last-child td:first-child strong').attr
-        class: 'error'
-        title: i18n.get order.error
-    # Found the track link so I'll share it with the user. I'm good like that.
-    if order.trackingUrl
-      tbody.find('tr:last-child').append $('<td/>').append $ '<a/>',
-          'data-order-number': order.number
-          href:                '#'
-          text:                i18n.get 'pop_track_text'
-          title:               i18n.get 'pop_track_title'
-    else
-      tbody.find('tr:last-child').append $('<td/>').append ' '
-  # One or more order has an error so I'll add a little icon.
-  if errors
-    $('<img/>',
-      height: 14
-      id:     'errorIcon'
-      src:    '../images/exclamation_red.png'
-      title:  i18n.get 'pop_errors_title'
-      width:  14
-    ).prependTo footerL
-  ext.popupHtml = $('<div/>').append(header, table, footer).html()
-
-# Transform the configuration status into useable localized options.
-buildStatus = ->
-  log.trace()
-  for status, i in ext.config.apple.status
-    ext.config.apple.status[i] =
-      text:  i18n.get "status_#{i}_text"
-      value: /// ^ #{status} $ ///i
-
 # Inject and execute `install.coffee` within each of the tabs provided (where valid).
 executeScriptsInExistingTabs = (tabs) ->
   log.trace()
@@ -185,12 +41,6 @@ executeScriptsInExistingWindows = ->
     log.info 'Retrieved the following windows...', windows
     for win in windows
       chrome.tabs.query windowId: win.id, executeScriptsInExistingTabs
-
-# Attempt to retrieve the details for the persisted update frequency.
-getFrequency = ->
-  log.trace()
-  frequency = store.get 'frequency'
-  return freq for freq in ext.config.frequencies when freq.value is frequency
 
 # Return the number of status updates detected by this extension for an order since the specified
 # time.
@@ -227,74 +77,6 @@ getWindows = (url) ->
   log.trace()
   chrome.extension.getViews(type: 'tab').filter (element) ->
     element.location.href.indexOf(url) is 0
-
-# Handle the conversion/removal of older version of settings that may have been stored previously
-# by `ext.init`.
-init_update = ->
-  log.trace()
-  # Update the update progress indicator itself.
-  if store.exists 'update_progress'
-    store.modify 'updates', (updates) ->
-      progress = store.remove 'update_progress'
-      for own namespace, versions of progress
-        updates[namespace] = if versions?.length then versions.pop() else ''
-  # Create updater for the `settings` namespace.
-  updater      = new store.Updater 'settings'
-  isNewInstall = updater.isNew
-  # Define the processes for all required updates to the `settings` namespace.
-  updater.update '1.1.0', ->
-    log.info 'Updating general settings for 1.1.0'
-    freq      = ext.config.frequencies[1].value
-    frequency = store.get 'frequency'
-    store.set 'frequency', freq if frequency > -1 and frequency < freq
-  updater.update '1.2.0', ->
-    log.info 'Updating general settings for 1.2.0'
-    notifications = store.get 'notifications'
-    store.set 'notifications',
-      badges:   store.get('badges')               ? on
-      duration: store.get('notificationDuration') ? 3000
-      enabled:  if $.type(notifications) is 'boolean' then notifications else yes
-    store.remove 'badges', 'notificationDuration'
-
-# Initialize `order` and its properties.
-initOrder = (order) ->
-  log.trace()
-  order.error       ?= ''
-  order.code        ?= ''
-  order.email       ?= ''
-  order.label       ?= ''
-  order.number      ?= ''
-  order.trackingUrl ?= ''
-  order.updates     ?= []
-  for update in order.updates
-    update.status    ?= -1
-    update.timeStamp ?= $.now()
-  order
-
-# Initialize the persisted managed orders.
-initOrders = ->
-  log.trace()
-  do initOrders_update
-  # Initialize all orders to ensure their properties are valid.
-  store.modify 'orders', (orders) ->
-    initOrder order for order in orders
-  ext.updateOrders()
-
-# Handle the conversion/removal of older version of settings that may have been stored previously
-# by `initOrders`.
-initOrders_update = ->
-  log.trace()
-  # Create updater for the `orders` namespace.
-  updater = new store.Updater 'orders'
-  # Define the processes for all required updates to the `orders` namespace.
-  updater.update '1.2.0', ->
-    log.info 'Updating order settings for 1.2.0'
-    store.modify 'orders', (orders) ->
-      for order in orders
-        if order.error is 'update_status_not_found_error'
-          order.error = 'update_invalid_status_error'
-        order.key    ?= utils.keyGen()
-        update.status = getStatusIndex update.status for update in order.updates
 
 # Determine whether or not an order already has the specified status.
 isOrderStatusNew = (order, status) ->
@@ -336,7 +118,7 @@ onMessage = (message, sender, sendResponse) ->
   url   = ''
   # Attempt to return the order whose details match the specified criteria.
   getOrder = (data) ->
-    ext.queryOrder (order) -> order.number is data.number
+    ext.queryOrder (order) -> order.key is data.key
   # Check what needs to be done... and then do it.
   switch message.type
     when 'clear' then do markRead
@@ -441,6 +223,201 @@ updatePopup = ->
   log.trace()
   do buildPopup
   chrome.extension.getViews(type: 'popup')[0]?.popup.init()
+
+# Configuration functions
+# -----------------------
+
+# Transform specific sections of the data loaded from `configuration.json` so that they're more
+# useable and localized.
+buildConfig = ->
+  log.trace()
+  do buildFrequencies
+  do buildStatus
+
+# Transform the configuration frequencies into useable localized options.
+buildFrequencies = ->
+  log.trace()
+  for mins, i in ext.config.frequencies
+    hours = mins / 60
+    ext.config.frequencies[i] = if mins is -1
+      text:  i18n.get 'freq_disabled'
+      value: mins
+    else
+      text:  (
+        if hours < 1
+          i18n.get 'freq_minutes', [mins]
+        else if hours is 1
+          i18n.get 'freq_hour'
+        else
+          i18n.get 'freq_hours', [hours]
+      )
+      value: mins * 60 * 1000
+
+# Transform the configuration status into useable localized options.
+buildStatus = ->
+  log.trace()
+  for status, i in ext.config.apple.status
+    ext.config.apple.status[i] =
+      text:  i18n.get "status_#{i}_text"
+      value: /// ^ #{status} $ ///i
+
+# HTML building functions
+# -----------------------
+
+# Create a `tr` element to represent `order`.  
+# The element should then be inserted in to the `tbody` element in the popup page but is created
+# here to optimize display times of the popup window.
+buildOrder = (order) ->
+  log.trace()
+  log.debug "Creating popup table for #{order.label} (#{order.number})"
+  row = $ '<tr/>'
+  row.addClass 'error' if order.error
+  column = $ '<td/>'
+  if order.error
+    column.append $ '<i/>',
+      class: 'icon-exclamation-sign'
+      title: i18n.get order.error
+  column.append $ '<strong/>', text: order.label
+  column.append '<br/>'
+  column.append $ '<a/>',
+    'data-order-action': 'view'
+    'data-order-key':    order.key
+    text:                order.number
+    title:               i18n.get 'pop_order_title'
+  row.append column
+  column = $ '<td/>'
+  column.append $ '<span/>', text: ext.getStatusText order
+  row.append column
+  column = $ '<td/>'
+  # Found the track link so I'll share it with the user. I'm good like that.
+  if order.trackingUrl
+    column.append $ '<a/>',
+      'data-order-action': 'track'
+      'data-order-key':    order.key
+      text:                i18n.get 'pop_track_text'
+      title:               i18n.get 'pop_track_title'
+  else
+    column.append ' '
+  row.append column
+
+# Build the HTML to populate the popup with to optimize popup loading times.
+buildPopup = ->
+  log.trace()
+  rows = $()
+  # Generate the HTML for each order.
+  rows = rows.add buildOrder order for order in ext.orders
+  # Add a generic message to state the obvious... that the list is empty.
+  if rows.length is 0
+    rows = rows.add $('<tr/>').append $ '<td/>',
+      class:   'empty'
+      colspan: 3
+      html:    i18n.get 'empty'
+  ext.ordersHtml = $('<div/>').append(rows).html()
+
+# Build the HTML to indicate in a user-friendly manner the time since/until that specified.
+buildTimeAgo = (time) ->
+  log.trace()
+  time   ?= $.now()
+  time    = new Date time if 'date' isnt $.type time
+  timeAgo = $('<abbr/>', title: time.toISOString()).timeago()
+  $('<div/>').append(timeAgo).html()
+
+# Initialization functions
+# ------------------------
+
+# Handle the conversion/removal of older version of settings that may have been stored previously
+# by `ext.init`.
+init_update = ->
+  log.trace()
+  # Update the update progress indicator itself.
+  if store.exists 'update_progress'
+    store.modify 'updates', (updates) ->
+      progress = store.remove 'update_progress'
+      for own namespace, versions of progress
+        updates[namespace] = if versions?.length then versions.pop() else ''
+  # Create updater for the `settings` namespace.
+  updater      = new store.Updater 'settings'
+  isNewInstall = updater.isNew
+  # Define the processes for all required updates to the `settings` namespace.
+  updater.update '1.1.0', ->
+    log.info 'Updating general settings for 1.1.0'
+    freq      = ext.config.frequencies[1].value
+    frequency = store.get 'frequency'
+    store.set 'frequency', freq if frequency > -1 and frequency < freq
+  updater.update '1.2.0', ->
+    log.info 'Updating general settings for 1.2.0'
+    notifications = store.get 'notifications'
+    store.set 'notifications',
+      badges:   store.get('badges')               ? on
+      duration: store.get('notificationDuration') ? 3000
+      enabled:  if $.type(notifications) is 'boolean' then notifications else yes
+    store.remove 'badges', 'notificationDuration'
+
+# Initialize `order` and its properties.
+initOrder = (order) ->
+  log.trace()
+  order.error       ?= ''
+  order.code        ?= ''
+  order.email       ?= ''
+  order.label       ?= ''
+  order.number      ?= ''
+  order.trackingUrl ?= ''
+  order.updates     ?= []
+  for update in order.updates
+    update.status    ?= -1
+    update.timeStamp ?= $.now()
+  order
+
+# Initialize the persisted managed orders.
+initOrders = ->
+  log.trace()
+  do initOrders_update
+  # Initialize all orders to ensure their properties are valid.
+  store.modify 'orders', (orders) ->
+    initOrder order for order in orders
+  ext.updateOrders()
+
+# Handle the conversion/removal of older version of settings that may have been stored previously
+# by `initOrders`.
+initOrders_update = ->
+  log.trace()
+  # Create updater for the `orders` namespace.
+  updater = new store.Updater 'orders'
+  # Define the processes for all required updates to the `orders` namespace.
+  updater.update '1.2.0', ->
+    log.info 'Updating order settings for 1.2.0'
+    store.modify 'orders', (orders) ->
+      for order in orders
+        if order.error is 'update_status_not_found_error'
+          order.error = 'update_invalid_status_error'
+        order.key    ?= utils.keyGen()
+        update.status = getStatusIndex update.status for update in order.updates
+
+# Initialize the timeago jQuery plugin.
+initTimeAgo = ->
+  log.trace()
+  messageOrNull = (messageKey) -> i18n.get(messageKey) or null
+  numbers = messageOrNull 'ta_numbers'
+  numbers = if numbers? then numbers.trim().split /\s+/ else []
+  # Apply localized strings to timeago.
+  $.timeago.settings.strings =
+    day:           messageOrNull 'ta_day'
+    days:          messageOrNull 'ta_days'
+    hour:          messageOrNull 'ta_hour'
+    hours:         messageOrNull 'ta_hours'
+    minute:        messageOrNull 'ta_minute'
+    minutes:       messageOrNull 'ta_minutes'
+    month:         messageOrNull 'ta_month'
+    months:        messageOrNull 'ta_months'
+    numbers:       numbers
+    prefixAgo:     messageOrNull 'ta_prefix_ago'
+    prefixFromNow: messageOrNull 'ta_prefix_from_now'
+    seconds:       messageOrNull 'ta_seconds'
+    suffixAgo:     messageOrNull 'ta_suffix_ago'
+    suffixFromNow: messageOrNull 'ta_suffix_from_now'
+    wordSeparator: i18n.get 'ta_word_separator'
+    year:          messageOrNull 'ta_year'
+    years:         messageOrNull 'ta_years'
 
 # Update Manager setup
 # --------------------
@@ -575,7 +552,7 @@ ext = window.ext = new class Extension extends utils.Class
   # Pre-prepared HTML for the popup to be populated using.  
   # This should be updated whenever orders are changed/updated in any way as this is generated to
   # improve performance and load times of the popup frame.
-  popupHtml: ''
+  ordersHtml: ''
 
   # Current version of iOrder.
   version: ''
@@ -613,16 +590,23 @@ ext = window.ext = new class Extension extends utils.Class
         notifications.duration ?= 3000
         notifications.enabled  ?= yes
       utils.onMessage 'extension', no, onMessage
+      do initTimeAgo
       do initOrders
       analytics.track 'Installs', 'New', @version, Number isProductionBuild if isNewInstall
       # Execute content scripts now that we know the version.
       do executeScriptsInExistingWindows
 
+  # Attempt to retrieve the details for the persisted update frequency.
+  getFrequency: ->
+    log.trace()
+    frequency = store.get 'frequency'
+    return freq for freq in @config.frequencies when freq.value is frequency
+
   # Return the URL of the page on the Apple store for the specified `order`.
   getOrderUrl: (order) ->
     log.trace()
     encode = encodeURIComponent
-    "#{ext.config.apple.url.detail}#{encode order.number}/#{encode order.email or order.code}"
+    "#{@config.apple.url.detail}#{encode order.number}/#{encode order.email or order.code}"
 
   # Attempt to derive the status text to be displayed for the order.  
   # The status text will either be that of the latest update or a single whitespace character if no
@@ -630,7 +614,27 @@ ext = window.ext = new class Extension extends utils.Class
   getStatusText: (order) ->
     log.trace()
     index = if order.updates?.length then order.updates[-1..][0].status else -1
-    ext.config.apple.status[index]?.text
+    @config.apple.status[index]?.text
+
+  # Retrieve the HTML for a user-friendly timestamp representing the time since/until that
+  # specified.
+  getTimeAgoHtml: (time) -> buildTimeAgo time
+
+  # Indicate whether any errors were encountered when orders were last updated.
+  hasErrors: ->
+    log.trace()
+    return yes for order in @orders when order.error
+    no
+
+  # Indicate whether any order updates were detected.
+  hasUpdates: ->
+    log.trace()
+    updates > 0
+
+  # Indicate whether the update manager is currently processing order updates.
+  isUpdating: ->
+    log.trace()
+    updateManager.updating
 
   # Retrieve the first order that passes the specified `filter`.
   queryOrder: (filter, singular = yes) ->
