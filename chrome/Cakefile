@@ -38,6 +38,7 @@ TARGET_DIR       = 'bin'
 TARGET_SUB_DIRS  = [
   TARGET_DIR
   Path.join TARGET_DIR, LOCALES_DIR
+  Path.join TARGET_DIR, 'css'
   Path.join TARGET_DIR, 'images'
   Path.join TARGET_DIR, 'lib'
   Path.join TARGET_DIR, 'pages'

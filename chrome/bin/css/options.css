@@ -1,0 +1,54 @@
+body {padding-top: 60px; padding-bottom: 10px;}
+a {cursor: pointer;}
+a.ref-link {font-weight: bold;}
+a.ref-link:hover {text-decoration: none;}
+abbr[data-original-title] {cursor: help; border-bottom: 1px dotted #ddd;}
+legend + p {margin-top: 18px; -webkit-margin-top-collapse: separate;}
+#orders {table-layout: fixed;}
+#orders tbody td:not(:only-child) {cursor: pointer;}
+#orders tbody td:nth-child(2) span, #orders tbody td:nth-child(3), #orders tbody td:nth-child(4) span, #orders tbody td:nth-child(5) span, #orders tbody td:nth-child(6) span {display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+#orders tbody td:last-child span {cursor: move; display: block; font-weight: bold; margin: -3px 0 0 0; transform: rotate(90deg); -webkit-transform: rotate(90deg);}
+#orders input[type="checkbox"] {margin: 0;}
+#orders thead th:first-child {text-align: center; width: 13px;}
+#orders thead th:nth-child(2) {width: 16%;}
+#orders thead th:nth-child(3) {width: 16%;}
+#orders thead th:nth-child(4) {width: 16%;}
+#orders thead th:nth-child(5) {width: 16%;}
+#orders thead th:nth-child(6) {width: 16%;}
+#orders thead th:nth-child(7) {width: 16%;}
+#orders thead th:last-child {padding-left: 4px; width: 10px;}
+.navbar-fixed-top .brand {padding-right: 0; padding-left: 0; margin-left: 20px; float: right; font-weight: bold; color: black; text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px rgba(255, 255, 255, .125); -webkit-transition: all .2s linear; -moz-transition: all .2s linear; transition: all .2s linear;}
+.form-vertical .control-group > label, .control-label {padding-top: 6px;}
+#tools_wizard legend .help {font-size: 13px; line-height: 18px;}
+.input-prepend, .input-append {margin-bottom: 0;}
+pre {overflow: auto; white-space: pre; word-wrap: normal;}
+.label.pull-right, .badge.pull-right {padding-bottom: 1px;}
+.popover {font-size: 14px; line-height: 20px;}
+.popover-inner {text-align: left;}
+#order_wizard .modal-body {position: static;}
+#donation {display: inline; margin: 0;}
+#donation .btn {margin: -4px 0 0 12px;}
+.blocky {display: block;}
+.help {cursor: help;}
+.tight {margin: 0;}
+.tight-top {margin-top: 0;}
+.tight-right {margin-right: 0;}
+.tight-bottom {margin-bottom: 0;}
+.tight-left {margin-left: 0;}
+.gap-top {padding-top: 18px;}
+.gap-bottom {margin-bottom: 5px;}
+.w-quarter {width: 25%;}
+.w-tenth {width: 10%;}
+.left {text-align: left;}
+.center {text-align: center;}
+.right {text-align: right;}
+.top {vertical-align: top;}
+.middle {vertical-align: middle;}
+.bottom {vertical-align: bottom;}
+*[draggable], .pagination {user-select: none; -webkit-user-select: none;}
+*[draggable].dnd-moving {opacity: 0.4;}
+*[draggable].dnd-over {background: #f5f5f5;border: 1px dashed #ddd;}
+@media (max-width: 979px) {
+  body {padding-top: 0;}
+  #navigation li:last-child {display: none;}
+}

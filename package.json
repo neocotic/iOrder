@@ -1,7 +1,7 @@
 {
     "name": "iOrder"
   , "description": "Browser extension that keeps users updated with their iDevice order progress"
-  , "version": "1.1.4"
+  , "version": "2.0.0"
   , "homepage": "http://neocotic.com/iOrder"
   , "bugs": {
       "url": "https://github.com/neocotic/iOrder/issues"

@@ -1,0 +1,40 @@
+{
+    "apple":       {
+        "status": [
+            "we'?ve\\s+received\\s+your\\s+order"
+          , "processing\\s+items"
+          , "preparing\\s+for\\s+shipment"
+          , "shipped"
+          , "complete"
+          , "shipping\\s+to\\s+store"
+          , "ready\\s+for\\s+pickup"
+          , "picked\\s+up"
+        ]
+      , "url":    {
+            "detail": "https://store.apple.com/us/order/guest/"
+          , "list":   "https://store.apple.com/us/order/list"
+          , "track":  "https://applestore.bridge-point.com/"
+        }
+    }
+  , "frequencies": [
+        -1
+      , 15
+      , 30
+      , 45
+      , 60
+      , 120
+    ]
+  , "options":     {
+        "limits":    [
+            25
+          , 50
+          , 75
+          , 100
+        ]
+      , "payPal":    "2KJMS2YHQVMWU"
+      , "userVoice": {
+            "forum": 163706
+          , "id":    "GzzuEbfY3eITOLikw7YvTQ"
+        }
+    }
+}

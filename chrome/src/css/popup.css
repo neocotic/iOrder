@@ -1,0 +1,11 @@
+body {font-size: 12px; min-width: 400px; padding: 5px;}
+a {cursor: pointer;}
+i[class^="icon-exclamation-sign"] {cursor: help;}
+#orders {margin: 5px 0;}
+#orders .empty {font-style: italic;}
+#orders td:first-child i {padding-right: 3px;}
+#refreshButton:disabled i {-webkit-animation: rotation 2s infinite linear;}
+@-webkit-keyframes rotation {
+  from {-webkit-transform: rotate(0deg);}
+  to {-webkit-transform: rotate(359deg);}
+}
