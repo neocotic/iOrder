@@ -39,5 +39,5 @@
       , "http://*.neocotic.com/"
       , "https://store.apple.com/"
     ]
-  , "version": "1.1.4"
+  , "version": "2.0.0"
 }
